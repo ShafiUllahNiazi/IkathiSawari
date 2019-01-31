@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "866795577481",
+    "firebase_url": "https://ikathisawari-86d7b.firebaseio.com",
+    "project_id": "ikathisawari-86d7b",
+    "storage_bucket": "ikathisawari-86d7b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866795577481:android:573079e4599fb69a",
+        "android_client_info": {
+          "package_name": "com.example.shafi.ikathisawari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866795577481-9rolsbju9ms3ikklmf70ddbm8rhjedet.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shafi.ikathisawari",
+            "certificate_hash": "d0ed73079fdbfcff9089bd8e80c0ebee44ea2c24"
+          }
+        },
+        {
+          "client_id": "866795577481-8q3n4t7l1rp9cnvfu83gg8a7k94dq023.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz4h_1iJHFdxuu7J_rGWN7_4knACuUUDE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866795577481-8q3n4t7l1rp9cnvfu83gg8a7k94dq023.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
