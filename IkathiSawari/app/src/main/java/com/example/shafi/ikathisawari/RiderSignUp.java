@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.shafi.ikathisawari.models.RiderInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -177,20 +178,17 @@ public class RiderSignUp  extends Fragment {
                         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                         String currentUserUid = currentUser.getUid();
                         if (task.isSuccessful()) {
-                            sign_up_HashMap = new HashMap<>();
-                            sign_up_HashMap.put("name_Rider", name_Rider.getText().toString());
-                            sign_up_HashMap.put("email_Rider", email_Rider.getText().toString());
-                            sign_up_HashMap.put("password_Rider", password_Rider.getText().toString());
-                            sign_up_HashMap.put("rePassword_Rider", rePassword_Rider.getText().toString());
-                            sign_up_HashMap.put("mobile_Rider", mobile_Rider.getText().toString());
-                            sign_up_HashMap.put("cnic_Rider", cnic_Rider.getText().toString());
-                            sign_up_HashMap.put("type", "Rider");
-                            sign_up_HashMap.put("Uid",currentUserUid.toString());
+                            String name = name_Rider.getText().toString();
+                            String email = email_Rider.getText().toString();
+                            String mobile = mobile_Rider.getText().toString();
+                            String cnic =  cnic_Rider.getText().toString();
+
+                            RiderInfo riderInfo = new RiderInfo(name, email, mobile, cnic);
 
                             firebaseDatabase = FirebaseDatabase.getInstance();
                             databaseReference=firebaseDatabase.getReference();
 
-                            databaseReference.child("users").child("Rider").child(currentUserUid).setValue(sign_up_HashMap);
+                            databaseReference.child("users").child("Rider").child(currentUserUid).setValue(riderInfo);
 
                             progressDialog.cancel();
                             Toast.makeText(getActivity(), "Authentication Successful.", Toast.LENGTH_SHORT).show();

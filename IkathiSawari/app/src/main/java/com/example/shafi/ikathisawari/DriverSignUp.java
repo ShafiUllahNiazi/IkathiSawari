@@ -18,11 +18,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.shafi.ikathisawari.models.DriverInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -154,33 +156,31 @@ public class DriverSignUp  extends Fragment {
             Toast.makeText(getActivity(), "Please Write Your Password", Toast.LENGTH_SHORT).show();
             return;
         }
+
         progressDialog.setMessage("Account is Creating");
         progressDialog.show();
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        HashMap<String, String> sign_up_HashMap;
-                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                        String currentUserUid = currentUser.getUid();
                         if (task.isSuccessful()) {
-                            sign_up_HashMap = new HashMap<>();
-                            sign_up_HashMap.put("name_Driver", name_Driver.getText().toString());
-                            sign_up_HashMap.put("email_Driver", email_Driver.getText().toString());
-                            sign_up_HashMap.put("password_Driver", password_Driver.getText().toString());
-                            sign_up_HashMap.put("rePassword_Driver", rePassword_Driver.getText().toString());
-                            sign_up_HashMap.put("mobile_Driver", mobile_Driver.getText().toString());
-                            sign_up_HashMap.put("cnic_Driver", cnic_Driver.getText().toString());
-                            sign_up_HashMap.put("type_and_model", type_and_model.getText().toString());
-                            sign_up_HashMap.put("regNumber", regNumber.getText().toString());
-                            sign_up_HashMap.put("noOfSeats", noOfSeats.getText().toString());
-                            sign_up_HashMap.put("type", "Driver");
-                            sign_up_HashMap.put("Uid",currentUserUid.toString());
+                            String name = name_Driver.getText().toString();
+                            String email = email_Driver.getText().toString();
+                            String mobile = mobile_Driver.getText().toString();
+                            String cnic =  cnic_Driver.getText().toString();
+                            String type_model = type_and_model.getText().toString();
+                            String reg_no =  regNumber.getText().toString();
+                            String seats = noOfSeats.getText().toString();
+
+                            DriverInfo driverInfo = new DriverInfo(name, email, mobile, cnic, type_model, reg_no, seats);
 
                             firebaseDatabase = FirebaseDatabase.getInstance();
                             databaseReference=firebaseDatabase.getReference();
 
-                            databaseReference.child("users").child("Driver").child(currentUserUid).setValue(sign_up_HashMap);
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            String currentUserUid = currentUser.getUid();
+
+                            databaseReference.child("users").child("Driver").child(currentUserUid).setValue(driverInfo);
 
                             progressDialog.cancel();
                             Toast.makeText(getActivity(), "Authentication Successful.", Toast.LENGTH_SHORT).show();
