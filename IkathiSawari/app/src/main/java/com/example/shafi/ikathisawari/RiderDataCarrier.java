@@ -21,20 +21,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DriverDataCarrier extends AppCompatActivity {
+public class RiderDataCarrier extends AppCompatActivity {
 
     Intent intent;
     Double currentLat, currentLong, destinationLat, destinationLong;
-    private DatabaseReference mDriverAvailableRout;
-    Button goBackHomeDriver;
+    private DatabaseReference mRiderAvailableRout;
+    Button goBackHomeRider;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_driver_data_carrier);
-
-        goBackHomeDriver = findViewById(R.id.goBackHomeDriver);
+        setContentView(R.layout.activity_rider_data_carrier);
+        goBackHomeRider = findViewById(R.id.goBackHomeRider);
 
         intent = getIntent();
 
@@ -49,38 +48,40 @@ public class DriverDataCarrier extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
-        goBackHomeDriver.setOnClickListener(new View.OnClickListener() {
+        goBackHomeRider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DriverDataCarrier.this,Driver_Home.class));
+                startActivity(new Intent(RiderDataCarrier.this,Rider_Home.class));
             }
         });
     }
 
     private void saveIntoFirebase(){
-        mDriverAvailableRout = FirebaseDatabase.getInstance().getReference("Available Routs");
-        String driver_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mRiderAvailableRout = FirebaseDatabase.getInstance().getReference("Rider Routs");
+        String rider_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Map locationData = new HashMap();
         locationData.put("currentLat", currentLat);
         locationData.put("currentLong", currentLong);
         locationData.put("destinationLat", destinationLat);
         locationData.put("destinationLong", destinationLong);
-        mDriverAvailableRout.child(driver_id).setValue(locationData).addOnCompleteListener(new OnCompleteListener<Void>() {
+        mRiderAvailableRout.child(rider_id).setValue(locationData).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    Toast.makeText(DriverDataCarrier.this, "data has been added.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RiderDataCarrier.this, "data has been added.", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(DriverDataCarrier.this, "Unable to add data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RiderDataCarrier.this, "Unable to add data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,7 +96,7 @@ public class DriverDataCarrier extends AppCompatActivity {
         if(item.getItemId()==R.id.profile){
 
 
-            startActivity(new Intent(this,Driver_Profile.class));
+            startActivity(new Intent(this,Rider_Profile.class));
 
             return true;
         }
@@ -110,6 +111,5 @@ public class DriverDataCarrier extends AppCompatActivity {
         return true;
 
     }
-
 
 }

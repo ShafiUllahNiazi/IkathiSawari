@@ -47,7 +47,13 @@
         <activity
             android:name=".DriverHomeMap"
             android:label="@string/title_activity_driver_home_map" />
-        <activity android:name=".DriverDataCarrier"></activity>
+        <activity android:name=".DriverDataCarrier" />
+        <activity
+            android:name=".RiderHomeMap"
+            android:label="@string/title_activity_rider_home_map" />
+        <activity android:name=".RiderDataCarrier" />
+        <activity android:name=".Driver_Profile" />
+        <activity android:name=".Rider_Profile"></activity>
     </application>
 
 </manifest>

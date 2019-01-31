@@ -31,9 +31,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallback {
+public class RiderHomeMap extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "DriverHomeMap";
+    private static final String TAG = "RiderHomeMap";
     private static final float DEFAULT_ZOOM = 15f;
     private GoogleMap mMap;
     private PlaceAutocompleteFragment autocompleteFragment;
@@ -47,13 +47,13 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.driver_home_map);
+        setContentView(R.layout.rider_home_map);
 
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.mapRider);
         mapFragment.getMapAsync(this);
 
-        autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocompleteRider);
         autocompleteFragment.setHint("Select your origin");
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -71,7 +71,7 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
             }
         });
 
-        autocompleteFragment_destination = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_destination);
+        autocompleteFragment_destination = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_destinationRider);
         autocompleteFragment_destination.setHint("Select your destination");
         autocompleteFragment_destination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -92,14 +92,14 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-        saveRoute = findViewById(R.id.sendData);
+        saveRoute = findViewById(R.id.sendDataRider);
         saveRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (latLngCurrent!=null && latLngDestination!=null){
                     sendData();
                 }else {
-                    Toast.makeText(DriverHomeMap.this, "Locations empty...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RiderHomeMap.this, "Locations empty...", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -135,7 +135,7 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
             @Override
             public boolean onMarkerClick(Marker marker) {
                 latLngDestination = marker.getPosition();
-                AlertDialog.Builder builder = new AlertDialog.Builder(DriverHomeMap.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(RiderHomeMap.this);
                 builder.setTitle("Confirm");
                 builder.setMessage("Confirm Location?");
                 builder.setCancelable(false);
@@ -186,7 +186,7 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngCurrent, DEFAULT_ZOOM));
                             mMap.addMarker(new MarkerOptions().position(latLngCurrent).title("My Location"));
                         }else
-                            Toast.makeText(DriverHomeMap.this, "Unable to Fetch Current Location", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RiderHomeMap.this, "Unable to Fetch Current Location", Toast.LENGTH_LONG).show();
                     } else {
                         mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     }
@@ -214,7 +214,7 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
     }
 
     public void sendData() {
-        Intent intent = new Intent(DriverHomeMap.this, DriverDataCarrier.class);
+        Intent intent = new Intent(RiderHomeMap.this, RiderDataCarrier.class);
         Log.i(TAG, "sendData: current" + latLngCurrent.latitude + "  " + latLngCurrent.longitude );
         Log.i(TAG, "sendData: destination " + latLngDestination.latitude + "  " + latLngDestination.longitude);
         intent.putExtra("currentLat", latLngCurrent.latitude);

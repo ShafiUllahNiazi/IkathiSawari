@@ -13,12 +13,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Driver_Home extends AppCompatActivity {
 
@@ -125,7 +129,7 @@ public class Driver_Home extends AppCompatActivity {
     public void showSettingAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Confirm");
-        alertDialog.setMessage("Are you sure to confirm location?");
+        alertDialog.setMessage("location?");
         alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -140,6 +144,35 @@ public class Driver_Home extends AppCompatActivity {
             }
         });
         alertDialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId()==R.id.profile){
+
+
+            startActivity(new Intent(this,Driver_Profile.class));
+
+            return true;
+        }
+        if(item.getItemId()==R.id.sign_out){
+
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this,MainActivity.class));
+
+            return true;
+        }
+
+        return true;
+
     }
 
 

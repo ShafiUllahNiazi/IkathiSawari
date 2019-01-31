@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
 //        email=email.toString().concat("@email.com");
 
+        progressDialog.setMessage("Logging in");
+        progressDialog.show();
+
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -141,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                             });
+                            progressDialog.cancel();
                         }
                     }
 
