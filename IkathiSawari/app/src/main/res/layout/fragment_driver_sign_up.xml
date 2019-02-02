@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DriverSignUp"
+    android:fillViewport="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/name_Driver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:paddingBottom="10dp" />
+
+            <EditText
+                android:id="@+id/email_Driver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="10dp" />
+
+            <EditText
+                android:id="@+id/password_Driver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingBottom="10dp" />
+
+            <EditText
+                android:id="@+id/repassword_Driver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:paddingBottom="10dp" />
+
+            <EditText
+                android:id="@+id/mobile_Driver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mobile Number"
+                android:inputType="number"
+                android:paddingBottom="10dp" />
+
+            <EditText
+                android:id="@+id/cnic_Driver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="CNIC"
+                android:inputType="number"
+                android:paddingBottom="10dp" />
+
+            <EditText
+                android:id="@+id/type_and_model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Vehicle type and model"
+                android:inputType="text"
+                android:paddingBottom="10dp" />
+
+            <EditText
+                android:id="@+id/regNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Vehicle Regestration no."
+                android:inputType="number"
+                android:paddingBottom="10dp" />
+
+            <EditText
+                android:id="@+id/noOfSeats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="No. of Seats"
+                android:inputType="number"
+                android:paddingBottom="10dp" />
+
+
+            <Button
+                android:id="@+id/signUpBtn_Driver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="SignUp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+</ScrollView>
