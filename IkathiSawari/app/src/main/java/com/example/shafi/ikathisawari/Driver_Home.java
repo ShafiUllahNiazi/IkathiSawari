@@ -28,7 +28,7 @@ public class Driver_Home extends AppCompatActivity {
 
     private static final String TAG = "Driver_Home";
     
-    private Button home_btn;
+    private Button home_btn,driverRouteMap;
 
     // google maps
     private static final int ERROR_DIALOGE_REQUEST = 9001;
@@ -45,6 +45,7 @@ public class Driver_Home extends AppCompatActivity {
 
     private void initializeViews(){
         home_btn = (Button) findViewById(R.id.driverHome);
+        driverRouteMap = findViewById(R.id.driverRouteMap);
     }
 
     @Override
@@ -66,6 +67,27 @@ public class Driver_Home extends AppCompatActivity {
                 }
             }
         });
+
+        driverRouteMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isServicesOK()){
+                    if(isLocationEnabled()){
+                        getLocationPermission();
+                        if (mLocationPermissionGranted){
+                            navigateToMapRoute();
+                        }
+                    }
+                }else {
+                    showSettingAlert();
+                }
+
+            }
+        });
+    }
+
+    private void navigateToMapRoute() {
+        startActivity(new Intent(Driver_Home.this,DriverMapRouteDirection.class));
     }
 
     public void navigateToMap() {

@@ -53,7 +53,10 @@
             android:label="@string/title_activity_rider_home_map" />
         <activity android:name=".RiderDataCarrier" />
         <activity android:name=".Driver_Profile" />
-        <activity android:name=".Rider_Profile"></activity>
+        <activity android:name=".Rider_Profile" />
+        <activity
+            android:name=".DriverMapRouteDirection"
+            android:label="@string/title_activity_driver_map_route_direction"></activity>
     </application>
 
 </manifest>

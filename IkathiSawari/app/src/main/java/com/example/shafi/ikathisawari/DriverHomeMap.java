@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
+import com.example.shafi.ikathisawari.directionhelpers.TaskLoadedCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -28,10 +30,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallback {
+public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
     private static final String TAG = "DriverHomeMap";
     private static final float DEFAULT_ZOOM = 15f;
@@ -42,7 +46,9 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
     private Location location;
     private LatLng latLngCurrent, latLngDestination;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private Button saveRoute;
+    private Button saveRoute, showRoute;
+
+    private Polyline currentPolyline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +111,46 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
             }
         });
 
+        showRoute = findViewById(R.id.showRoute);
+        showRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (latLngCurrent!=null && latLngDestination!=null){
+                    showRouteOnMap();
+                }else {
+                    Toast.makeText(DriverHomeMap.this, "Locations empty...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    private void showRouteOnMap() {
+        new FetchURL(DriverHomeMap.this).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+    }
+
+    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        // Mode
+        String mode = "mode=" + directionMode;
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + mode;
+        // Output format
+        String output = "json";
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
+        return url;
+    }
+
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
 
     /**

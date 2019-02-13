@@ -21,6 +21,12 @@ tools:context=".DriverHomeMap">
         android:layout_height="40dp" />
 
     <Button
+        android:id="@+id/showRoute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Route" />
+
+    <Button
         android:id="@+id/sendData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
