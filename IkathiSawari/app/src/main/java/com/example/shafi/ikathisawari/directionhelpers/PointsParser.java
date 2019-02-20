@@ -4,9 +4,17 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.shafi.ikathisawari.DriverHomeMap;
+import com.example.shafi.ikathisawari.RoutesObserver;
+import com.example.shafi.ikathisawari.models.DriverRoutInfo;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONObject;
 
@@ -21,10 +29,12 @@ import java.util.List;
 public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
     TaskLoadedCallback taskCallback;
     String directionMode = "driving";
+    Context actContext ;
 
     public PointsParser(Context mContext, String directionMode) {
         this.taskCallback = (TaskLoadedCallback) mContext;
         this.directionMode = directionMode;
+        actContext = mContext;
     }
 
     // Parsing the data in non-ui thread
@@ -42,6 +52,8 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
 
             // Starts parsing data
             routes = parser.parse(jObject);
+
+
             Log.d("mylog", "Executing routes");
             Log.d("mylog", routes.toString());
 
@@ -55,6 +67,23 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
     // Executes in UI thread, after the parsing process
     @Override
     protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+
+
+        Log.d("Yousaf1b","qewewqew");
+        Log.d("Yousaf1b"," dd "+result.size());
+        Log.d("Yousaf1b"," ddd "+result.toString()+"llllGGGG");
+//        Toast.makeText(actContext, ""+result.toString()+"kkkk", Toast.LENGTH_SHORT).show();
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String currentUserUid = currentUser.getUid();
+        DriverRoutInfo driverRoutInfo = new DriverRoutInfo(result);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Available Routs").child(currentUserUid).setValue(driverRoutInfo);
+        Toast.makeText(actContext, "data inserted", Toast.LENGTH_SHORT).show();
+
+
+
+
         ArrayList<LatLng> points;
         PolylineOptions lineOptions = null;
         // Traversing through all the routes
@@ -92,4 +121,12 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
             Log.d("mylog", "without Polylines drawn");
         }
     }
+
+//    RoutesObserver routesObserver1;
+//
+//
+//    public void confirm(RoutesObserver routesObserver){
+//        routesObserver1=routesObserver;
+//
+//    }
 }

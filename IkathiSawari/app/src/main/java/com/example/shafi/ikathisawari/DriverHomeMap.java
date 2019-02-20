@@ -2,12 +2,15 @@ package com.example.shafi.ikathisawari;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,9 +19,13 @@ import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
+import com.example.shafi.ikathisawari.directionhelpers.PointsParser;
 import com.example.shafi.ikathisawari.directionhelpers.TaskLoadedCallback;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -35,7 +42,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback {
+import java.util.HashMap;
+import java.util.List;
+
+public class DriverHomeMap extends FragmentActivity implements /*RoutesObserver,*/ OnMapReadyCallback, TaskLoadedCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+
+
 
     private static final String TAG = "DriverHomeMap";
     private static final float DEFAULT_ZOOM = 15f;
@@ -50,10 +62,18 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
 
     private Polyline currentPolyline;
 
+
+    GoogleApiClient mGoogleApiClient;
+    Location mLoaLocation;
+    LocationRequest mLocationRequest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.driver_home_map);
+
+//        PointsParser pointsParser=new PointsParser(this, "driving");
+//        pointsParser.confirm(this);
 
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -272,6 +292,41 @@ public class DriverHomeMap extends FragmentActivity implements OnMapReadyCallbac
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+//    @Override
+//    public void theTaskIsDone(List<List<HashMap<String, String>>> routes) {
+//
+//        Toast.makeText(this, "dsadasd", Toast.LENGTH_SHORT).show();
+//        Log.d("Yousaf","absashifhsefhsa");
+//
+//    }
 }
 
 

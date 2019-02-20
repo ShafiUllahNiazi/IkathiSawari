@@ -217,8 +217,8 @@ public class RiderHomeMap extends FragmentActivity implements OnMapReadyCallback
         Intent intent = new Intent(RiderHomeMap.this, RiderDataCarrier.class);
         Log.i(TAG, "sendData: current" + latLngCurrent.latitude + "  " + latLngCurrent.longitude );
         Log.i(TAG, "sendData: destination " + latLngDestination.latitude + "  " + latLngDestination.longitude);
-        intent.putExtra("currentLat", latLngCurrent.latitude);
-        intent.putExtra("currentLong", latLngCurrent.longitude);
+        intent.putExtra("originLat", latLngCurrent.latitude);
+        intent.putExtra("originLong", latLngCurrent.longitude);
         intent.putExtra("destinationLat", latLngDestination.latitude);
         intent.putExtra("destinationLong", latLngDestination.longitude);
 

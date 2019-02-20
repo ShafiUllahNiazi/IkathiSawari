@@ -1,5 +1,7 @@
 package com.example.shafi.ikathisawari.directionhelpers;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -47,7 +49,12 @@ public class DataParser {
                     }
                     routes.add(path);
                 }
+
+                Log.d("myPath","Path "+ path.toString());
             }
+
+            Log.d("myRoutes","Routes "+ routes.toString());
+
 
         } catch (JSONException e) {
             e.printStackTrace();
