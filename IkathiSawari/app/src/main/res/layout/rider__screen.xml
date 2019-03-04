@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".controllers.activities.Rider_Screen">
+
+    <FrameLayout
+        android:id="@+id/rider_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+
+        >
+
+
+    </FrameLayout>
+
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigationRider"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/navigation_rider" />
+
+</LinearLayout>

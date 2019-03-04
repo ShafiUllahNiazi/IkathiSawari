@@ -88,13 +88,15 @@ public class RiderDataCarrier extends AppCompatActivity {
         getDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getNearbyDriver();
+                ArrayList<String>drivers = new ArrayList<>();
+                drivers = getNearbyDriver();
+                Log.d(TAG, "Driver list sizeee" + drivers.size());
             }
         });
 
     }
 
-    private void getNearbyDriver() {
+    private ArrayList<String> getNearbyDriver() {
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Available Routs");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -128,6 +130,7 @@ public class RiderDataCarrier extends AppCompatActivity {
             }
         });
 
+        return availableDrivers;
 
 
 //        databaseReference.addValueEventListener(new ValueEventListener() {

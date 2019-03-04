@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.controllers.FindAvailableDrivers;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -30,6 +31,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
 
 public class RiderHomeMap extends FragmentActivity implements OnMapReadyCallback {
 
@@ -225,6 +228,12 @@ public class RiderHomeMap extends FragmentActivity implements OnMapReadyCallback
         //setResult(RESULT_OK, intent);
         startActivity(intent);
         finish();
+
+//        FindAvailableDrivers findAvailableDrivers = new FindAvailableDrivers(latLngCurrent.latitude,latLngCurrent.longitude,latLngDestination.latitude,latLngDestination.longitude);
+//        ArrayList<String> drivers= new ArrayList<>();
+//        drivers = findAvailableDrivers.getAvailableDrivers();
+//
+//        Log.d("driversinMap"," ff " + drivers.size());
     }
 }
 

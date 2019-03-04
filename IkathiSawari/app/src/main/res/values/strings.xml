@@ -7,4 +7,8 @@
     <string name="title_activity_driver_home_map">Map</string>
     <string name="title_activity_rider_home_map">Map</string>
     <string name="title_activity_driver_map_route_direction">MapDirection</string>
+    <string name="title_activity_rider_home">RiderHome</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Requests</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

@@ -56,7 +56,8 @@
         <activity android:name=".Rider_Profile" />
         <activity
             android:name=".DriverMapRouteDirection"
-            android:label="@string/title_activity_driver_map_route_direction"></activity>
+            android:label="@string/title_activity_driver_map_route_direction" />
+        <activity android:name=".controllers.activities.Rider_Screen"></activity>
     </application>
 
 </manifest>

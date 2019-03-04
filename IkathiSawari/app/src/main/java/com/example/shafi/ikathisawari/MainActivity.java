@@ -18,6 +18,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shafi.ikathisawari.controllers.activities.Rider_Screen;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     if (dt.getKey().toString().equals(user.getUid().toString())) {
 //                                            logIn_progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(MainActivity.this, Rider_Home.class));
+                        startActivity(new Intent(MainActivity.this, Rider_Screen.class));
                     }
                 }
             }
