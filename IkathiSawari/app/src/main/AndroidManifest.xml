@@ -29,6 +29,8 @@
         <activity android:name=".SignUpScreen" />
         <activity android:name=".Rider_Home" />
         <activity android:name=".Driver_Home" />
+
+        <service android:name=".MyIntentService" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -57,7 +59,8 @@
         <activity
             android:name=".DriverMapRouteDirection"
             android:label="@string/title_activity_driver_map_route_direction" />
-        <activity android:name=".controllers.activities.Rider_Screen"></activity>
+        <activity android:name=".controllers.activities.Rider_Screen" />
+        <activity android:name=".controllers.activities.Driver_Screen"></activity>
     </application>
 
 </manifest>

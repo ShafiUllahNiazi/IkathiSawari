@@ -2,11 +2,9 @@ package com.example.shafi.ikathisawari;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,10 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
-import com.example.shafi.ikathisawari.directionhelpers.PointsParser;
-import com.example.shafi.ikathisawari.directionhelpers.TaskLoadedCallback;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -42,10 +37,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.HashMap;
-import java.util.List;
-
-public class DriverHomeMap extends FragmentActivity implements /*RoutesObserver,*/ OnMapReadyCallback, TaskLoadedCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class DriverHomeMap extends FragmentActivity implements /*RoutesObserver,*/ OnMapReadyCallback /*TaskLoadedCallback*/, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
 
 
@@ -146,7 +138,7 @@ public class DriverHomeMap extends FragmentActivity implements /*RoutesObserver,
     }
 
     private void showRouteOnMap() {
-        new FetchURL(DriverHomeMap.this).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+//        new FetchURL(DriverHomeMap.this).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
     }
 
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
@@ -166,12 +158,12 @@ public class DriverHomeMap extends FragmentActivity implements /*RoutesObserver,
     }
 
 
-    @Override
-    public void onTaskDone(Object... values) {
-        if (currentPolyline != null)
-            currentPolyline.remove();
-        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-    }
+//    @Override
+//    public void onTaskDone(Object... values) {
+//        if (currentPolyline != null)
+//            currentPolyline.remove();
+//        currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
+//    }
 
     /**
      * Manipulates the map once available.

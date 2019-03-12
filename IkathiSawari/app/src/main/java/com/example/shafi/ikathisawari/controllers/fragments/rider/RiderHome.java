@@ -29,6 +29,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
+import com.example.shafi.ikathisawari.models.DriverInfo;
 import com.example.shafi.ikathisawari.models.DriverRoutInfo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -93,9 +95,11 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     private DatabaseReference mRiderLocationPoints;
-    ArrayList<String> availableDriversList;
+    ArrayList<AvailableDriverInfo> availableDriversList;
     private float radius = 100;
     Double originLat, originLong, destinationLat, destinationLong;
+
+    private DatabaseReference mDriverData;
 
 
     public RiderHome() {
@@ -129,6 +133,93 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    private static View view;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+        }
+        try {
+            view = inflater.inflate(R.layout.fragment_rider_home, container, false);
+        } catch (InflateException e) {
+            /* map is already there, just return view as it is */
+        }
+//        View view =  inflater.inflate(R.layout.fragment_rider_home, container, false);
+        availableDriversList = new ArrayList<>();
+
+        latLngCurrent = null;
+        latLngDestination = null;
+
+        saveRouteFragment = view.findViewById(R.id.saveRouteFragment);
+
+//        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
+//                .findFragmentById(R.id.mapRiderFragment);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.mapRiderFragment);
+
+        if(mapFragment == null){
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            mapFragment = SupportMapFragment.newInstance();
+            ft.replace(R.id.mapRiderFragment,mapFragment).commit();
+        }
+
+        mapFragment.getMapAsync(this);
+
+
+
+
+
+        autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_originRider_Fragment);
+        autocompleteFragment.setText(null);
+        autocompleteFragment.setHint("Select your origin");
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                mMap.clear();
+                latLngCurrent = place.getLatLng();
+                Log.i(TAG, "onPlaceSelected: current location" + latLngCurrent.latitude + " " + latLngCurrent.longitude);
+                Marker marker = mMap.addMarker(new MarkerOptions().position(latLngCurrent));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 13));
+            }
+
+            @Override
+            public void onError(Status status) {
+
+            }
+        });
+
+        autocompleteFragment_destination = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_destinationRider_Fragment);
+        autocompleteFragment_destination.setText(null);
+        autocompleteFragment_destination.setHint("Select your destination");
+        autocompleteFragment_destination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                latLngDestination = place.getLatLng();
+                Log.i(TAG, "onPlaceSelected: destination location" + latLngDestination.latitude + " " + latLngDestination.longitude);
+                Marker marker = mMap.addMarker(new MarkerOptions().position(latLngDestination));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 13));
+            }
+
+            @Override
+            public void onError(Status status) {
+
+            }
+        });
+
+
+
+
+        return view;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -153,6 +244,8 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
                     originLong = latLngCurrent.longitude;
                     destinationLat = latLngDestination.latitude;
                     destinationLong = latLngDestination.longitude;
+
+                    Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
 
                     saveIntoFirebase();
                     getNearByDrivers();
@@ -183,15 +276,31 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
                     driverRoutInfo.setRoutes((List<List<HashMap<String, String>>>) dd.get("routes"));
                     Log.d(TAG, "onDataChange: "+dd.get("routes").toString());
-                    String availableDriver=fetchNearbyDriver(driver, driverRoutInfo);
+                    final String availableDriver=fetchNearbyDriver(driver, driverRoutInfo);
+                    Log.d(TAG,"String "+ availableDriver);
+
+                    mDriverData = FirebaseDatabase.getInstance().getReference("users").child("Driver");
+                    mDriverData.child(availableDriver).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
+                            AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo);
+                            availableDriversList.add(availableDriverInfo);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
 
-                    availableDriversList.add(availableDriver);
+
                 }
 
 
 //                Log.d(TAG,latLngCurrent)
-                Log.d(TAG, "Driver list size" + availableDriversList.size()+" "+availableDriversList.get(0)+" "+availableDriversList.get(1));
+//                Log.d(TAG, "Driver list size" + availableDriversList.size()+" "+availableDriversList.get(0)+" "+availableDriversList.get(1));
                 Toast.makeText(getActivity(), "Driver list size" + availableDriversList.size(), Toast.LENGTH_SHORT).show();
                 showAvailableDrivers(availableDriversList);
 
@@ -205,10 +314,10 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void showAvailableDrivers(ArrayList<String> availableDriversList) {
+    private void showAvailableDrivers(ArrayList<AvailableDriverInfo> availableDriversList) {
         AvailableDrivers availableDrivers = new AvailableDrivers();
         Bundle b = new Bundle();
-        b.putStringArrayList("availableDriversList",availableDriversList);
+        b.putParcelableArrayList("availableDriversList",availableDriversList);
         availableDrivers.setArguments(b);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -218,6 +327,8 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
     }
 
     private String fetchNearbyDriver(String driverKey, DriverRoutInfo driverRoutInfo) {
+
+        Log.d("dddriver",driverKey );
 
         boolean originFound = false;
         boolean destinationFound = false;
@@ -229,12 +340,14 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
         List<List<HashMap<String, String>>> result = driverRoutInfo.getRoutes();
         for (int i = 0; i < result.size(); i++) {
 
+            Log.d("mydebug", "For 1");
             // Fetching i-th route
             List<HashMap<String, String>> path = result.get(i);
             // Fetching all the points in i-th route
             for (int j = 0; j < path.size(); j++) {
 
 
+                Log.d("mydebug", "For 2");
                 HashMap<String, String> point = path.get(j);
                 double lat = Double.parseDouble(point.get("lat"));
                 double lng = Double.parseDouble(point.get("lng"));
@@ -257,7 +370,10 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 //                Toast.makeText(this, "dis "+rr, Toast.LENGTH_SHORT).show();
                 Log.d("myLocationss", "" + originDistance + " " + destinationDistance);
                 if (originDistance < radius) {
+                    Log.d("mydebug", "if 1");
+
                     if (originDistance < originFoundPointDistance) {
+                        Log.d("mydebug", "if 2");
                         originFound = true;
                         originFoundPoint = position;
                         originFoundPointDistance = originDistance;
@@ -268,7 +384,9 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
                 }
                 if (destinationDistance < radius) {
+                    Log.d("mydebug", "if 3");
                     if (destinationDistance < destinationFoundPointDistance) {
+                        Log.d("mydebug", "if 4");
                         destinationFound = true;
                         destinationFoundPoint = position;
                         destinationFoundPointDistance = destinationDistance;
@@ -283,6 +401,8 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
 
             if (originFound == true && destinationFound == true) {
+
+                Log.d("mydebug", "if 5");
                 Location originFoundLocation = new Location(LocationManager.GPS_PROVIDER);
                 originFoundLocation.setLatitude(originFoundPoint.latitude);
                 originFoundLocation.setLongitude(originFoundPoint.longitude);
@@ -306,13 +426,19 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
                 float riderOriginToDriverOrigin = originFoundLocation.distanceTo(driverOriginLocation);
                 float riderDestinationToDriverOrigin = destinationFoundLocation.distanceTo(driverOriginLocation);
 
+                Log.d("diffff",""+riderOriginToDriverOrigin);
+                Log.d("diffff",""+riderDestinationToDriverOrigin);
+
 
                 if (riderOriginToDriverOrigin < riderDestinationToDriverOrigin) {
 
+                    Log.d("mydebug", "if 6");
 //                    Toast.makeText(getActivity(), "PathFound", Toast.LENGTH_SHORT).show();
                     Log.d("FoundLocation", "path Found");
                     Log.d("availableDriver", "path Found");
 //                    availableDrivers.add(driverKey);
+
+                    Log.d("ddddriver",driverKey);
                     return driverKey;
 //                    Log.d("availableDriver", "Driver list added item " + availableDrivers.size());
 
@@ -324,7 +450,7 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
         }
 
 
-        return null;
+        return "kkk";
     }
 
     private void saveIntoFirebase() {
@@ -350,87 +476,7 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private static View view;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        if (view != null) {
-            ViewGroup parent = (ViewGroup) view.getParent();
-            if (parent != null)
-                parent.removeView(view);
-        }
-        try {
-            view = inflater.inflate(R.layout.fragment_rider_home, container, false);
-        } catch (InflateException e) {
-            /* map is already there, just return view as it is */
-        }
-//        View view =  inflater.inflate(R.layout.fragment_rider_home, container, false);
-        availableDriversList = new ArrayList<>();
-
-        saveRouteFragment = view.findViewById(R.id.saveRouteFragment);
-
-//        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
-//                .findFragmentById(R.id.mapRiderFragment);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.mapRiderFragment);
-
-        if(mapFragment == null){
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            mapFragment = SupportMapFragment.newInstance();
-            ft.replace(R.id.mapRiderFragment,mapFragment).commit();
-        }
-
-        mapFragment.getMapAsync(this);
-
-
-
-
-
-        autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_originRider_Fragment);
-        autocompleteFragment.setHint("Select your origin");
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                mMap.clear();
-                latLngCurrent = place.getLatLng();
-                Log.i(TAG, "onPlaceSelected: current location" + latLngCurrent.latitude + " " + latLngCurrent.longitude);
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLngCurrent));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 13));
-            }
-
-            @Override
-            public void onError(Status status) {
-
-            }
-        });
-
-        autocompleteFragment_destination = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_destinationRider_Fragment);
-        autocompleteFragment_destination.setHint("Select your destination");
-        autocompleteFragment_destination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                latLngDestination = place.getLatLng();
-                Log.i(TAG, "onPlaceSelected: destination location" + latLngDestination.latitude + " " + latLngDestination.longitude);
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLngDestination));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 13));
-            }
-
-            @Override
-            public void onError(Status status) {
-
-            }
-        });
-
-
-
-
-        return view;
-    }
 
     private boolean isServicesOK() {
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
@@ -513,7 +559,6 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

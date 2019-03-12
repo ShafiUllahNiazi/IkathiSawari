@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.AvailableDriversAdapter;
+import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
+import com.example.shafi.ikathisawari.models.DriverInfo;
 
 import java.util.ArrayList;
 
@@ -33,7 +35,7 @@ public class AvailableDrivers extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private AvailableDriversAdapter availableDriversAdapter;
 
-    ArrayList<String> availableDriversList;
+    ArrayList<AvailableDriverInfo> availableDriversList;
 
 
     public AvailableDrivers() {
@@ -74,11 +76,11 @@ public class AvailableDrivers extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_available_drivers, container, false);
-        availableDriversList = getArguments().getStringArrayList("availableDriversList");
+        availableDriversList = getArguments().getParcelableArrayList("availableDriversList");
         recyclerView = view.findViewById(R.id.recyclerViewAvailableDrivers);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        availableDriversAdapter = new AvailableDriversAdapter(getActivity(), availableDriversList);
+        availableDriversAdapter = new AvailableDriversAdapter(getActivity(),getActivity().getSupportFragmentManager(), availableDriversList);
 
         recyclerView.setAdapter(availableDriversAdapter);
 

@@ -9,7 +9,9 @@ import android.widget.Toast;
 import com.example.shafi.ikathisawari.DriverHomeMap;
 import com.example.shafi.ikathisawari.RoutesObserver;
 import com.example.shafi.ikathisawari.models.DriverRoutInfo;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,14 +29,21 @@ import java.util.List;
  */
 
 public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-    TaskLoadedCallback taskCallback;
+//    TaskLoadedCallback taskCallback;
     String directionMode = "driving";
-    Context actContext ;
+//    Context actContext ;
+    private GoogleMap mMap;
+    private Polyline currentPolyline;
 
-    public PointsParser(Context mContext, String directionMode) {
-        this.taskCallback = (TaskLoadedCallback) mContext;
+    public interface TaskLoadedCallback {
+        void onTaskDone(Object... values);
+    }
+
+    public PointsParser(GoogleMap map, Polyline currentPolyline, String directionMode) {
+//        this.taskCallback = (TaskLoadedCallback) mContext;
         this.directionMode = directionMode;
-        actContext = mContext;
+        this.mMap = map;
+        this.currentPolyline = currentPolyline;
     }
 
     // Parsing the data in non-ui thread
@@ -79,7 +88,7 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
         DriverRoutInfo driverRoutInfo = new DriverRoutInfo(result);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("Available Routs").child(currentUserUid).setValue(driverRoutInfo);
-        Toast.makeText(actContext, "data inserted", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(actContext, "data inserted", Toast.LENGTH_SHORT).show();
 
 
 
@@ -114,8 +123,19 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
 
         // Drawing polyline in the Google Map for the i-th route
         if (lineOptions != null) {
-            //mMap.addPolyline(lineOptions);
-            taskCallback.onTaskDone(lineOptions);
+
+            if (currentPolyline != null)
+                currentPolyline.remove();
+            currentPolyline = mMap.addPolyline(lineOptions);
+
+            Log.d("mylog", "add polyline");
+//            taskCallback.onTaskDone(lineOptions);
+//            if (currentPolyline != null){
+//            currentPolyline.remove();
+//            currentPolyline = map.addPolyline(lineOptions);
+//        }
+
+
 
         } else {
             Log.d("mylog", "without Polylines drawn");
@@ -129,4 +149,5 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
 //        routesObserver1=routesObserver;
 //
 //    }
+
 }

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,12 +23,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Driver_Home extends AppCompatActivity {
 
     private static final String TAG = "Driver_Home";
-    
+    private static final int PICKUP_PLACE_PICKER_REQUEST = 101;
+
     private Button home_btn,driverRouteMap;
 
     // google maps
@@ -36,10 +40,14 @@ public class Driver_Home extends AppCompatActivity {
     private final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private boolean mLocationPermissionGranted = false;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver__home);
+        Intent intent = new Intent(this,MyIntentService.class);
+        startService(intent);
         initializeViews();
     }
 
@@ -71,19 +79,44 @@ public class Driver_Home extends AppCompatActivity {
         driverRouteMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isServicesOK()){
-                    if(isLocationEnabled()){
-                        getLocationPermission();
-                        if (mLocationPermissionGranted){
-                            navigateToMapRoute();
-                        }
-                    }
-                }else {
-                    showSettingAlert();
-                }
+//                if (isServicesOK()){
+//                    if(isLocationEnabled()){
+//                        getLocationPermission();
+//                        if (mLocationPermissionGranted){
+//                            navigateToMapRoute();
+//                        }
+//                    }
+//                }else {
+//                    showSettingAlert();
+//                }
+                placePicker();
 
             }
         });
+    }
+
+    private void placePicker() {
+
+        PlacePicker.IntentBuilder builder =  new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(this), PICKUP_PLACE_PICKER_REQUEST);
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICKUP_PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                final Place pickUpPlace = PlacePicker.getPlace(this, data);
+                Toast.makeText(this, ""+pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
+
+
+            }
+        }
     }
 
     private void navigateToMapRoute() {
