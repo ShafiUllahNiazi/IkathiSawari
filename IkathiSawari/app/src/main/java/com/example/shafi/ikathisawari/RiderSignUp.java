@@ -183,7 +183,7 @@ public class RiderSignUp  extends Fragment {
                             String mobile = mobile_Rider.getText().toString();
                             String cnic =  cnic_Rider.getText().toString();
 
-                            RiderInfo riderInfo = new RiderInfo(name, email, mobile, cnic);
+                            RiderInfo riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic);
 
                             firebaseDatabase = FirebaseDatabase.getInstance();
                             databaseReference=firebaseDatabase.getReference();

@@ -1,15 +1,12 @@
 package com.example.shafi.ikathisawari.controllers.fragments.rider;
 
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -21,31 +18,30 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
 import com.example.shafi.ikathisawari.models.DriverInfo;
 import com.example.shafi.ikathisawari.models.DriverRoutInfo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,186 +52,139 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RiderHome#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class RiderHome extends Fragment implements OnMapReadyCallback {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = "RiderHome1";
 
+    private static final int PICKUP_Origin_PLACE_PICKER_REQUEST = 256;
+    private static final int PICKUP_Destination_PLACE_PICKER_REQUEST = 671;
 
     private static final int ERROR_DIALOGE_REQUEST = 9001;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1122;
-    private static final float DEFAULT_ZOOM = 15f;
 
     private final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
-    private boolean mLocationPermissionGranted = false;
-    private static final String TAG = "RiderHome";
+    private boolean mLocationPermissionGranted;
 
-    private PlaceAutocompleteFragment autocompleteFragment;
-    private PlaceAutocompleteFragment autocompleteFragment_destination;
+
+    Button selectOriginRider, selectDestinationRider,showRouteRider,saveRouteRider;
+    TextView originLocationTextRider, destinationLocationTextRider;
+    Spinner driverSpinner;
+
     private GoogleMap mMap;
     private LatLng latLngCurrent, latLngDestination;
+    Double originLat, originLong, destinationLat, destinationLong;
 
-    Button saveRouteFragment ;
-
+    private static final float DEFAULT_ZOOM = 15f;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+
 
     private DatabaseReference mRiderLocationPoints;
     ArrayList<AvailableDriverInfo> availableDriversList;
     private float radius = 100;
-    Double originLat, originLong, destinationLat, destinationLong;
-
     private DatabaseReference mDriverData;
 
 
-    public RiderHome() {
+    public RiderHome1() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RiderHome.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RiderHome newInstance(String param1, String param2) {
-        RiderHome fragment = new RiderHome();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    private static View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        if (view != null) {
-            ViewGroup parent = (ViewGroup) view.getParent();
-            if (parent != null)
-                parent.removeView(view);
-        }
-        try {
-            view = inflater.inflate(R.layout.fragment_rider_home, container, false);
-        } catch (InflateException e) {
-            /* map is already there, just return view as it is */
-        }
-//        View view =  inflater.inflate(R.layout.fragment_rider_home, container, false);
-        availableDriversList = new ArrayList<>();
-
+        View view =  inflater.inflate(R.layout.fragment_rider_home1, container, false);
+        mLocationPermissionGranted = false;
         latLngCurrent = null;
         latLngDestination = null;
 
-        saveRouteFragment = view.findViewById(R.id.saveRouteFragment);
 
-//        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
-//                .findFragmentById(R.id.mapRiderFragment);
+
+//        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd hhmmss");
+//        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd hhmmss");
+//        dateFormatter.setLenient(false);
+//        Date today = new Date();
+//        String s = dateFormatter.format(today);
+//        Toast.makeText(getActivity(), "ss "+ s, Toast.LENGTH_SHORT).show();
+
+
+        originLocationTextRider = view.findViewById(R.id.textselectOriginRider);
+        destinationLocationTextRider = view.findViewById(R.id.textselectDestinationRider);
+        selectOriginRider = view.findViewById(R.id.selectOriginRider);
+        selectDestinationRider = view.findViewById(R.id.selectDestinationRider);
+        showRouteRider = view.findViewById(R.id.showRouteR1);
+        saveRouteRider = view.findViewById(R.id.saveRouteR1);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.mapRiderFragment);
+                .findFragmentById(R.id.mapDriverFragment1);
 
-        if(mapFragment == null){
+
+        if (mapFragment == null) {
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             mapFragment = SupportMapFragment.newInstance();
-            ft.replace(R.id.mapRiderFragment,mapFragment).commit();
+            ft.replace(R.id.mapRiderFragment1, mapFragment).commit();
         }
 
         mapFragment.getMapAsync(this);
 
-
-
-
-
-        autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_originRider_Fragment);
-        autocompleteFragment.setText(null);
-        autocompleteFragment.setHint("Select your origin");
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        selectOriginRider.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPlaceSelected(Place place) {
-                mMap.clear();
-                latLngCurrent = place.getLatLng();
-                Log.i(TAG, "onPlaceSelected: current location" + latLngCurrent.latitude + " " + latLngCurrent.longitude);
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLngCurrent));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 13));
-            }
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(getActivity()), PICKUP_Origin_PLACE_PICKER_REQUEST);
 
-            @Override
-            public void onError(Status status) {
+                } catch (Exception e) {
 
-            }
-        });
-
-        autocompleteFragment_destination = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_destinationRider_Fragment);
-        autocompleteFragment_destination.setText(null);
-        autocompleteFragment_destination.setHint("Select your destination");
-        autocompleteFragment_destination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                latLngDestination = place.getLatLng();
-                Log.i(TAG, "onPlaceSelected: destination location" + latLngDestination.latitude + " " + latLngDestination.longitude);
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLngDestination));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 13));
-            }
-
-            @Override
-            public void onError(Status status) {
-
-            }
-        });
-
-
-
-
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (isServicesOK()){
-            if(isLocationEnabled()){
-                getLocationPermission();
-                if (mLocationPermissionGranted){
-                    navigateToMap();
                 }
             }
-        }else {
-            showSettingAlert();
-        }
+        });
+
+        selectDestinationRider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(getActivity()), PICKUP_Destination_PLACE_PICKER_REQUEST);
+
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
+        showRouteRider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (latLngCurrent != null && latLngDestination != null) {
+
+                    new FetchURL(mMap,"showRoute",getActivity(), latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
+                }
 
 
-        saveRouteFragment.setOnClickListener(new View.OnClickListener() {
+
+            }
+        });
+
+        saveRouteRider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (latLngCurrent!=null && latLngDestination!=null){
@@ -247,8 +196,10 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
                     Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
 
+                    availableDriversList = new ArrayList<>();
                     saveIntoFirebase();
                     getNearByDrivers();
+
                     Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
@@ -256,6 +207,47 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
             }
         });
+
+
+        return view;
+    }
+
+    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        // Mode
+        String mode = "mode=" + directionMode;
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + mode;
+        // Output format
+        String output = "json";
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
+        return url;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICKUP_Origin_PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
+                originLocationTextRider.setText(pickUpPlace.getAddress());
+                latLngCurrent = pickUpPlace.getLatLng();
+                Toast.makeText(getActivity(), pickUpPlace.getAddress() + "origin " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == PICKUP_Destination_PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
+                destinationLocationTextRider.setText(pickUpPlace.getAddress());
+                latLngDestination = pickUpPlace.getLatLng();
+                Toast.makeText(getActivity(), "Destination  " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
     private void getNearByDrivers() {
@@ -295,7 +287,6 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
                             }
                         });
                     }
-
 
 
 
@@ -479,7 +470,65 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            if (isServicesOK()) {
+                if (isLocationEnabled()) {
+                    getLocationPermission();
+                    if (mLocationPermissionGranted) {
+                        Toast.makeText(getActivity(), "permission in on map ready", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                showSettingAlert();
+            }
 
+
+
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        getDeviceLocation();
+    }
+
+    private void getDeviceLocation() {
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        try {
+            Task locationResult = mFusedLocationProviderClient.getLastLocation();
+            locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if (task.isSuccessful()) {
+                        Location currentLocation = (Location) task.getResult();
+                        if (currentLocation != null) {
+                            latLngCurrent = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+//                            Log.i(TAG, "onComplete: current location" + latLngCurrent.latitude + " " + latLngCurrent.longitude);
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngCurrent, DEFAULT_ZOOM));
+                            mMap.addMarker(new MarkerOptions().position(latLngCurrent).title("My Location"));
+                        } else
+                            Toast.makeText(getActivity(), "Unable to Fetch Current Location", Toast.LENGTH_LONG).show();
+                    } else {
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    }
+                }
+            });
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
 
     private boolean isServicesOK() {
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
@@ -497,7 +546,7 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
                 !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             showSettingAlert();
             return false;
@@ -529,9 +578,12 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
         Log.i(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION};
         if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "getLocationPermission: all permission granted");
             mLocationPermissionGranted = true;
+            Intent intent = getActivity().getIntent();
+            getActivity().finish();
+            startActivity(intent);
         } else {
             ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
@@ -541,61 +593,15 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionsResult: called");
 
-        switch (requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE:{
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED ){
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Log.i(TAG, "onRequestPermissionsResult: permission failed");
                     return;
                 }
             }
             mLocationPermissionGranted = true;
             Log.i(TAG, "onRequestPermissionsResult: permission granted");
-        }
-    }
-
-    private void navigateToMap() {
-        //navigate to map fragment
-//        Toast.makeText(getActivity(), "map called", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        getDeviceLocation();
-        //onMapClicked();
-//        onMarkerClicked();
-    }
-
-    private void getDeviceLocation() {
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        try {
-            Task locationResult = mFusedLocationProviderClient.getLastLocation();
-            locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()) {
-                        Location currentLocation = (Location) task.getResult();
-                        if (currentLocation != null){
-                            latLngCurrent = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            Log.i(TAG, "onComplete: current location" + latLngCurrent.latitude + " " + latLngCurrent.longitude);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngCurrent, DEFAULT_ZOOM));
-                            mMap.addMarker(new MarkerOptions().position(latLngCurrent).title("My Location"));
-                        }else
-                            Toast.makeText(getActivity(), "Unable to Fetch Current Location", Toast.LENGTH_LONG).show();
-                    } else {
-                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    }
-                }
-            });
-        } catch(SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
         }
     }
 }

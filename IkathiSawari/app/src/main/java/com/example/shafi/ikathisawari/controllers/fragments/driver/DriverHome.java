@@ -64,11 +64,12 @@ public class DriverHome extends Fragment implements OnMapReadyCallback {
     private final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private boolean mLocationPermissionGranted;
 
-    private LatLng latLngCurrent, latLngDestination;
+
     Button saveRouteDriverFragment;
 
     private PlaceAutocompleteFragment autocompleteFragment;
     private PlaceAutocompleteFragment autocompleteFragment_destination;
+    private LatLng latLngCurrent, latLngDestination;
     Double originLat, originLong, destinationLat, destinationLong;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -194,7 +195,7 @@ public class DriverHome extends Fragment implements OnMapReadyCallback {
     private void showRouteOnMap() {
 //        mListener.onRequirePoints(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
 
-        new FetchURL(mMap,currentPolyline).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+//        new FetchURL(mMap,currentPolyline).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
     }
 
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {

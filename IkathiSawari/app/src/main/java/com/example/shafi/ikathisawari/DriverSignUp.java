@@ -164,6 +164,8 @@ public class DriverSignUp  extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            String currentUserUid = currentUser.getUid();
                             String name = name_Driver.getText().toString();
                             String email = email_Driver.getText().toString();
                             String mobile = mobile_Driver.getText().toString();
@@ -172,13 +174,12 @@ public class DriverSignUp  extends Fragment {
                             String reg_no =  regNumber.getText().toString();
                             String seats = noOfSeats.getText().toString();
 
-                            DriverInfo driverInfo = new DriverInfo(name, email, mobile, cnic, type_model, reg_no, seats);
+                            DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic, type_model, reg_no, seats);
 
                             firebaseDatabase = FirebaseDatabase.getInstance();
                             databaseReference=firebaseDatabase.getReference();
 
-                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                            String currentUserUid = currentUser.getUid();
+
 
                             databaseReference.child("users").child("Driver").child(currentUserUid).setValue(driverInfo);
 

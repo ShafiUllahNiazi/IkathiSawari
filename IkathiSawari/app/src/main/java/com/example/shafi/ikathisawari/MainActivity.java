@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     if (dt.getKey().toString().equals(user.getUid().toString())) {
 //                                            logIn_progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(MainActivity.this, Driver_Home.class));
+                        startActivity(new Intent(MainActivity.this, Driver_Screen.class));
                     }
                 }
                 for (DataSnapshot dt : dataSnapshot.child("Rider").getChildren()) {

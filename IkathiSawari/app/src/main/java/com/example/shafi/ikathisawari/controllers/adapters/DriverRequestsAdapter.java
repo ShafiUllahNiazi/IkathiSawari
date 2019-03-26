@@ -7,31 +7,35 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
-import com.example.shafi.ikathisawari.controllers.fragments.rider.AvailableDriverProfile;
-import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
+import com.example.shafi.ikathisawari.controllers.fragments.driver.RequestRiderProfile;
+import com.example.shafi.ikathisawari.models.RiderInfo;
+import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Map;
 
-public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDriversAdapter.ViewHolder> {
-
+public class DriverRequestsAdapter extends  RecyclerView.Adapter<DriverRequestsAdapter.ViewHolder>{
     Context context;
+    ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
     FragmentManager supportFragmentManager;
-    ArrayList<AvailableDriverInfo> availableDriversList;
 
-    public AvailableDriversAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<AvailableDriverInfo> availableDriversList) {
-        this.context = context;
-        this.availableDriversList = availableDriversList;
-        this.supportFragmentManager=supportFragmentManager;
+    public DriverRequestsAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver) {
+        this.context=context;
+        this.ridersRequestsListInDriver= ridersRequestsListInDriver;
+        this.supportFragmentManager = supportFragmentManager;
     }
 
     @NonNull
@@ -45,36 +49,36 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.driversKey.setText(availableDriversList.get(i).getDriverInfo().getName());
+        viewHolder.driversKey.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getRiderInfo().getName());
         final int position = i;
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                AvailableDriverProfile availableDriverProfile = new AvailableDriverProfile();
+                RequestRiderProfile requestRiderProfile = new RequestRiderProfile();
                 Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("availableDriversList",availableDriversList);
+                bundle.putParcelableArrayList("ridersRequestsListInDriver",ridersRequestsListInDriver);
                 bundle.putInt("position",position);
-                availableDriverProfile.setArguments(bundle);
+                requestRiderProfile.setArguments(bundle);
 //                FragmentManager fragmentManager = context.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.rider_container, availableDriverProfile);
+                fragmentTransaction.replace(R.id.driver_container, requestRiderProfile);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
             }
         });
 
+
+
     }
 
     @Override
     public int getItemCount() {
-        return availableDriversList.size();
+        return ridersRequestsListInDriver.size();
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView driversKey;
 
@@ -83,5 +87,8 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
             driversKey = itemView.findViewById(R.id.driverKey);
 
         }
+
+
+
     }
 }

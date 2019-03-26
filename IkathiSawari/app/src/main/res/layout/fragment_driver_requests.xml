@@ -6,9 +6,21 @@
     tools:context=".controllers.fragments.driver.DriverRequests">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayoutRequestsDrivers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewRequestDrivers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

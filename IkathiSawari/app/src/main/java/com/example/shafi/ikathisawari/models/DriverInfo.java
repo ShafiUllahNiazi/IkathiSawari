@@ -3,12 +3,13 @@ package com.example.shafi.ikathisawari.models;
 public class DriverInfo {
 
 
-    private String name, email, mobile, cnic, type_and_model, registration_no, no_of_seats;
+    private String uid,name, email, mobile, cnic, type_and_model, registration_no, no_of_seats;
 
     public DriverInfo() {
     }
 
-    public DriverInfo(String name, String email, String mobile, String cnic, String type_and_model, String registration_no, String no_of_seats) {
+    public DriverInfo(String uid, String name, String email, String mobile, String cnic, String type_and_model, String registration_no, String no_of_seats) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
         this.mobile = mobile;
@@ -16,6 +17,14 @@ public class DriverInfo {
         this.type_and_model = type_and_model;
         this.registration_no = registration_no;
         this.no_of_seats = no_of_seats;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {
@@ -77,7 +86,8 @@ public class DriverInfo {
     @Override
     public String toString() {
         return "DriverInfo{" +
-                "name='" + name + '\'' +
+                "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", cnic='" + cnic + '\'' +

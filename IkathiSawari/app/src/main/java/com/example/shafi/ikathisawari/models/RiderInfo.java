@@ -2,15 +2,24 @@ package com.example.shafi.ikathisawari.models;
 
 public class RiderInfo {
 
-    private String name, email, mobile, cnic;
+    private String name, email, mobile, cnic,uid;
     public RiderInfo() {
     }
 
-    public RiderInfo(String name, String email, String mobile, String cnic) {
+    public RiderInfo(String uid,String name, String email, String mobile, String cnic) {
         this.name = name;
         this.email = email;
         this.mobile = mobile;
         this.cnic = cnic;
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {
@@ -52,6 +61,7 @@ public class RiderInfo {
                 ", email='" + email + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", cnic='" + cnic + '\'' +
+                ", uid='" + uid + '\'' +
                 '}';
     }
 }

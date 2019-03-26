@@ -9,8 +9,10 @@ import android.view.MenuItem;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderHome;
+import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderHome1;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderNotification;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRequests;
+import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRide;
 
 public class Rider_Screen extends AppCompatActivity  implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -28,21 +30,28 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
     }
 
     RiderHome riderHome = new RiderHome();
+    RiderHome1 riderHome1 = new RiderHome1();
+
     RiderRequests riderRequests = new RiderRequests();
     RiderNotification riderNotification = new RiderNotification();
+    RiderRide riderRide = new RiderRide();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         Log.d("asdfg","clicked");
         switch (menuItem.getItemId()){
             case R.id.navigation_home_rider:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderHome).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderHome1).addToBackStack(null).commit();
+//                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderHome).addToBackStack(null).commit();
                 return true;
             case R.id.navigation_requests_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderRequests).commit();
                 return true;
             case R.id.navigation_notifications_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderNotification).commit();
+                return true;
+            case R.id.navigation_ride_rider:
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderRide).commit();
                 return true;
         }
         return false;

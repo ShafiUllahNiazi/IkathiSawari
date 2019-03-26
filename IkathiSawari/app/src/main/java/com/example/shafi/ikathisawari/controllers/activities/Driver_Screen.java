@@ -8,8 +8,10 @@ import android.view.MenuItem;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverHome;
+import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverHome1;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverNotification;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRequests;
+import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRide;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 
 public class Driver_Screen extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener/*, DriverHome.OnRequirePoints */{
@@ -26,14 +28,16 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
     }
 
     DriverHome driverHome = new DriverHome();
-   DriverRequests driverRequests = new DriverRequests();
+    DriverHome1 driverHome1 = new DriverHome1();
+    DriverRequests driverRequests = new DriverRequests();
     DriverNotification driverNotification = new DriverNotification();
+    DriverRide driverRide = new DriverRide();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.navigation_home_rider:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverHome).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverHome1).addToBackStack(null).commit();
                 return true;
             case R.id.navigation_requests_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverRequests).commit();
@@ -41,6 +45,10 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
             case R.id.navigation_notifications_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverNotification).commit();
                 return true;
+            case R.id.navigation_ride_rider:
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverRide).commit();
+                return true;
+
         }
         return false;
     }
