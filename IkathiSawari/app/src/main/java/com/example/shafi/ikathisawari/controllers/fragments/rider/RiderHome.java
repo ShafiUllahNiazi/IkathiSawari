@@ -7,9 +7,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -272,7 +269,7 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
 
                     Map<String,Object> dd = (Map<String, Object>) myDrivers.get(driver);
 
-                    DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
+                    final DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
 
                     driverRoutInfo.setRoutes((List<List<HashMap<String, String>>>) dd.get("routes"));
                     Log.d(TAG, "onDataChange: "+dd.get("routes").toString());
@@ -285,7 +282,7 @@ public class RiderHome extends Fragment implements OnMapReadyCallback {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo);
+                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo, driverRoutInfo);
                                 availableDriversList.add(availableDriverInfo);
                             }
 

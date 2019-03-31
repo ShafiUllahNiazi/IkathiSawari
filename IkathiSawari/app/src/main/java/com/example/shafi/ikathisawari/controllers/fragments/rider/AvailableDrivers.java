@@ -13,6 +13,7 @@ import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.AvailableDriversAdapter;
 import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
 import com.example.shafi.ikathisawari.models.DriverInfo;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -77,10 +78,13 @@ public class AvailableDrivers extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_available_drivers, container, false);
         availableDriversList = getArguments().getParcelableArrayList("availableDriversList");
+        LatLng fromPosition = getArguments().getParcelable("from_position");
+        LatLng toPosition = getArguments().getParcelable("to_position");
+
         recyclerView = view.findViewById(R.id.recyclerViewAvailableDrivers);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        availableDriversAdapter = new AvailableDriversAdapter(getActivity(),getActivity().getSupportFragmentManager(), availableDriversList);
+        availableDriversAdapter = new AvailableDriversAdapter(getActivity(),getActivity().getSupportFragmentManager(), availableDriversList,fromPosition,toPosition);
 
         recyclerView.setAdapter(availableDriversAdapter);
 

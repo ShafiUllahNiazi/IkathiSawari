@@ -3,16 +3,20 @@ package com.example.shafi.ikathisawari.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.shafi.ikathisawari.models.DriverRoutInfo;
+import com.google.android.gms.maps.model.LatLng;
 
 public class AvailableDriverInfo implements Parcelable {
     String driverKey;
     DriverInfo driverInfo;
+    DriverRoutInfo driverRoutInfo;
 
-    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo) {
+
+    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo) {
         this.driverKey = driverKey;
         this.driverInfo = driverInfo;
+        this.driverRoutInfo = driverRoutInfo;
     }
+
 
     protected AvailableDriverInfo(Parcel in) {
         driverKey = in.readString();
@@ -38,6 +42,9 @@ public class AvailableDriverInfo implements Parcelable {
         return driverInfo;
     }
 
+    public DriverRoutInfo getDriverRoutInfo() {
+        return driverRoutInfo;
+    }
 
     @Override
     public int describeContents() {

@@ -264,7 +264,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 
                     Map<String,Object> dd = (Map<String, Object>) myDrivers.get(driver);
 
-                    DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
+                    final DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
 
                     driverRoutInfo.setRoutes((List<List<HashMap<String, String>>>) dd.get("routes"));
                     Log.d(TAG, "onDataChange: "+dd.get("routes").toString());
@@ -277,7 +277,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo);
+                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo);
                                 availableDriversList.add(availableDriverInfo);
                             }
 
@@ -312,6 +312,8 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
         AvailableDrivers availableDrivers = new AvailableDrivers();
         Bundle b = new Bundle();
         b.putParcelableArrayList("availableDriversList",availableDriversList);
+        b.putParcelable("from_position", latLngCurrent);
+        b.putParcelable("to_position", latLngDestination);
         availableDrivers.setArguments(b);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

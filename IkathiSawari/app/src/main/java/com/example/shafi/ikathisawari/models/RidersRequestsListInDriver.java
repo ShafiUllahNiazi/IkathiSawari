@@ -3,11 +3,12 @@ package com.example.shafi.ikathisawari.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class RidersRequestsListInDriver implements Parcelable {
+public class RidersRequestsListInDriver  implements Parcelable{
     String dateAndTime;
-    RiderInfo riderInfo;
+//    RiderInfo riderInfo;
+    MakeRequest riderInfo;
 
-    public RidersRequestsListInDriver(String dateAndTime, RiderInfo riderInfo) {
+    public RidersRequestsListInDriver(String dateAndTime, MakeRequest riderInfo) {
         this.dateAndTime = dateAndTime;
         this.riderInfo = riderInfo;
     }
@@ -32,24 +33,8 @@ public class RidersRequestsListInDriver implements Parcelable {
         return dateAndTime;
     }
 
-    public void setDateAndTime(String dateAndTime) {
-        this.dateAndTime = dateAndTime;
-    }
-
-    public RiderInfo getRiderInfo() {
+    public MakeRequest getRiderInfo() {
         return riderInfo;
-    }
-
-    public void setRiderInfo(RiderInfo riderInfo) {
-        this.riderInfo = riderInfo;
-    }
-
-    @Override
-    public String toString() {
-        return "RidersRequestsListInDriver{" +
-                "dateAndTime='" + dateAndTime + '\'' +
-                ", riderInfo=" + riderInfo +
-                '}';
     }
 
     @Override

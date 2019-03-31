@@ -60,7 +60,11 @@
             android:name=".DriverMapRouteDirection"
             android:label="@string/title_activity_driver_map_route_direction" />
         <activity android:name=".controllers.activities.Rider_Screen" />
-        <activity android:name=".controllers.activities.Driver_Screen"></activity>
+        <activity android:name=".controllers.activities.Driver_Screen" />
+        <activity
+            android:name=".controllers.activities.Driver_Screen1"
+            android:label="@string/title_activity_driver__screen1"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

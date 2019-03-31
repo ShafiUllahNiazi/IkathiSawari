@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.DriverRequestsAdapter;
+import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RiderInfo;
 import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,15 +53,17 @@ public class DriverRequests extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_driver_requests, container, false);
         ridersRequestsListInDriver =new ArrayList<>();
         final String uid = FirebaseAuth.getInstance().getUid();
+        Toast.makeText(getActivity(), "req oncreate", Toast.LENGTH_SHORT).show();
 
 //        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child("Driver").child(uid).child("request");
         String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child(currentDriver);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("pending").child(currentDriver);
         databaseReference.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
+                   MakeRequest rider = snapshot.getValue(MakeRequest.class);
+//                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
                    RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
                    ridersRequestsListInDriver.add(riderRequestInDriver);
                    Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
@@ -94,4 +98,9 @@ public class DriverRequests extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(getActivity(), "resumme req", Toast.LENGTH_SHORT).show();
+    }
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RiderInfo;
 import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,7 +35,7 @@ public class RequestRiderProfile extends Fragment {
 
 
     TextView name;
-    Button acceptRequest;
+    Button acceptRequest, rejectRequest;
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDrivers;
 
     public RequestRiderProfile() {
@@ -51,8 +52,9 @@ public class RequestRiderProfile extends Fragment {
         ridersRequestsListInDrivers=getArguments().getParcelableArrayList("ridersRequestsListInDriver");
         final int position = getArguments().getInt("position");
         name = view.findViewById(R.id.requestRiderName);
-        name.setText(ridersRequestsListInDrivers.get(position).getRiderInfo().getName()+" "+ ridersRequestsListInDrivers.get(position).getDateAndTime());
+        name.setText(ridersRequestsListInDrivers.get(position).getRiderInfo().getRiderInfo().getName()+" "+ ridersRequestsListInDrivers.get(position).getDateAndTime());
         acceptRequest = view.findViewById(R.id.acceptRequest);
+        rejectRequest = view.findViewById(R.id.rejectRequest);
         acceptRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,17 +64,17 @@ public class RequestRiderProfile extends Fragment {
 
 
                 final String currentRequest= ridersRequestsListInDrivers.get(position).getDateAndTime();
-                FirebaseDatabase.getInstance().getReference().child("requests").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
+                FirebaseDatabase.getInstance().getReference().child("requests").child("pending").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()){
-                            RiderInfo riderInfo = dataSnapshot.getValue(RiderInfo.class);
-                            FirebaseDatabase.getInstance().getReference().child("requestsShift")
-                                    .child(currentDriver).child(currentRequest).setValue(riderInfo)
+                            MakeRequest riderInfo = dataSnapshot.getValue(MakeRequest.class);
+                            FirebaseDatabase.getInstance().getReference().child("requests").child("responded")
+                                    .child(currentDriver).child(currentRequest).child("accepted").setValue(riderInfo)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    FirebaseDatabase.getInstance().getReference().child("requests")
+                                    FirebaseDatabase.getInstance().getReference().child("requests").child("pending")
                                             .child(currentDriver).child(currentRequest)
                                             .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -145,6 +147,48 @@ public class RequestRiderProfile extends Fragment {
 
 
 
+            }
+        });
+
+        rejectRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getActivity(), "hhhhhh", Toast.LENGTH_SHORT).show();
+                final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+
+                final String currentRequest= ridersRequestsListInDrivers.get(position).getDateAndTime();
+                FirebaseDatabase.getInstance().getReference().child("requests").child("pending").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            MakeRequest riderInfo = dataSnapshot.getValue(MakeRequest.class);
+                            FirebaseDatabase.getInstance().getReference().child("requests").child("responded")
+                                    .child(currentDriver).child(currentRequest).child("rejected").setValue(riderInfo)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            FirebaseDatabase.getInstance().getReference().child("requests").child("pending")
+                                                    .child(currentDriver).child(currentRequest)
+                                                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                    });
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 

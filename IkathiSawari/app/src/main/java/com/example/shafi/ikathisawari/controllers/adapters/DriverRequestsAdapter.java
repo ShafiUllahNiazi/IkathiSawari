@@ -49,7 +49,7 @@ public class DriverRequestsAdapter extends  RecyclerView.Adapter<DriverRequestsA
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.driversKey.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getRiderInfo().getName());
+        viewHolder.driversKey.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getRiderInfo().getRiderInfo().getName());
         final int position = i;
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

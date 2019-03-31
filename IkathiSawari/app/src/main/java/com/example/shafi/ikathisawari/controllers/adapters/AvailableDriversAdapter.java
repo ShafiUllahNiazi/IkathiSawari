@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.AvailableDriverProfile;
 import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,12 +28,17 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
     Context context;
     FragmentManager supportFragmentManager;
     ArrayList<AvailableDriverInfo> availableDriversList;
+    LatLng fromPosition;
+    LatLng toPosition;
 
-    public AvailableDriversAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<AvailableDriverInfo> availableDriversList) {
+    public AvailableDriversAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<AvailableDriverInfo> availableDriversList, LatLng fromPosition, LatLng toPosition) {
         this.context = context;
+        this.supportFragmentManager = supportFragmentManager;
         this.availableDriversList = availableDriversList;
-        this.supportFragmentManager=supportFragmentManager;
+        this.fromPosition = fromPosition;
+        this.toPosition = toPosition;
     }
+
 
     @NonNull
     @Override
@@ -56,6 +62,8 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("availableDriversList",availableDriversList);
                 bundle.putInt("position",position);
+                bundle.putParcelable("from_position", fromPosition);
+                bundle.putParcelable("to_position", toPosition);
                 availableDriverProfile.setArguments(bundle);
 //                FragmentManager fragmentManager = context.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();

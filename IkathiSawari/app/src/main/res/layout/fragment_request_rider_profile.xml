@@ -21,6 +21,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Accept Request" />
+        <Button
+            android:id="@+id/rejectRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reject Request" />
     </LinearLayout>
 
 </FrameLayout>

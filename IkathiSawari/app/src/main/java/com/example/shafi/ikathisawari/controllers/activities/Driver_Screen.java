@@ -10,6 +10,7 @@ import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverHome;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverHome1;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverNotification;
+import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRequestParent;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRequests;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRide;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
@@ -29,7 +30,8 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
 
     DriverHome driverHome = new DriverHome();
     DriverHome1 driverHome1 = new DriverHome1();
-    DriverRequests driverRequests = new DriverRequests();
+//    DriverRequests driverRequests = new DriverRequests();
+    DriverRequestParent driverRequests = new DriverRequestParent();
     DriverNotification driverNotification = new DriverNotification();
     DriverRide driverRide = new DriverRide();
 
