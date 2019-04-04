@@ -2,6 +2,7 @@ package com.example.shafi.ikathisawari.controllers.fragments.driver;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,9 +16,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.models.RiderRidePointsDriver;
+import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -44,6 +47,8 @@ public class DriverRide extends Fragment implements OnMapReadyCallback, GoogleAp
 
     private GoogleMap mMap;
 
+    Button stoppService;
+
 
     public DriverRide() {
         // Required empty public constructor
@@ -67,6 +72,16 @@ public class DriverRide extends Fragment implements OnMapReadyCallback, GoogleAp
         }
 
         mapFragment.getMapAsync(this);
+
+
+        stoppService = view.findViewById(R.id.stopservice);
+        stoppService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),UpdateDriverLocation.class);
+                getActivity().stopService(intent);
+            }
+        });
 
 
         return view;
@@ -144,7 +159,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback, GoogleAp
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
 
         mMap.addMarker(new MarkerOptions().position(latLng));
-        Log.d("Updatee",""+ latLng.latitude +" "+ latLng.longitude);
+        Log.d("Updatee",""+ latLng.latitude +" "+ latLng.longitude );
 
         String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference().child("DriverRidePoints").setValue(points);

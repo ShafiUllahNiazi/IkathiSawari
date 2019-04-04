@@ -64,7 +64,16 @@
         <activity
             android:name=".controllers.activities.Driver_Screen1"
             android:label="@string/title_activity_driver__screen1"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".services.UpdateDriverLocation"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.DriverNotification"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.models.DriverInfo;
+import com.example.shafi.ikathisawari.models.DriverRoutInfo;
 import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RiderInfo;
 import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
@@ -37,6 +39,8 @@ public class RequestRiderProfile extends Fragment {
     TextView name;
     Button acceptRequest, rejectRequest;
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDrivers;
+    DriverInfo driverInfo;
+    DriverRoutInfo driverRoutInfo;
 
     public RequestRiderProfile() {
         // Required empty public constructor
@@ -49,6 +53,41 @@ public class RequestRiderProfile extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_request_rider_profile, container, false);
 
+
+        String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(currentDriver);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    driverInfo = dataSnapshot.getValue(DriverInfo.class);
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Available Routs").child(currentDriver);
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                driverRoutInfo = dataSnapshot.getValue(DriverRoutInfo.class);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         ridersRequestsListInDrivers=getArguments().getParcelableArrayList("ridersRequestsListInDriver");
         final int position = getArguments().getInt("position");
         name = view.findViewById(R.id.requestRiderName);
@@ -60,40 +99,45 @@ public class RequestRiderProfile extends Fragment {
             public void onClick(View v) {
 
                 Toast.makeText(getActivity(), "hhhhhh", Toast.LENGTH_SHORT).show();
-                final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
                 final String currentRequest= ridersRequestsListInDrivers.get(position).getDateAndTime();
-                FirebaseDatabase.getInstance().getReference().child("requests").child("pending").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            MakeRequest riderInfo = dataSnapshot.getValue(MakeRequest.class);
-                            FirebaseDatabase.getInstance().getReference().child("requests").child("responded")
-                                    .child(currentDriver).child(currentRequest).child("accepted").setValue(riderInfo)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    FirebaseDatabase.getInstance().getReference().child("requests").child("pending")
-                                            .child(currentDriver).child(currentRequest)
-                                            .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
-                                            Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            });
+                FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
+                String requestRider = ridersRequestsListInDrivers.get(position).getRiderInfo().getCurrent_rider();
+                String request = ridersRequestsListInDrivers.get(position).getDateAndTime();
+                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child(requestRider).child(request).setValue(driverInfo);
 
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+//                FirebaseDatabase.getInstance().getReference().child("requests").child("pending").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        if(dataSnapshot.exists()){
+//                            MakeRequest riderInfo = dataSnapshot.getValue(MakeRequest.class);
+//                            FirebaseDatabase.getInstance().getReference().child("requests").child("responded")
+//                                    .child(currentDriver).child(currentRequest).child("accepted").setValue(riderInfo)
+//                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    FirebaseDatabase.getInstance().getReference().child("requests").child("pending")
+//                                            .child(currentDriver).child(currentRequest)
+//                                            .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Void> task) {
+//                                            Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                }
+//                            });
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
 //                DatabaseReference to = FirebaseDatabase.getInstance().getReference().child("requestsShift").child(currentDriver);
 //                from.child(currentRequest).addValueEventListener(new ValueEventListener() {
 //                    @Override
@@ -159,36 +203,38 @@ public class RequestRiderProfile extends Fragment {
 
 
                 final String currentRequest= ridersRequestsListInDrivers.get(position).getDateAndTime();
-                FirebaseDatabase.getInstance().getReference().child("requests").child("pending").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            MakeRequest riderInfo = dataSnapshot.getValue(MakeRequest.class);
-                            FirebaseDatabase.getInstance().getReference().child("requests").child("responded")
-                                    .child(currentDriver).child(currentRequest).child("rejected").setValue(riderInfo)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            FirebaseDatabase.getInstance().getReference().child("requests").child("pending")
-                                                    .child(currentDriver).child(currentRequest)
-                                                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
-                                                    Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        }
-                                    });
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("rejected");
+//                FirebaseDatabase.getInstance().getReference().child("requests").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        if(dataSnapshot.exists()){
+//                            MakeRequest riderInfo = dataSnapshot.getValue(MakeRequest.class);
+//
+//                            FirebaseDatabase.getInstance().getReference().child("requests").child("responded")
+//                                    .child(currentDriver).child(currentRequest).child("rejected").setValue(riderInfo)
+//                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Void> task) {
+//                                            FirebaseDatabase.getInstance().getReference().child("requests").child("pending")
+//                                                    .child(currentDriver).child(currentRequest)
+//                                                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Void> task) {
+//                                                    Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
+//                                                    Toast.makeText(getActivity(), "DOne", Toast.LENGTH_SHORT).show();
+//                                                }
+//                                            });
+//                                        }
+//                                    });
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
             }
         });
 

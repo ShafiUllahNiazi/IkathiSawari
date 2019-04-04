@@ -4,6 +4,7 @@ package com.example.shafi.ikathisawari.controllers.fragments.driver;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,10 +13,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
+import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,8 +46,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,6 +96,47 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         Toast.makeText(getActivity(), "oncreatee", Toast.LENGTH_SHORT).show();
         View view = inflater.inflate(R.layout.fragment_driver_home1, container, false);
+
+        Intent intent = new Intent(getActivity(),UpdateDriverLocation.class);
+        getActivity().stopService(intent);
+
+//        String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child(currentDriver);
+//        databaseReference.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
+//                builder.setSmallIcon(R.mipmap.ic_launcher);
+//                builder.setContentTitle("Firebase Push Notification");
+//                builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
+//                NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
+//                notificationManager.notify(1, builder.build());
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
+
+
 //        initViews(view);
 
         mLocationPermissionGranted = false;
@@ -146,14 +198,22 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
         showRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getActivity(), "Hello", Toast.LENGTH_SHORT).show();
 
-                if (latLngCurrent != null && latLngDestination != null) {
-
-                    new FetchURL(mMap,"showRoute",getActivity(), latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
-                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
-                }
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
+//                builder.setSmallIcon(R.mipmap.ic_launcher);
+//                builder.setContentTitle("Firebase Push Notification");
+//                builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
+//                NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
+//                notificationManager.notify(1, builder.build());
+//                Intent intent = new Intent(DriverHome1.this, DriverDataCarrier.class);
+//                if (latLngCurrent != null && latLngDestination != null) {
+//
+//                    new FetchURL(mMap,"showRoute",getActivity(), latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+//                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
+//                }
 
 
 

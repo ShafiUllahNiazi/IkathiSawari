@@ -69,14 +69,14 @@ public class AvailableDriverProfile extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "hhhhh", Toast.LENGTH_SHORT).show();
-                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
                 dateFormatter.setLenient(false);
                 Date today = new Date();
                 final String timeSting = dateFormatter.format(today);
                 Toast.makeText(getActivity(), "ss "+ timeSting, Toast.LENGTH_SHORT).show();
                 final String current_Rider = FirebaseAuth.getInstance().getCurrentUser().getUid();
 //                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(availableDriversList.get(position).getDriverKey()).child("request").child(timeSting);
-                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("pending").child(availableDriversList.get(position).getDriverKey()).child(timeSting);
+                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(availableDriversList.get(position).getDriverKey()).child(timeSting);
 
 //                final RiderInfo[] riderInfo = new RiderInfo[1];
                 DatabaseReference databaseReferenceRider = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(current_Rider);
@@ -87,7 +87,9 @@ public class AvailableDriverProfile extends Fragment {
                         RiderInfo riderInfo = new RiderInfo();
                         riderInfo = dataSnapshot.getValue(RiderInfo.class);
                         Log.d(TAG,"innnnnn");
-                        MakeRequest makeRequest = new MakeRequest(current_Rider,riderInfo,fromPosition.latitude,fromPosition.longitude,toPosition.latitude,toPosition.longitude);
+                        MakeRequest makeRequest = new MakeRequest("pending",current_Rider,riderInfo,fromPosition.latitude,fromPosition.longitude,toPosition.latitude,toPosition.longitude,
+                                availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
+                                availableDriversList.get(position).getDriverRoutInfo());
                         databaseReference.setValue(makeRequest);
 //                        databaseReference.setValue(availableDriversList.get(position));
 
