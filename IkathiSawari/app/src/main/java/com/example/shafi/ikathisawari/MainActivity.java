@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,25 +101,45 @@ public class MainActivity extends AppCompatActivity {
 
     private void goHome(){
         final FirebaseUser user = firebaseAuth.getCurrentUser();
+        final String userId = user.getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseDatabase.getReference().child("users").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dt : dataSnapshot.child("Driver").getChildren()) {
-                    if (dt.getKey().toString().equals(user.getUid().toString())) {
-//                                            logIn_progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(MainActivity.this, Driver_Screen.class));
-                    }
-                }
-                for (DataSnapshot dt : dataSnapshot.child("Rider").getChildren()) {
-                    if (dt.getKey().toString().equals(user.getUid().toString())) {
-//                                            logIn_progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
+                boolean isDriver = dataSnapshot.child("Driver").hasChild(userId);
+                boolean isRider = dataSnapshot.child("Rider").hasChild(userId);
+
+
+                if(isDriver){
+                    progressDialog.cancel();
+                    startActivity(new Intent(MainActivity.this, Driver_Screen.class));
+                    finish();
+                }else {
+
+                    if(isRider){
+                        progressDialog.cancel();
                         startActivity(new Intent(MainActivity.this, Rider_Screen.class));
+                        finish();
+                    }else {
+                        Toast.makeText(MainActivity.this, "No such user exist", Toast.LENGTH_LONG).show();
                     }
                 }
+
+//                for (DataSnapshot dt : dataSnapshot.child("Driver").getChildren()) {
+//                    if (dt.getKey().toString().equals(user.getUid().toString())) {
+////                                            logIn_progressBar.setVisibility(View.INVISIBLE);
+//                        Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
+//                        startActivity(new Intent(MainActivity.this, Driver_Screen.class));
+//                    }
+//                }
+//                for (DataSnapshot dt : dataSnapshot.child("Rider").getChildren()) {
+//                    if (dt.getKey().toString().equals(user.getUid().toString())) {
+////                                            logIn_progressBar.setVisibility(View.INVISIBLE);
+//                        Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
+//                        startActivity(new Intent(MainActivity.this, Rider_Screen.class));
+//                    }
+//                }
             }
 
             @Override
@@ -195,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //
 //                            });
-                            progressDialog.cancel();
+//                            progressDialog.cancel();
                         }
                     }
 

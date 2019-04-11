@@ -25,7 +25,7 @@ public class DriverRequestParent extends Fragment {
     private TabLayout driver_request_tablayout;
     public ViewPager driver_request_viewPager;
     public DriverRequestViewPagerAdapter driverRequestViewPagerAdapter;
-    View view;;
+    View view;
 
 
     public DriverRequestParent() {
@@ -39,7 +39,6 @@ public class DriverRequestParent extends Fragment {
         setRetainInstance(true);
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_driver_request_parent, container, false);
-//        Toast.makeText(getActivity(), "req oncreate parent", Toast.LENGTH_SHORT).show();
         driverRequestViewPagerAdapter=new DriverRequestViewPagerAdapter(getChildFragmentManager());
         driverRequestViewPagerAdapter.addFragment(new DriverRequests(),"Current Ride");
         driverRequestViewPagerAdapter.addFragment(new DriverRequests(),"History");
@@ -48,20 +47,6 @@ public class DriverRequestParent extends Fragment {
         driver_request_viewPager = view.findViewById(R.id.driver_request_parent_viewPager);
         driver_request_viewPager.setAdapter(driverRequestViewPagerAdapter);
         driver_request_tablayout.setupWithViewPager(driver_request_viewPager);
-//        if(driverRequestViewPagerAdapter== null) {
-//            Toast.makeText(getActivity(), "Nulllllllllll", Toast.LENGTH_SHORT).show();
-//            driverRequestViewPagerAdapter=new DriverRequestViewPagerAdapter(getActivity().getSupportFragmentManager());
-//            driverRequestViewPagerAdapter.addFragment(new DriverRequests(),"No Response");
-//            driverRequestViewPagerAdapter.addFragment(new DriverRequests(),"Accept/Reject");
-//            driver_request_viewPager.setAdapter(driverRequestViewPagerAdapter);
-//            driver_request_tablayout.setupWithViewPager(driver_request_viewPager);
-//        }
-//        else {
-//            Toast.makeText(getActivity(), "not null", Toast.LENGTH_SHORT).show();
-//            driver_request_viewPager.setAdapter(driverRequestViewPagerAdapter);
-//            driver_request_tablayout.setupWithViewPager(driver_request_viewPager);
-//
-//        }
         return view;
     }
 }

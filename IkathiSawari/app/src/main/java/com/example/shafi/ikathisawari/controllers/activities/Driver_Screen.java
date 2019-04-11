@@ -6,9 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.shafi.ikathisawari.Driver_Profile;
+import com.example.shafi.ikathisawari.MainActivity;
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverHome;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverHome1;
@@ -18,6 +22,7 @@ import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRequest
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRide;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Driver_Screen extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener/*, DriverHome.OnRequirePoints */{
 
@@ -105,4 +110,33 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
 //    public void onRequirePoints(String str1, String str2) {
 //        new FetchURL(getApplicationContext()).execute(str1,str2);
 //    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId()==R.id.profile){
+
+
+            startActivity(new Intent(this,Driver_Profile.class));
+
+            return true;
+        }
+        if(item.getItemId()==R.id.sign_out){
+
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this,MainActivity.class));
+
+            return true;
+        }
+
+        return true;
+
+    }
 }

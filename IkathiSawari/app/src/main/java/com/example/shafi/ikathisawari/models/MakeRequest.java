@@ -8,7 +8,7 @@ public class MakeRequest {
 
     String status;
     double origin_latitude, origin_longitude,destination_latitude,destination_longitude;
-    String driverKey;
+    String driverId;
     DriverInfo driverInfo;
     DriverRoutInfo driverRoutInfo;
 
@@ -16,7 +16,7 @@ public class MakeRequest {
     public MakeRequest() {
     }
 
-    public MakeRequest(String status, String current_rider, RiderInfo riderInfo, double origin_latitude, double origin_longitude, double destination_latitude, double destination_longitude, String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo) {
+    public MakeRequest(String status, String current_rider, RiderInfo riderInfo, double origin_latitude, double origin_longitude, double destination_latitude, double destination_longitude, String driverId, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo) {
         this.status = status;
         this.current_rider = current_rider;
         this.riderInfo = riderInfo;
@@ -24,7 +24,7 @@ public class MakeRequest {
         this.origin_longitude = origin_longitude;
         this.destination_latitude = destination_latitude;
         this.destination_longitude = destination_longitude;
-        this.driverKey = driverKey;
+        this.driverId = driverId;
         this.driverInfo = driverInfo;
         this.driverRoutInfo = driverRoutInfo;
 
@@ -56,5 +56,17 @@ public class MakeRequest {
 
     public double getDestination_longitude() {
         return destination_longitude;
+    }
+
+    public String getdriverId() {
+        return driverId;
+    }
+
+    public DriverInfo getDriverInfo() {
+        return driverInfo;
+    }
+
+    public DriverRoutInfo getDriverRoutInfo() {
+        return driverRoutInfo;
     }
 }

@@ -53,18 +53,39 @@
                 android:layout_weight="1"
                 android:text="Select Destination" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/spinnerDriverSeats"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No of Seats Available" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/pricePerKM"
+            <TextView
+                android:id="@+id/textDriverDateTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Ride Start Time" />
+
+            <Button
+                android:id="@+id/selectDriverDateTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Select Time" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/driverSeats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Price per Km" />
+            android:hint="No of Seats Available"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/driverPricePerKM"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Price/Km in PKR"
+            android:inputType="number"/>
 
         <LinearLayout
             android:layout_width="match_parent"

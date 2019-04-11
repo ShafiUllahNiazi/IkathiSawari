@@ -2,6 +2,7 @@ package com.example.shafi.ikathisawari.directionhelpers;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -26,8 +27,22 @@ public class FetchURL extends AsyncTask<String, Void, String> {
     String clickButton;
     Context context;
     private LatLng latLngCurrent, latLngDestination;
+    String timeAndDate, seats,price;
 
-    public FetchURL(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent, LatLng latLngDestination) {
+    public FetchURL(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
+                    LatLng latLngDestination, String timeAndDate, String seats, String price) {
+        this.mMap = map;
+        this.clickButton = clickButton;
+        this.context = context;
+        this.latLngCurrent = latLngCurrent;
+        this.latLngDestination = latLngDestination;
+        this.timeAndDate = timeAndDate;
+        this.seats = seats;
+        this.price = price;
+    }
+
+    public FetchURL(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
+                    LatLng latLngDestination) {
         this.mMap = map;
         this.clickButton = clickButton;
         this.context = context;
@@ -53,7 +68,7 @@ public class FetchURL extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        PointsParser parserTask = new PointsParser(mMap,clickButton,context,latLngCurrent,latLngDestination, directionMode);
+        PointsParser parserTask = new PointsParser(mMap, clickButton, context, latLngCurrent, latLngDestination,timeAndDate,seats,price, directionMode);
         // Invokes the thread for parsing the JSON data
         parserTask.execute(s);
     }

@@ -6,11 +6,11 @@ import android.os.Parcelable;
 public class RidersRequestsListInDriver  implements Parcelable{
     String dateAndTime;
 //    RiderInfo riderInfo;
-    MakeRequest riderInfo;
+    MakeRequest makeRequest;
 
-    public RidersRequestsListInDriver(String dateAndTime, MakeRequest riderInfo) {
+    public RidersRequestsListInDriver(String dateAndTime, MakeRequest makeRequest) {
         this.dateAndTime = dateAndTime;
-        this.riderInfo = riderInfo;
+        this.makeRequest = makeRequest;
     }
 
     protected RidersRequestsListInDriver(Parcel in) {
@@ -33,8 +33,8 @@ public class RidersRequestsListInDriver  implements Parcelable{
         return dateAndTime;
     }
 
-    public MakeRequest getRiderInfo() {
-        return riderInfo;
+    public MakeRequest getMakeRequest() {
+        return makeRequest;
     }
 
     @Override

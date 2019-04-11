@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vishal on 10/20/2018.
@@ -39,12 +40,14 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
     String clickButton;
     Context context;
     private LatLng latLngCurrent, latLngDestination;
+    String timeAndDate, seats,price;
 
     public interface TaskLoadedCallback {
         void onTaskDone(Object... values);
     }
 
-    public PointsParser(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent, LatLng latLngDestination, String directionMode) {
+    public PointsParser(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
+                        LatLng latLngDestination, String timeAndDate, String seats, String price, String directionMode) {
 //        this.taskCallback = (TaskLoadedCallback) mContext;
         this.directionMode = directionMode;
         this.mMap = map;
@@ -52,6 +55,9 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
         this.context =context;
         this.latLngCurrent = latLngCurrent;
         this.latLngDestination = latLngDestination;
+        this.timeAndDate = timeAndDate;
+        this.seats = seats;
+        this.price = price;
     }
 
     // Parsing the data in non-ui thread
@@ -91,17 +97,24 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
         if(clickButton.equals("saveRoute")){
 
 
+            Map map = new HashMap();
+            map.put("routes", result);
+            map.put("driver_origin_lat", latLngCurrent.latitude);
+            map.put("driver_origin_long", latLngCurrent.longitude);
+            map.put("driver_destination_lat", latLngDestination.latitude);
+            map.put("driver_destination_long", latLngDestination.longitude);
+            map.put("start_ride", timeAndDate);
+            map.put("no_of_seats", seats);
+            map.put("price_per_km", price);
 
-            Log.d("Yousaf1b","qewewqew");
-            Log.d("Yousaf1b"," dd "+result.size());
-            Log.d("Yousaf1b"," ddd "+result.toString()+"llllGGGG");
-//        Toast.makeText(actContext, ""+result.toString()+"kkkk", Toast.LENGTH_SHORT).show();
+
+
 
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             String currentUserUid = currentUser.getUid();
-            DriverRoutInfo driverRoutInfo = new DriverRoutInfo(result);
+
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-            databaseReference.child("Available Routs").child(currentUserUid).setValue(driverRoutInfo);
+            databaseReference.child("Available Routs").child(currentUserUid).setValue(map);
             Toast.makeText(context, "data inserted", Toast.LENGTH_SHORT).show();
 
 

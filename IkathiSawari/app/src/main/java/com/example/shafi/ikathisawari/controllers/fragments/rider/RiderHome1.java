@@ -3,7 +3,9 @@ package com.example.shafi.ikathisawari.controllers.fragments.rider;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,8 +24,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
@@ -52,9 +57,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,9 +85,9 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
     private boolean mLocationPermissionGranted;
 
 
-    Button selectOriginRider, selectDestinationRider,showRouteRider,saveRouteRider;
-    TextView originLocationTextRider, destinationLocationTextRider;
-    Spinner driverSpinner;
+    Button selectOriginRider, selectDestinationRider,showRouteRider,saveRouteRider, selectTime;
+    TextView originLocationTextRider, destinationLocationTextRider,dateTimeText;
+    EditText riderSeats, riderPricePerKM;
 
     private GoogleMap mMap;
     private LatLng latLngCurrent, latLngDestination;
@@ -96,6 +102,9 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
     private float radius = 100;
     private DatabaseReference mDriverData;
 
+    int myHour, myMinute, myYear, myMonth, myDay;
+    boolean isDate,isTime;
+    String time, seats, price;
 
     public RiderHome1() {
         // Required empty public constructor
@@ -110,6 +119,9 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
         mLocationPermissionGranted = false;
         latLngCurrent = null;
         latLngDestination = null;
+
+        isDate =false;
+        isTime = false;
 
 
 
@@ -127,6 +139,10 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
         selectDestinationRider = view.findViewById(R.id.selectDestinationRider);
         showRouteRider = view.findViewById(R.id.showRouteR1);
         saveRouteRider = view.findViewById(R.id.saveRouteR1);
+        dateTimeText = view.findViewById(R.id.textRiderDateTime);
+        selectTime = view.findViewById(R.id.selectRiderDateTime);
+        riderSeats = view.findViewById(R.id.riderSeats);
+        riderPricePerKM = view.findViewById(R.id.pricePerKMRider);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapDriverFragment1);
@@ -171,7 +187,10 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
 
+
+
                 if (latLngCurrent != null && latLngDestination != null) {
+
 
                     new FetchURL(mMap,"showRoute",getActivity(), latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
                     Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
@@ -207,9 +226,67 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 
             }
         });
+        selectTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setSchedule();
+            }
+        });
 
 
         return view;
+    }
+
+    private void setSchedule() {
+        Calendar calendar = Calendar.getInstance();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//                Toast.makeText(getContext(), hourOfDay+""+minute, Toast.LENGTH_SHORT).show();
+                myHour = hourOfDay;
+                myMinute = minute;
+                isTime = true;
+                setDTW();
+            }
+        },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true);
+        timePickerDialog.show();
+    }
+    private void setDTW() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog= new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                Toast.makeText(getContext(), dayOfMonth+"", Toast.LENGTH_SHORT).show();
+                String y,mon,d,h,min;
+                myYear = year;
+                myMonth = month+1;
+                myDay = dayOfMonth;
+                y = myYear+"";
+                if(myMonth<10)
+                    mon = "0"+myMonth;
+                else
+                    mon = ""+myMonth;
+                if(myDay<10)
+                    d = "0"+myDay;
+                else
+                    d = ""+myDay;
+                if(myHour<10)
+                    h = "0"+myHour;
+                else
+                    h = ""+myHour;
+                if(myMinute<10)
+                    min = "0"+myMinute;
+                else
+                    min = ""+myMinute;
+//                dateTimeText.setText(myHour+":"+myMinute+" on "+myDay+" "+myMonth+":"+myYear);
+                dateTimeText.setText(y+"-"+mon+"-"+d+"T"+h+":"+min);
+
+                isDate = true;
+
+            }
+        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+
     }
 
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
@@ -267,8 +344,12 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
                     final DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
 
                     driverRoutInfo.setRoutes((List<List<HashMap<String, String>>>) dd.get("routes"));
+                    time = (String) dd.get("start_ride");
+                    seats = (String) dd.get("no_of_seats");
+                    price = (String) dd.get("price_per_km");
+
                     Log.d(TAG, "onDataChange: "+dd.get("routes").toString());
-                    final String availableDriver=fetchNearbyDriver(driver, driverRoutInfo);
+                    final String availableDriver=fetchNearbyDriver(driver, driverRoutInfo, time, seats, price);
                     Log.d(TAG,"String "+ availableDriver);
 
                     if(availableDriver != null){
@@ -277,7 +358,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo);
+                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,time, seats, price);
                                 availableDriversList.add(availableDriverInfo);
                             }
 
@@ -309,6 +390,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
     }
 
     private void showAvailableDrivers(ArrayList<AvailableDriverInfo> availableDriversList) {
+
         AvailableDrivers availableDrivers = new AvailableDrivers();
         Bundle b = new Bundle();
         b.putParcelableArrayList("availableDriversList",availableDriversList);
@@ -322,7 +404,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
         fragmentTransaction.commit();
     }
 
-    private String fetchNearbyDriver(String driverKey, DriverRoutInfo driverRoutInfo) {
+    private String fetchNearbyDriver(String driverKey, DriverRoutInfo driverRoutInfo, String time, String seats, String price) {
 
         Log.d("dddriver",driverKey );
 
@@ -435,7 +517,30 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 //                    availableDrivers.add(driverKey);
 
                     Log.d("ddddriver",driverKey);
-                    return driverKey;
+
+
+                    ///////////////////////////////////////////
+
+
+
+                    if(time.compareTo(dateTimeText.getText().toString())<= 0){
+                        if(Integer.parseInt(seats)>= Integer.parseInt(riderSeats.getText().toString())){
+                            return driverKey;
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+//                    return driverKey;
 //                    Log.d("availableDriver", "Driver list added item " + availableDrivers.size());
 
                 }

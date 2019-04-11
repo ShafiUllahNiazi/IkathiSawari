@@ -3,23 +3,28 @@ package com.example.shafi.ikathisawari.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.maps.model.LatLng;
-
-public class AvailableDriverInfo implements Parcelable {
+public class AvailableDriverInfo  implements Parcelable{
     String driverKey;
     DriverInfo driverInfo;
     DriverRoutInfo driverRoutInfo;
+    String time, seats, price;
 
 
-    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo) {
+    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String time, String seats, String price) {
         this.driverKey = driverKey;
         this.driverInfo = driverInfo;
         this.driverRoutInfo = driverRoutInfo;
+        this.time = time;
+        this.seats = seats;
+        this.price = price;
     }
 
 
     protected AvailableDriverInfo(Parcel in) {
         driverKey = in.readString();
+        time = in.readString();
+        seats = in.readString();
+        price = in.readString();
     }
 
     public static final Creator<AvailableDriverInfo> CREATOR = new Creator<AvailableDriverInfo>() {
@@ -46,6 +51,30 @@ public class AvailableDriverInfo implements Parcelable {
         return driverRoutInfo;
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public String getSeats() {
+        return seats;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    @Override
+    public String toString() {
+        return "AvailableDriverInfo{" +
+                "driverKey='" + driverKey + '\'' +
+                ", driverInfo=" + driverInfo +
+                ", driverRoutInfo=" + driverRoutInfo +
+                ", time='" + time + '\'' +
+                ", seats='" + seats + '\'' +
+                ", price='" + price + '\'' +
+                '}';
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -54,6 +83,9 @@ public class AvailableDriverInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(driverKey);
+        dest.writeString(time);
+        dest.writeString(seats);
+        dest.writeString(price);
     }
 }
 

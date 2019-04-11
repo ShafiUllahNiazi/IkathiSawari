@@ -3,8 +3,9 @@ package com.example.shafi.ikathisawari.controllers.fragments.driver;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.NotificationManager;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,20 +14,20 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
@@ -46,15 +47,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,9 +72,9 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
     private boolean mLocationPermissionGranted;
 
 
-    Button selectOriginDriver, selectDestinationDriver,showRoute,saveRoute;
-    TextView originLocationTextDriver, destinationLocationTextDriver;
-    Spinner driverSpinner;
+    Button selectOriginDriver, selectDestinationDriver,showRoute,saveRoute, selectTime;
+    TextView originLocationTextDriver, destinationLocationTextDriver, dateTimeText;
+    EditText driverSeats, driverPricePerKM;
 
     private GoogleMap mMap;
     private LatLng latLngCurrent, latLngDestination;
@@ -83,6 +82,9 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
 
     private static final float DEFAULT_ZOOM = 15f;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+
+    int myHour, myMinute, myYear, myMonth, myDay;
+    boolean isDate,isTime;
 
 
     public DriverHome1() {
@@ -100,49 +102,13 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
         Intent intent = new Intent(getActivity(),UpdateDriverLocation.class);
         getActivity().stopService(intent);
 
-//        String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child(currentDriver);
-//        databaseReference.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
-//                builder.setSmallIcon(R.mipmap.ic_launcher);
-//                builder.setContentTitle("Firebase Push Notification");
-//                builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
-//                NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
-//                notificationManager.notify(1, builder.build());
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
-
-
-
-//        initViews(view);
 
         mLocationPermissionGranted = false;
         latLngCurrent = null;
         latLngDestination = null;
 
+        isDate =false;
+        isTime = false;
 
         originLocationTextDriver = view.findViewById(R.id.textselectOriginDriver);
         destinationLocationTextDriver = view.findViewById(R.id.textselectDestinationDriver);
@@ -150,6 +116,12 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
         selectDestinationDriver = view.findViewById(R.id.selectDestinationDriver);
         showRoute = view.findViewById(R.id.showRouteD1);
         saveRoute = view.findViewById(R.id.saveRouteD1);
+        dateTimeText = view.findViewById(R.id.textDriverDateTime);
+        selectTime = view.findViewById(R.id.selectDriverDateTime);
+        driverSeats = view.findViewById(R.id.driverSeats);
+        driverPricePerKM = view.findViewById(R.id.driverPricePerKM);
+
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapDriverFragment1);
@@ -200,6 +172,18 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Hello", Toast.LENGTH_SHORT).show();
 
+                String seats = driverSeats.getText().toString();
+                String price = driverPricePerKM.getText().toString();
+
+                String dtStart = "2010-10-15T09:27";
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+                try {
+                    Date date = format.parse(dtStart);
+                    Toast.makeText(getActivity(), ""+date, Toast.LENGTH_SHORT).show();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
 //                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
 //                builder.setSmallIcon(R.mipmap.ic_launcher);
 //                builder.setContentTitle("Firebase Push Notification");
@@ -224,9 +208,31 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 if (latLngCurrent != null && latLngDestination != null) {
+                    if(isTime & isDate){
+                        String timeAndDate =dateTimeText.getText().toString();
+                        String seats = driverSeats.getText().toString();
+                        String price = driverPricePerKM.getText().toString();
+//                        Toast.makeText(getActivity(), seats +" "+ price, Toast.LENGTH_SHORT).show();
+                        if(!(seats.equals(""))){
+                            if(!(price.equals(""))){
+                                new FetchURL(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination,timeAndDate,seats,price).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
 
-                    new FetchURL(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
-                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+                                Log.d("dddddddddddd",seats+" "+price);
+
+                            }else {
+                                Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }else {
+                            Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }else{
+                        Toast.makeText(getActivity(), "Select Date and Time", Toast.LENGTH_SHORT).show();
+                    }
+
+//                    new FetchURL(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+//                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
                 }
@@ -234,9 +240,75 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        selectTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                setSchedule();
+//                setDTW();
+
+
+//                newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
+            }
+        });
+
 
         return view;
     }
+
+
+    private void setSchedule() {
+        Calendar calendar = Calendar.getInstance();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//                Toast.makeText(getContext(), hourOfDay+""+minute, Toast.LENGTH_SHORT).show();
+                myHour = hourOfDay;
+                myMinute = minute;
+                isTime = true;
+                setDTW();
+            }
+        },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true);
+        timePickerDialog.show();
+    }
+    private void setDTW() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog= new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                Toast.makeText(getContext(), dayOfMonth+"", Toast.LENGTH_SHORT).show();
+                String y,mon,d,h,min;
+                myYear = year;
+                myMonth = month+1;
+                myDay = dayOfMonth;
+                y = myYear+"";
+                if(myMonth<10)
+                    mon = "0"+myMonth;
+                else
+                    mon = ""+myMonth;
+                if(myDay<10)
+                    d = "0"+myDay;
+                else
+                    d = ""+myDay;
+                if(myHour<10)
+                    h = "0"+myHour;
+                else
+                    h = ""+myHour;
+                if(myMinute<10)
+                    min = "0"+myMinute;
+                else
+                    min = ""+myMinute;
+//                dateTimeText.setText(myHour+":"+myMinute+" on "+myDay+" "+myMonth+":"+myYear);
+                dateTimeText.setText(y+"-"+mon+"-"+d+"T"+h+":"+min);
+
+                isDate = true;
+
+            }
+        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+
+    }
+
 
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         // Origin of route
@@ -418,4 +490,6 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
             Log.i(TAG, "onRequestPermissionsResult: permission granted");
         }
     }
+
+
 }

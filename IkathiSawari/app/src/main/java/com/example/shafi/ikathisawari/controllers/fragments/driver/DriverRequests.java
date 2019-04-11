@@ -49,12 +49,7 @@ public class DriverRequests extends Fragment {
         // Required empty public constructor
     }
 
-    @Override
-    public void onStart() {
-//        Toast.makeText(getActivity(), "OnSTae", Toast.LENGTH_SHORT).show();
-        Log.d("SSSSSSSSSSSSS", "SSSSSSS");
-        super.onStart();
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,15 +57,6 @@ public class DriverRequests extends Fragment {
         setRetainInstance(true);
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_driver_requests, container, false);
-//        ridersRequestsListInDriver =new ArrayList<>();
-        final String uid = FirebaseAuth.getInstance().getUid();
-//        Toast.makeText(getActivity(), "req oncreate", Toast.LENGTH_SHORT).show();
-
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child("Driver").child(uid).child("request");
-
-
-        ///////////////////////////////////////////////////////////////////////////////
-
 
 
         final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -166,7 +152,7 @@ public class DriverRequests extends Fragment {
                    MakeRequest rider = snapshot.getValue(MakeRequest.class);
 //                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
                    RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
-                   if(!(riderRequestInDriver.getRiderInfo().getStatus().equals("rejected"))){
+                   if(!(riderRequestInDriver.getMakeRequest().getStatus().equals("rejected"))){
                        ridersRequestsListInDriver.add(riderRequestInDriver);
                    }
 

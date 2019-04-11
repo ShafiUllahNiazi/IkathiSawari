@@ -56,7 +56,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //        return position % 2 * 2;
 //        ridersRequestsListInDriver
 //        return super.getItemViewType(position);
-        switch (ridersRequestsListInDriver.get(position).getRiderInfo().getStatus()) {
+        switch (ridersRequestsListInDriver.get(position).getMakeRequest().getStatus()) {
             case "pending":
                 return 0;
             case "accepted":
@@ -75,7 +75,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         switch (viewHolder.getItemViewType()) {
             case 0:
                 ViewHolder0 viewHolder0 = (ViewHolder0) viewHolder;
-                viewHolder0.content.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getRiderInfo().getRiderInfo().getName());
+                viewHolder0.content.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
                 viewHolder0.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -112,7 +112,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             case 2:
                 ViewHolder2 viewHolder2 = (ViewHolder2)viewHolder;
-                viewHolder2.content.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getRiderInfo().getRiderInfo().getName());
+                viewHolder2.content.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
                 viewHolder2.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

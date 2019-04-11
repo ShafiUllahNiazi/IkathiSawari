@@ -91,7 +91,7 @@ public class RequestRiderProfile extends Fragment {
         ridersRequestsListInDrivers=getArguments().getParcelableArrayList("ridersRequestsListInDriver");
         final int position = getArguments().getInt("position");
         name = view.findViewById(R.id.requestRiderName);
-        name.setText(ridersRequestsListInDrivers.get(position).getRiderInfo().getRiderInfo().getName()+" "+ ridersRequestsListInDrivers.get(position).getDateAndTime());
+        name.setText(ridersRequestsListInDrivers.get(position).getMakeRequest().getRiderInfo().getName()+" "+ ridersRequestsListInDrivers.get(position).getDateAndTime());
         acceptRequest = view.findViewById(R.id.acceptRequest);
         rejectRequest = view.findViewById(R.id.rejectRequest);
         acceptRequest.setOnClickListener(new View.OnClickListener() {
@@ -104,9 +104,9 @@ public class RequestRiderProfile extends Fragment {
 
                 final String currentRequest= ridersRequestsListInDrivers.get(position).getDateAndTime();
                 FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
-                String requestRider = ridersRequestsListInDrivers.get(position).getRiderInfo().getCurrent_rider();
+                String requestRider = ridersRequestsListInDrivers.get(position).getMakeRequest().getCurrent_rider();
                 String request = ridersRequestsListInDrivers.get(position).getDateAndTime();
-                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child(requestRider).child(request).setValue(driverInfo);
+                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).setValue(ridersRequestsListInDrivers.get(position).getMakeRequest());
 
 //                FirebaseDatabase.getInstance().getReference().child("requests").child("pending").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
 //                    @Override
