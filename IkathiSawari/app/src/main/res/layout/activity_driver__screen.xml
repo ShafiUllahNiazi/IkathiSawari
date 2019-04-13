@@ -7,6 +7,11 @@
     android:orientation="vertical"
     tools:context=".controllers.activities.Driver_Screen">
 
+    <!--<include layout="@layout/toolbar"-->
+        <!--android:id="@+id/driverToolbar">-->
+
+    <!--</include>-->
+
     <FrameLayout
         android:id="@+id/driver_container"
         android:layout_width="match_parent"

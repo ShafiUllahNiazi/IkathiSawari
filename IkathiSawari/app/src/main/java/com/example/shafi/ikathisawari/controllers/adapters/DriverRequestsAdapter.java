@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,16 +22,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     Context context;
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
+    ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriverFull;
     FragmentManager supportFragmentManager;
 
     public DriverRequestsAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver) {
         this.context=context;
         this.ridersRequestsListInDriver= ridersRequestsListInDriver;
+        ridersRequestsListInDriverFull = new ArrayList<>(ridersRequestsListInDriver);
         this.supportFragmentManager = supportFragmentManager;
     }
 
@@ -178,4 +183,40 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<RidersRequestsListInDriver>  filteredList = new ArrayList<>();
+            if(constraint == null || constraint.length() ==0){
+                filteredList.addAll(ridersRequestsListInDriverFull);
+            }else {
+                String filteredPattern = constraint.toString().toLowerCase().trim();
+                for (RidersRequestsListInDriver item:ridersRequestsListInDriverFull) {
+                    if(item.getMakeRequest().getRiderInfo().getName().toLowerCase().contains(filteredPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            ridersRequestsListInDriver.clear();
+            ridersRequestsListInDriver.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

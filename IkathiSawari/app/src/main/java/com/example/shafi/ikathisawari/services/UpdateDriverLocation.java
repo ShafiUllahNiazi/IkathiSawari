@@ -46,14 +46,14 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG,"startt");
-        if(true){
-            Log.d(TAG,"sss "+11);
-//            final DatabaseReference dbReference= FirebaseDatabase.getInstance().getReference("test").child("testt");
-//            dbReference.setValue("111");
-
-
-        }
+//        Log.d(TAG,"startt");
+//        if(true){
+//            Log.d(TAG,"sss "+11);
+////            final DatabaseReference dbReference= FirebaseDatabase.getInstance().getReference("test").child("testt");
+////            dbReference.setValue("111");
+//
+//
+//        }
 //        for(int i = 0;i<10;i++){
 //
 //            Log.d(TAG,"sss "+i);
@@ -62,7 +62,7 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
 //
 //            }
 //        }
-//        buildGoogleApiClient();
+        buildGoogleApiClient();
         Toast.makeText(this, "Service update location started", Toast.LENGTH_SHORT).show();
         Log.d(TAG,"start");
 //        return super.onStartCommand(intent, flags, startId);

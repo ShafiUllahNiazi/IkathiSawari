@@ -6,10 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.RiderRequestsAdapter;
@@ -50,6 +55,7 @@ public class RiderRequests extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        setHasOptionsMenu(true);
         view =  inflater.inflate(R.layout.fragment_rider_requests, container, false);
         currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(currentRider).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -130,6 +136,35 @@ public class RiderRequests extends Fragment {
 
 
         return view;
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        MenuInflater menuInflater = getActivity().getMenuInflater();
+
+        super.onCreateOptionsMenu(menu, inflater);
+//        menu.clear();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (riderRequestsAdapter != null){
+                    riderRequestsAdapter.getFilter().filter(newText);
+                }
+
+                return false;
+            }
+        });
+
     }
 
 }

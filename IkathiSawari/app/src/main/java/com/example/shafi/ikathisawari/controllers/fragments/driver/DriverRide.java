@@ -14,9 +14,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.models.RiderRidePointsDriver;
@@ -59,6 +62,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback, GoogleAp
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_driver_ride, container, false);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -105,11 +109,14 @@ public class DriverRide extends Fragment implements OnMapReadyCallback, GoogleAp
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
+        Toast.makeText(getActivity(), "connected", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onConnectionSuspended(int i) {
 
+        Toast.makeText(getActivity(), "onConnectionSuspended", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -124,9 +131,11 @@ public class DriverRide extends Fragment implements OnMapReadyCallback, GoogleAp
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(getActivity(), "retttt", Toast.LENGTH_SHORT).show();
             return;
         }
-        buildGoogleApiClient();
+//        Toast.makeText(getActivity(), "nott", Toast.LENGTH_SHORT).show();
+//        buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -142,15 +151,18 @@ public class DriverRide extends Fragment implements OnMapReadyCallback, GoogleAp
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
+        Toast.makeText(getActivity(), "build", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+        Toast.makeText(getActivity(), "onConnectionFailed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        Toast.makeText(getActivity(), "onLocationChanged", Toast.LENGTH_SHORT).show();
         mLastLocation = location;
         mMap.clear();
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
@@ -173,5 +185,17 @@ public class DriverRide extends Fragment implements OnMapReadyCallback, GoogleAp
 //        String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
 //        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("DriverRidePoints");
 //        databaseReference.removeValue();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        super.onPrepareOptionsMenu(menu);
+        if(menu.findItem(R.id.action_search) !=null ){
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            searchItem.setVisible(false);
+        }
+
+
     }
 }

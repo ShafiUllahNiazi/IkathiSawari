@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.Driver_Profile;
@@ -33,9 +35,16 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver__screen);
+//        Toolbar toolbar = findViewById(R.id.driverToolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
 //        com.example.shafi.ikathisawari.services.DriverNotification driverNotification = new com.example.shafi.ikathisawari.services.DriverNotification(this);
         Intent intent = new Intent(this, com.example.shafi.ikathisawari.services.DriverNotification.class);
         startService(intent);
+        Intent intent2 = new Intent(this, UpdateDriverLocation.class);
+        startService(intent2);
 
         bottomNavigationView = findViewById(R.id.navigationDriver);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -115,6 +124,7 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+//        inflater.inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 

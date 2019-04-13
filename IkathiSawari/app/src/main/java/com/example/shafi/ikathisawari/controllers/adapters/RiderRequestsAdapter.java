@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,10 +29,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdapter.ViewHolder>{
+public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdapter.ViewHolder> implements Filterable {
     Context context;
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
+    ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriverFull;
     FragmentManager supportFragmentManager;
     private String currentRider;
 
@@ -38,6 +42,7 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
         this.context=context;
         this.ridersRequestsListInDriver= ridersRequestsListInDriver;
         this.supportFragmentManager = supportFragmentManager;
+        ridersRequestsListInDriverFull = new ArrayList<>(ridersRequestsListInDriver);
     }
 
     @NonNull
@@ -52,8 +57,8 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final int position = i;
-        viewHolder.content_rider_request.setText("Driver");
-//        viewHolder.content_rider_request.setText("Driver"+ ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getName());
+//        viewHolder.content_rider_request.setText("Driver");
+        viewHolder.content_rider_request.setText("Driver"+ ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getName());
         viewHolder.rider_request_status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
         viewHolder.cancelRiderRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +127,8 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
     }
 
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView content_rider_request;
         TextView rider_request_status;
@@ -134,4 +141,42 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
 
         }
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+    private Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<RidersRequestsListInDriver> filteredList = new ArrayList<>();
+            if(constraint == null || constraint.length() ==0){
+                filteredList.addAll(ridersRequestsListInDriverFull);
+            }else {
+                String filteredPattern = constraint.toString().toLowerCase().trim();
+                for (RidersRequestsListInDriver item:ridersRequestsListInDriverFull) {
+                    if(item.getMakeRequest().getDriverInfo().getName().toLowerCase().contains(filteredPattern)){
+                        filteredList.add(item);
+                    }
+                    if(item.getMakeRequest().getDriverInfo().getMobile().toLowerCase().contains(filteredPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            ridersRequestsListInDriver.clear();
+            ridersRequestsListInDriver.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

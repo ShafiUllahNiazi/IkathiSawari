@@ -19,10 +19,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -92,10 +97,13 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
     }
 
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        setHasOptionsMenu(true);
         Toast.makeText(getActivity(), "oncreatee", Toast.LENGTH_SHORT).show();
         View view = inflater.inflate(R.layout.fragment_driver_home1, container, false);
 
@@ -492,4 +500,30 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
     }
 
 
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+////        MenuInflater menuInflater = getActivity().getMenuInflater();
+//
+//        super.onCreateOptionsMenu(menu, inflater);
+////        menu.clear();
+//        inflater.inflate(R.menu.toolbar_menu, menu);
+//
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        searchItem.setVisible(false);
+//
+//
+//
+//    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        super.onPrepareOptionsMenu(menu);
+        if(menu.findItem(R.id.action_search) !=null ){
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            searchItem.setVisible(false);
+        }
+
+
+    }
 }

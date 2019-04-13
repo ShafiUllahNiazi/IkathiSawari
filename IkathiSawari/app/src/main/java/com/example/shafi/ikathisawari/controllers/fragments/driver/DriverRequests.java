@@ -6,10 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
@@ -54,7 +60,9 @@ public class DriverRequests extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("cyyyy","create");
         setRetainInstance(true);
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_driver_requests, container, false);
 
@@ -194,18 +202,58 @@ public class DriverRequests extends Fragment {
     @Override
     public void onStop() {
 //        Toast.makeText(getActivity(), "onStop req", Toast.LENGTH_SHORT).show();
+
         super.onStop();
+        Log.d("cyyyy","stop");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("cyyyy","pause");
     }
 
     @Override
     public void onDestroy() {
 //        Toast.makeText(getActivity(), "onDestroy req", Toast.LENGTH_SHORT).show();
+        Log.d("cyyyy","onDestroy");
         super.onDestroy();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("cyyyy","resume");
 //        Toast.makeText(getActivity(), "resumme req", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        MenuInflater menuInflater = getActivity().getMenuInflater();
+
+        super.onCreateOptionsMenu(menu, inflater);
+//        menu.clear();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (driverRequestsAdapter != null){
+                    driverRequestsAdapter.getFilter().filter(newText);
+                }
+
+                return false;
+            }
+        });
+
     }
 }
