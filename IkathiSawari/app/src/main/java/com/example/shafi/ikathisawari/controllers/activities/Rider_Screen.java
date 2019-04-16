@@ -20,6 +20,7 @@ import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderNotificat
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRequestParent;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRequests;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRide;
+import com.example.shafi.ikathisawari.services.RiderNotificationsService;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Rider_Screen extends AppCompatActivity  implements BottomNavigationView.OnNavigationItemSelectedListener{
@@ -30,6 +31,10 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rider__screen);
+
+        Intent intent = new Intent(this, RiderNotificationsService.class);
+        startService(intent);
+
         bottomNavigationView = findViewById(R.id.navigationRider);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_home_rider);
@@ -83,6 +88,9 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
             return true;
         }
         if(item.getItemId()==R.id.sign_out){
+
+            Intent intent = new Intent(this, RiderNotificationsService.class);
+            stopService(intent);
 
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this,MainActivity.class));

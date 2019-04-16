@@ -21,6 +21,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -105,6 +107,19 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
     int myHour, myMinute, myYear, myMonth, myDay;
     boolean isDate,isTime;
     String time, seats, price;
+    String timeAndDateRider, seatsRider, priceRider;
+
+
+
+    Location riderOriginAtRoad;
+    Location riderDestinationAtRoad;
+
+
+
+
+
+
+
 
     public RiderHome1() {
         // Required empty public constructor
@@ -115,6 +130,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        setHasOptionsMenu(true);
         View view =  inflater.inflate(R.layout.fragment_rider_home1, container, false);
         mLocationPermissionGranted = false;
         latLngCurrent = null;
@@ -206,26 +222,66 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
         saveRouteRider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 if (latLngCurrent!=null && latLngDestination!=null){
-//                    sendData();
-                    originLat = latLngCurrent.latitude;
-                    originLong = latLngCurrent.longitude;
-                    destinationLat = latLngDestination.latitude;
-                    destinationLong = latLngDestination.longitude;
+                    if(isTime & isDate){
+                        timeAndDateRider =dateTimeText.getText().toString();
+                        seatsRider = riderSeats.getText().toString();
+                        priceRider = riderPricePerKM.getText().toString();
+                        if(!(seatsRider.equals(""))){
+                            if(!(priceRider.equals(""))){
+                                originLat = latLngCurrent.latitude;
+                                originLong = latLngCurrent.longitude;
+                                destinationLat = latLngDestination.latitude;
+                                destinationLong = latLngDestination.longitude;
 
-                    Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
+                                Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
 
-                    availableDriversList = new ArrayList<>();
-                    saveIntoFirebase();
-                    getNearByDrivers();
+                                availableDriversList = new ArrayList<>();
+                                saveIntoFirebase();
+                                getNearByDrivers();
 
-                    Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+
+                            }else {
+                                Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }else {
+                            Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(getActivity(), "Select Date and Time", Toast.LENGTH_SHORT).show();
+                    }
                 }else {
                     Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
                 }
 
-            }
-        });
+
+
+
+
+//                if (latLngCurrent!=null && latLngDestination!=null){
+////                    sendData();
+//                    originLat = latLngCurrent.latitude;
+//                    originLong = latLngCurrent.longitude;
+//                    destinationLat = latLngDestination.latitude;
+//                    destinationLong = latLngDestination.longitude;
+//
+//                    Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
+//
+//                    availableDriversList = new ArrayList<>();
+//                    saveIntoFirebase();
+//                    getNearByDrivers();
+//
+//                    Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+//                }else {
+//                    Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
+//                }
+
+    }
+});
         selectTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -358,7 +414,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,time, seats, price);
+                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,time, seats, price,riderOriginAtRoad,riderDestinationAtRoad,timeAndDateRider,seatsRider);
                                 availableDriversList.add(availableDriverInfo);
                             }
 
@@ -525,6 +581,10 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 
                     if(time.compareTo(dateTimeText.getText().toString())<= 0){
                         if(Integer.parseInt(seats)>= Integer.parseInt(riderSeats.getText().toString())){
+
+
+                            riderOriginAtRoad = new Location(originFoundLocation);
+                            riderDestinationAtRoad = new Location(destinationFoundLocation);
                             return driverKey;
                         }
                     }
@@ -710,5 +770,17 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
             mLocationPermissionGranted = true;
             Log.i(TAG, "onRequestPermissionsResult: permission granted");
         }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        super.onPrepareOptionsMenu(menu);
+        if(menu.findItem(R.id.action_search) !=null ){
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            searchItem.setVisible(false);
+        }
+
+
     }
 }

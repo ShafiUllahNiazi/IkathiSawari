@@ -23,6 +23,7 @@ import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRequest
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRequests;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRide;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
+import com.example.shafi.ikathisawari.services.DriverNotificationsService;
 import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -40,11 +41,13 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-//        com.example.shafi.ikathisawari.services.DriverNotification driverNotification = new com.example.shafi.ikathisawari.services.DriverNotification(this);
+
         Intent intent = new Intent(this, com.example.shafi.ikathisawari.services.DriverNotification.class);
         startService(intent);
-        Intent intent2 = new Intent(this, UpdateDriverLocation.class);
-        startService(intent2);
+//        Intent intent2 = new Intent(this, UpdateDriverLocation.class);
+//        startService(intent2);
+        Intent intent3 = new Intent(this, DriverNotificationsService.class);
+        startService(intent3);
 
         bottomNavigationView = findViewById(R.id.navigationDriver);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -139,6 +142,13 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
             return true;
         }
         if(item.getItemId()==R.id.sign_out){
+
+            Intent intent = new Intent(this, com.example.shafi.ikathisawari.services.DriverNotification.class);
+            stopService(intent);
+            Intent intent2 = new Intent(this, UpdateDriverLocation.class);
+            stopService(intent2);
+            Intent intent3 = new Intent(this, DriverNotificationsService.class);
+            stopService(intent3);
 
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this,MainActivity.class));

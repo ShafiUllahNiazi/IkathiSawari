@@ -1,5 +1,6 @@
 package com.example.shafi.ikathisawari.services;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -38,25 +39,43 @@ public class DriverNotification extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        Toast.makeText(context, "notification startt", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "notification startt", Toast.LENGTH_SHORT).show();
         Log.d("cccccccc","startttttt");
         FirebaseApp.initializeApp(getApplicationContext());
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             Log.d("cccccc", "notttt");
+            Toast.makeText(this, "req notification startt111", Toast.LENGTH_SHORT).show();
             String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(currentDriver);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Log.d("cccc", "onDataChange:  "+ dataSnapshot.toString());
+                    Log.d("cccc", "onDataChange1:  "+ dataSnapshot.toString());
+//                    Toast.makeText(this, "notification startt2222", Toast.LENGTH_SHORT).show();
                     if(dataSnapshot.exists()){
                         int i = 0;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            Log.d("cccc", "onDataChange:  "+ snapshot.getKey());
+                            Log.d("cccc", "onDataChange2:  "+ snapshot.getKey());
                             MakeRequest rider = snapshot.getValue(MakeRequest.class);
                             Log.d("cccc", "onDataChange:  "+ rider.getStatus());
 
-                            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                            int notificationId = 1;
+                            String channelId = "channel-01";
+                            String channelName = "Channel Name";
+                            int importance = NotificationManager.IMPORTANCE_HIGH;
+                            NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
+
+
+
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                NotificationChannel mChannel = new NotificationChannel(
+                                        channelId, channelName, importance);
+                                notificationManager.createNotificationChannel(mChannel);
+                            }
+
+
+
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),channelId);
                             builder.setSmallIcon(R.mipmap.ic_launcher);
                             builder.setContentTitle("Ride Request");
 //                    builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
@@ -69,7 +88,7 @@ public class DriverNotification extends Service {
                             builder.setAutoCancel(true);
 
 
-                            NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
+
                             notificationManager.notify(i++, builder.build());
 
                         }

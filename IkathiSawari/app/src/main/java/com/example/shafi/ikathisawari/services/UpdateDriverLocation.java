@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.shafi.ikathisawari.models.DriverRideInfo;
 import com.example.shafi.ikathisawari.models.RiderRidePointsDriver;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,11 +27,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class UpdateDriverLocation extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener{
 
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
+
+    ArrayList<RiderRidePointsDriver> driverLiveRide;
 
     private static final String TAG = "UpdateDriverLocation";
 
@@ -46,22 +51,9 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        Log.d(TAG,"startt");
-//        if(true){
-//            Log.d(TAG,"sss "+11);
-////            final DatabaseReference dbReference= FirebaseDatabase.getInstance().getReference("test").child("testt");
-////            dbReference.setValue("111");
-//
-//
-//        }
-//        for(int i = 0;i<10;i++){
-//
-//            Log.d(TAG,"sss "+i);
-//            for(int j = 0;j<100000000;j++){
-//
-//
-//            }
-//        }
+
+        driverLiveRide = new ArrayList<>();
+
         buildGoogleApiClient();
         Toast.makeText(this, "Service update location started", Toast.LENGTH_SHORT).show();
         Log.d(TAG,"start");
@@ -119,6 +111,7 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG,"location change");
+        Toast.makeText(this, "update", Toast.LENGTH_SHORT).show();
 
         mLastLocation = location;
 //        mMap.clear();
@@ -132,6 +125,10 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
 //        Log.d("Updatee",""+ latLng.latitude +" "+ latLng.longitude);
 
         String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDatabase.getInstance().getReference().child("DriverRidePoints").setValue(points);
+
+        driverLiveRide.add(points);
+//        DriverRideInfo driverRideInfo = new DriverRideInfo(driverLiveRide);
+
+        FirebaseDatabase.getInstance().getReference().child("DriverRidePoints").setValue(driverLiveRide);
     }
 }

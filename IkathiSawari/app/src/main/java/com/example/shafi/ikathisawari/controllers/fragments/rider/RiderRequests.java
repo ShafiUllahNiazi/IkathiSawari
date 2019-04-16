@@ -119,7 +119,7 @@ public class RiderRequests extends Fragment {
                     recyclerView = view.findViewById(R.id.recyclerViewRequestRiders);
                     layoutManager = new LinearLayoutManager(getActivity());
                     recyclerView.setLayoutManager(layoutManager);
-                    riderRequestsAdapter = new RiderRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
+                    riderRequestsAdapter = new RiderRequestsAdapter(getActivity(),getChildFragmentManager(), ridersRequestsListInDriver);
 
 
                     recyclerView.setAdapter(riderRequestsAdapter);

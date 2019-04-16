@@ -107,8 +107,7 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
         Toast.makeText(getActivity(), "oncreatee", Toast.LENGTH_SHORT).show();
         View view = inflater.inflate(R.layout.fragment_driver_home1, container, false);
 
-        Intent intent = new Intent(getActivity(),UpdateDriverLocation.class);
-        getActivity().stopService(intent);
+
 
 
         mLocationPermissionGranted = false;

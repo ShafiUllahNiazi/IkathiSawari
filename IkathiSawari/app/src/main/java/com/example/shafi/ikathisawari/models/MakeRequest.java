@@ -1,5 +1,7 @@
 package com.example.shafi.ikathisawari.models;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 public class MakeRequest {
@@ -7,31 +9,30 @@ public class MakeRequest {
     RiderInfo riderInfo;
 
     String status;
-    double origin_latitude, origin_longitude,destination_latitude,destination_longitude;
     String driverId;
     DriverInfo driverInfo;
     DriverRoutInfo driverRoutInfo;
+    double riderLatOriginAtRoad,riderLngOriginAtRoad,riderLatDestinationAtRoad,  riderLngDestinationAtRoad;
+    String timeAndDateRider, seatsRider;
 
 
     public MakeRequest() {
     }
 
-    public MakeRequest(String status, String current_rider, RiderInfo riderInfo, double origin_latitude, double origin_longitude, double destination_latitude, double destination_longitude, String driverId, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo) {
+    public MakeRequest(String status, String current_rider, RiderInfo riderInfo, double riderLatOriginAtRoad, double riderLngOriginAtRoad, double riderLatDestinationAtRoad, double riderLngDestinationAtRoad, String timeAndDateRider, String seatsRider, String driverId, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo) {
         this.status = status;
         this.current_rider = current_rider;
         this.riderInfo = riderInfo;
-        this.origin_latitude = origin_latitude;
-        this.origin_longitude = origin_longitude;
-        this.destination_latitude = destination_latitude;
-        this.destination_longitude = destination_longitude;
+        this.riderLatOriginAtRoad = riderLatOriginAtRoad;
+        this.riderLngOriginAtRoad = riderLngOriginAtRoad;
+        this.riderLatDestinationAtRoad = riderLatDestinationAtRoad;
+        this.riderLngDestinationAtRoad = riderLngDestinationAtRoad;
+        this.timeAndDateRider = timeAndDateRider;
+        this.seatsRider = seatsRider;
         this.driverId = driverId;
         this.driverInfo = driverInfo;
         this.driverRoutInfo = driverRoutInfo;
 
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public String getCurrent_rider() {
@@ -42,23 +43,12 @@ public class MakeRequest {
         return riderInfo;
     }
 
-    public double getOrigin_latitude() {
-        return origin_latitude;
+    public String getStatus() {
+        return status;
     }
 
-    public double getOrigin_longitude() {
-        return origin_longitude;
-    }
 
-    public double getDestination_latitude() {
-        return destination_latitude;
-    }
-
-    public double getDestination_longitude() {
-        return destination_longitude;
-    }
-
-    public String getdriverId() {
+    public String getDriverId() {
         return driverId;
     }
 
@@ -68,5 +58,29 @@ public class MakeRequest {
 
     public DriverRoutInfo getDriverRoutInfo() {
         return driverRoutInfo;
+    }
+
+    public double getRiderLatOriginAtRoad() {
+        return riderLatOriginAtRoad;
+    }
+
+    public double getRiderLngOriginAtRoad() {
+        return riderLngOriginAtRoad;
+    }
+
+    public double getRiderLatDestinationAtRoad() {
+        return riderLatDestinationAtRoad;
+    }
+
+    public double getRiderLngDestinationAtRoad() {
+        return riderLngDestinationAtRoad;
+    }
+
+    public String getTimeAndDateRider() {
+        return timeAndDateRider;
+    }
+
+    public String getSeatsRider() {
+        return seatsRider;
     }
 }
