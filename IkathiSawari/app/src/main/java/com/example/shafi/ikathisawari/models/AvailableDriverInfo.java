@@ -4,16 +4,19 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class AvailableDriverInfo  implements Parcelable{
+public class AvailableDriverInfo implements Parcelable{
     String driverKey;
     DriverInfo driverInfo;
     DriverRoutInfo driverRoutInfo;
     String time, seats, price;
     Location riderOriginAtRoad, riderDestinationAtRoad;
     String timeAndDateRider, seatsRider, priceRider;
+    int traveledDistanceRider;
+    int traveledTimeRider;
+    int rideCharges;
 
 
-    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String time, String seats, String price, Location riderOriginAtRoad, Location riderDestinationAtRoad, String timeAndDateRider, String seatsRider) {
+    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String time, String seats, String price, Location riderOriginAtRoad, Location riderDestinationAtRoad, String timeAndDateRider, String seatsRider, int traveledDistanceRider, int traveledTimeRider, int rideCharges) {
         this.driverKey = driverKey;
         this.driverInfo = driverInfo;
         this.driverRoutInfo = driverRoutInfo;
@@ -25,8 +28,10 @@ public class AvailableDriverInfo  implements Parcelable{
         this.timeAndDateRider = timeAndDateRider;
         this.seatsRider = seatsRider;
         this.priceRider = seatsRider;
+        this.traveledDistanceRider = traveledDistanceRider;
+        this.traveledTimeRider = traveledTimeRider;
+        this.rideCharges = rideCharges;
     }
-
 
     protected AvailableDriverInfo(Parcel in) {
         driverKey = in.readString();
@@ -38,6 +43,9 @@ public class AvailableDriverInfo  implements Parcelable{
         timeAndDateRider = in.readString();
         seatsRider = in.readString();
         priceRider = in.readString();
+        traveledDistanceRider = in.readInt();
+        traveledTimeRider = in.readInt();
+        rideCharges = in.readInt();
     }
 
     public static final Creator<AvailableDriverInfo> CREATOR = new Creator<AvailableDriverInfo>() {
@@ -96,21 +104,16 @@ public class AvailableDriverInfo  implements Parcelable{
         return priceRider;
     }
 
-    @Override
-    public String toString() {
-        return "AvailableDriverInfo{" +
-                "driverKey='" + driverKey + '\'' +
-                ", driverInfo=" + driverInfo +
-                ", driverRoutInfo=" + driverRoutInfo +
-                ", time='" + time + '\'' +
-                ", seats='" + seats + '\'' +
-                ", price='" + price + '\'' +
-                ", riderOriginAtRoad=" + riderOriginAtRoad +
-                ", riderDestinationAtRoad=" + riderDestinationAtRoad +
-                ", timeAndDateRider='" + timeAndDateRider + '\'' +
-                ", seatsRider='" + seatsRider + '\'' +
-                ", priceRider='" + priceRider + '\'' +
-                '}';
+    public int getTraveledDistanceRider() {
+        return traveledDistanceRider;
+    }
+
+    public int getTraveledTimeRider() {
+        return traveledTimeRider;
+    }
+
+    public int getRideCharges() {
+        return rideCharges;
     }
 
     @Override
@@ -129,6 +132,9 @@ public class AvailableDriverInfo  implements Parcelable{
         dest.writeString(timeAndDateRider);
         dest.writeString(seatsRider);
         dest.writeString(priceRider);
+        dest.writeInt(traveledDistanceRider);
+        dest.writeInt(traveledTimeRider);
+        dest.writeInt(rideCharges);
     }
 }
 

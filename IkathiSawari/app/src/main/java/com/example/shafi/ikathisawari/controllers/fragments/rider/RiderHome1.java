@@ -33,6 +33,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
@@ -73,7 +78,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RiderHome1 extends Fragment implements OnMapReadyCallback {
+public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingListener {
 
     private static final String TAG = "RiderHome1";
 
@@ -108,6 +113,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
     boolean isDate,isTime;
     String time, seats, price;
     String timeAndDateRider, seatsRider, priceRider;
+    int traveledDistanceRider,traveledTimeRider;
 
 
 
@@ -203,6 +209,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
 
+//                Toast.makeText(getActivity(), traveledTimeRider+"..."+traveledDistanceRider, Toast.LENGTH_SHORT).show();
 
 
                 if (latLngCurrent != null && latLngDestination != null) {
@@ -225,35 +232,10 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 
 
                 if (latLngCurrent!=null && latLngDestination!=null){
-                    if(isTime & isDate){
-                        timeAndDateRider =dateTimeText.getText().toString();
-                        seatsRider = riderSeats.getText().toString();
-                        priceRider = riderPricePerKM.getText().toString();
-                        if(!(seatsRider.equals(""))){
-                            if(!(priceRider.equals(""))){
-                                originLat = latLngCurrent.latitude;
-                                originLong = latLngCurrent.longitude;
-                                destinationLat = latLngDestination.latitude;
-                                destinationLong = latLngDestination.longitude;
 
-                                Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
+                    calculateDistanceAndTime(latLngCurrent,latLngDestination);
 
-                                availableDriversList = new ArrayList<>();
-                                saveIntoFirebase();
-                                getNearByDrivers();
 
-                                Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
-
-                            }else {
-                                Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }else {
-                            Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
-                        }
-                    }else{
-                        Toast.makeText(getActivity(), "Select Date and Time", Toast.LENGTH_SHORT).show();
-                    }
                 }else {
                     Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
                 }
@@ -291,6 +273,17 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 
 
         return view;
+    }
+
+    private void calculateDistanceAndTime(LatLng latLngCurrent, LatLng latLngDestination) {
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .key("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
+                .withListener(this)
+                .alternativeRoutes(false )
+                .waypoints(latLngCurrent, latLngDestination)
+                .build();
+        routing.execute();
     }
 
     private void setSchedule() {
@@ -383,7 +376,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void getNearByDrivers() {
+    private void getNearByDrivers(final int traveledDistanceRider, final int traveledTimeRider) {
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Available Routs");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -409,12 +402,13 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
                     Log.d(TAG,"String "+ availableDriver);
 
                     if(availableDriver != null){
+                        final int  rideCharges = (Integer.valueOf(price)*traveledDistanceRider)/1000;
                         mDriverData = FirebaseDatabase.getInstance().getReference("users").child("Driver");
                         mDriverData.child(availableDriver).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,time, seats, price,riderOriginAtRoad,riderDestinationAtRoad,timeAndDateRider,seatsRider);
+                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,time, seats, price,riderOriginAtRoad,riderDestinationAtRoad,timeAndDateRider,seatsRider,traveledDistanceRider,traveledTimeRider,rideCharges);
                                 availableDriversList.add(availableDriverInfo);
                             }
 
@@ -783,4 +777,74 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback {
 
 
     }
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+
+        if(e != null) {
+            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(getActivity(), "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int i) {
+
+        traveledDistanceRider = route.get(0).getDistanceValue();
+        traveledTimeRider = route.get(0).getDurationValue();
+        saveRoute();
+
+
+        Toast.makeText(getActivity(),"Route: "+ (1) +": distance - "+ route.get(0).getDistanceValue()+": duration - "+ route.get(0).getDurationValue(),Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+
+    private void saveRoute() {
+        if(isTime & isDate){
+            timeAndDateRider =dateTimeText.getText().toString();
+            seatsRider = riderSeats.getText().toString();
+            priceRider = riderPricePerKM.getText().toString();
+            if(!(seatsRider.equals(""))){
+                if(!(priceRider.equals(""))){
+                    originLat = latLngCurrent.latitude;
+                    originLong = latLngCurrent.longitude;
+                    destinationLat = latLngDestination.latitude;
+                    destinationLong = latLngDestination.longitude;
+
+                    Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
+
+                    availableDriversList = new ArrayList<>();
+                    if(traveledDistanceRider!=0 && traveledTimeRider!=0){
+                        saveIntoFirebase();
+                        getNearByDrivers(traveledDistanceRider,traveledTimeRider);
+                    }
+
+
+                    Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+
+                }else {
+                    Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
+                }
+
+            }else {
+                Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(getActivity(), "Select Date and Time", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

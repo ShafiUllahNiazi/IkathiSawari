@@ -35,6 +35,11 @@ android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="TextView" />
 
+        <TextView
+            android:id="@+id/rideCharges"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5" />
 
 
     </LinearLayout>

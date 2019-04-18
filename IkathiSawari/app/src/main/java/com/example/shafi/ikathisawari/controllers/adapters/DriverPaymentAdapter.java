@@ -106,6 +106,9 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
             case 2:
                 final ViewHolder2 viewHolder2 = (ViewHolder2)viewHolder;
                 viewHolder2.ridername.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
+                viewHolder2.distance.setText(""+ridersRequestsListInDriver.get(i).getMakeRequest().getTraveledDistanceRider());
+                viewHolder2.charges.setText(""+ridersRequestsListInDriver.get(i).getMakeRequest().getRideCharges());
+
                 viewHolder2.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

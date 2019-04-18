@@ -99,7 +99,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
                     MakeRequest rider = snapshot.getValue(MakeRequest.class);
 //                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
                     RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
-                    if(!(riderRequestInDriver.getMakeRequest().getStatus().equals("rejected"))){
+                    if((riderRequestInDriver.getMakeRequest().getStatus().equals("accepted"))){
                         ridersRequestsListInDriver.add(riderRequestInDriver);
                         Log.d("Time1_Datess",snapshot.getKey()+" "+ rider);
                     }

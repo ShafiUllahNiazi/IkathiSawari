@@ -14,12 +14,14 @@ public class MakeRequest {
     DriverRoutInfo driverRoutInfo;
     double riderLatOriginAtRoad,riderLngOriginAtRoad,riderLatDestinationAtRoad,  riderLngDestinationAtRoad;
     String timeAndDateRider, seatsRider;
+    int traveledDistanceRider, traveledTimeRider;
+    int rideCharges;
 
 
     public MakeRequest() {
     }
 
-    public MakeRequest(String status, String current_rider, RiderInfo riderInfo, double riderLatOriginAtRoad, double riderLngOriginAtRoad, double riderLatDestinationAtRoad, double riderLngDestinationAtRoad, String timeAndDateRider, String seatsRider, String driverId, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo) {
+    public MakeRequest(String status, String current_rider, RiderInfo riderInfo, double riderLatOriginAtRoad, double riderLngOriginAtRoad, double riderLatDestinationAtRoad, double riderLngDestinationAtRoad, String timeAndDateRider, String seatsRider, String driverId, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo,int traveledDistanceRider, int traveledTimeRider,int rideCharges) {
         this.status = status;
         this.current_rider = current_rider;
         this.riderInfo = riderInfo;
@@ -32,6 +34,9 @@ public class MakeRequest {
         this.driverId = driverId;
         this.driverInfo = driverInfo;
         this.driverRoutInfo = driverRoutInfo;
+        this.traveledDistanceRider = traveledDistanceRider;
+        this.traveledTimeRider = traveledTimeRider;
+        this.rideCharges = rideCharges;
 
     }
 
@@ -82,5 +87,17 @@ public class MakeRequest {
 
     public String getSeatsRider() {
         return seatsRider;
+    }
+
+    public int getTraveledDistanceRider() {
+        return traveledDistanceRider;
+    }
+
+    public int getTraveledTimeRider() {
+        return traveledTimeRider;
+    }
+
+    public int getRideCharges() {
+        return rideCharges;
     }
 }

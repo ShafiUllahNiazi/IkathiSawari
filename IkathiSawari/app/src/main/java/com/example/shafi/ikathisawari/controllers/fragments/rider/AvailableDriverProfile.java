@@ -95,7 +95,10 @@ public class AvailableDriverProfile extends Fragment {
                                 availableDriversList.get(position).getTimeAndDateRider(),
                                 availableDriversList.get(position).getSeatsRider(),
                                 availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
-                                availableDriversList.get(position).getDriverRoutInfo());
+                                availableDriversList.get(position).getDriverRoutInfo(),
+                                availableDriversList.get(position).getTraveledDistanceRider(),
+                                availableDriversList.get(position).getTraveledTimeRider(),
+                                availableDriversList.get(position).getRideCharges());
                         databaseReference.setValue(makeRequest);
 //                        databaseReference.setValue(availableDriversList.get(position));
 

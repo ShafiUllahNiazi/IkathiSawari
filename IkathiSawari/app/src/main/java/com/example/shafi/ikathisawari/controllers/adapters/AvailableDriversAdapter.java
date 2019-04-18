@@ -52,6 +52,18 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.driversKey.setText(availableDriversList.get(i).getDriverInfo().getName());
+        int traveledDistanceRider = availableDriversList.get(i).getTraveledDistanceRider();
+        int pricePerKm = Integer.valueOf(availableDriversList.get(i).getPrice());
+        Toast.makeText(context, traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
+
+        int  charges = (pricePerKm*traveledDistanceRider)/1000;
+        Toast.makeText(context, charges+" ddd"+traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
+
+
+
+
+        viewHolder.rideCharges.setText(charges+"");
+
         final int position = i;
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,11 +96,12 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView driversKey;
+        TextView driversKey,rideCharges;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             driversKey = itemView.findViewById(R.id.driverKey);
+            rideCharges = itemView.findViewById(R.id.rideCharges);
 
         }
     }
