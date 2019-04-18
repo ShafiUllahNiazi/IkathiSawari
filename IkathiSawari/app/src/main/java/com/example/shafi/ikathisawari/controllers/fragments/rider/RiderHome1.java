@@ -167,7 +167,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
         riderPricePerKM = view.findViewById(R.id.pricePerKMRider);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.mapDriverFragment1);
+                .findFragmentById(R.id.mapRiderFragment1);
 
 
         if (mapFragment == null) {
@@ -215,7 +215,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
                 if (latLngCurrent != null && latLngDestination != null) {
 
 
-                    new FetchURL(mMap,"showRoute",getActivity(), latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+//                    new FetchURL(mMap,"showRoute",getActivity(), latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
                     Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();

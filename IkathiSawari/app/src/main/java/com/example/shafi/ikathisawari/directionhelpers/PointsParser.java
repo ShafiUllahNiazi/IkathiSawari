@@ -40,14 +40,14 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
     String clickButton;
     Context context;
     private LatLng latLngCurrent, latLngDestination;
-    String timeAndDate, seats,price;
+    String date,time, seats,price;
 
     public interface TaskLoadedCallback {
         void onTaskDone(Object... values);
     }
 
     public PointsParser(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
-                        LatLng latLngDestination, String timeAndDate, String seats, String price, String directionMode) {
+                        LatLng latLngDestination,String date, String time, String seats, String price, String directionMode) {
 //        this.taskCallback = (TaskLoadedCallback) mContext;
         this.directionMode = directionMode;
         this.mMap = map;
@@ -55,9 +55,11 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
         this.context =context;
         this.latLngCurrent = latLngCurrent;
         this.latLngDestination = latLngDestination;
-        this.timeAndDate = timeAndDate;
+        this.date = date;
+        this.time = time;
         this.seats = seats;
         this.price = price;
+        Toast.makeText(context, "in poinsts parser", Toast.LENGTH_SHORT).show();
     }
 
     // Parsing the data in non-ui thread
@@ -90,9 +92,9 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
     // Executes in UI thread, after the parsing process
     @Override
     protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-        mMap.clear();
-        Marker marker = mMap.addMarker(new MarkerOptions().position(latLngCurrent));
-        Marker markerDes = mMap.addMarker(new MarkerOptions().position(latLngDestination));
+//        mMap.clear();
+//        Marker marker = mMap.addMarker(new MarkerOptions().position(latLngCurrent));
+//        Marker markerDes = mMap.addMarker(new MarkerOptions().position(latLngDestination));
 
         if(clickButton.equals("saveRoute")){
 
@@ -103,7 +105,8 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
             map.put("driver_origin_long", latLngCurrent.longitude);
             map.put("driver_destination_lat", latLngDestination.latitude);
             map.put("driver_destination_long", latLngDestination.longitude);
-            map.put("start_ride", timeAndDate);
+            map.put("start_ride_date", date);
+            map.put("start_ride_time", time);
             map.put("no_of_seats", seats);
             map.put("price_per_km", price);
 

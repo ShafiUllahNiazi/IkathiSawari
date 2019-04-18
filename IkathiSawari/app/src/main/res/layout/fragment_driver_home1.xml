@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,114 +8,432 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <LinearLayout
+
+    <ScrollView
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
 
-        <LinearLayout
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textselectOriginDriver"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Origin" />
+            <android.support.v7.widget.CardView
+                android:id="@+id/coontainer_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_margin="5dp"
+                app:cardBackgroundColor="@color/common_google_signin_btn_text_dark_default"
+                app:cardCornerRadius="1dp"
+                app:cardElevation="3dp">
 
-            <Button
-                android:id="@+id/selectOriginDriver"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Select Origin" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-        </LinearLayout>
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                        <ImageButton
+                            android:id="@+id/imageButton"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_location_on_green_24dp" />
 
-            <TextView
-                android:id="@+id/textselectDestinationDriver"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Destination" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@color/light_gray"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageButton"
+                            app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/selectDestinationDriver"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Select Destination" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                            <EditText
+                                android:id="@+id/selectOriginDriver"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:hint="From"
+                                android:padding="3dp"
+                                android:paddingLeft="6dp"
+                                android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/textDriverDateTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Ride Start Time" />
+                        </LinearLayout>
 
-            <Button
-                android:id="@+id/selectDriverDateTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Select Time" />
-        </LinearLayout>
+                    </android.support.constraint.ConstraintLayout>
 
-        <EditText
-            android:id="@+id/driverSeats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="No of Seats Available"
-            android:inputType="number"/>
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/driverPricePerKM"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Price/Km in PKR"
-            android:inputType="number"/>
+                        <ImageButton
+                            android:id="@+id/imageButton3"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_location_on_red_24dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@color/light_gray"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageButton3"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <EditText
+                                android:id="@+id/selectDestinationDriver"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:hint="To"
+                                android:padding="3dp"
+                                android:paddingLeft="6dp"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/imageButton5"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_directions_car_black_24dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageButton5"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
+                                android:hint="Car Model"
+                                android:paddingLeft="6dp"
+                                android:textColorHint="@color/light_green"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/imageButton2"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_date_range_black_24dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageButton2"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <EditText
+                                android:id="@+id/selectDateRideDriver"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:hint="date"
+                                android:paddingLeft="6dp"
+                                android:textColorHint="@color/light_green"
+                                android:textSize="12sp" />
+
+                            <EditText
+                                android:id="@+id/selectTimeRideDriver"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:hint="Time"
+                                android:paddingLeft="6dp"
+                                android:textColorHint="@color/light_green"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/imageButton4"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_airline_seat_recline_extra_black_24dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageButton4"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <EditText
+                                android:id="@+id/driverSeats"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:hint="Seats Available"
+                                android:paddingLeft="6dp"
+                                android:textColorHint="@color/light_green"
+                                android:textSize="12sp" />
+
+                            <EditText
+                                android:id="@+id/driverPricePerKM"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:hint="Cost Per Km"
+                                android:paddingLeft="6dp"
+                                android:textColorHint="@color/light_green"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                    </android.support.constraint.ConstraintLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="@drawable/custum_border">
+
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:background="@android:color/transparent"
+                            android:gravity="top"
+                            android:hint="Your Message Here"
+                            android:inputType="textMultiLine"
+                            android:overScrollMode="always"
+                            android:padding="6dp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
 
             <Button
                 android:id="@+id/saveRouteD1"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Save Route" />
-
-            <Button
-                android:id="@+id/showRouteD1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Show Route" />
-        </LinearLayout>
-
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:map="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/mapDriverFragment1"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                android:layout_below="@+id/coontainer_details"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="6dp"
+                android:background="@android:color/black"
+                android:text="Offer Ride"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
 
 
-    </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+    </ScrollView>
+
+
+
+    <!--111111111111111111111111111111111111111111111111111111111111111111111-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/textselectOriginDriver"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:hint="Origin" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/selectOriginDriver"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="Select Origin" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/textselectDestinationDriver"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:hint="Destination" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/selectDestinationDriver"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="Select Destination" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/textDriverDateTime"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:hint="Ride Start Time" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/selectDriverDateTime"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="Select Time" />-->
+        <!--</LinearLayout>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/driverSeats"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="No of Seats Available"-->
+            <!--android:inputType="number"/>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/driverPricePerKM"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="Price/Km in PKR"-->
+            <!--android:inputType="number"/>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/saveRouteD1"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="Save Route" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/showRouteD1"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="Show Route" />-->
+        <!--</LinearLayout>-->
+
+        <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--xmlns:map="http://schemas.android.com/apk/res-auto"-->
+            <!--xmlns:tools="http://schemas.android.com/tools"-->
+            <!--android:id="@+id/mapDriverFragment1"-->
+            <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+
+
+    <!--</LinearLayout>-->
 </FrameLayout>

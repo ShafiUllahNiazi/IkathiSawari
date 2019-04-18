@@ -20,7 +20,11 @@ import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.RequestRiderProfile;
 import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -120,6 +124,32 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(context, "okkk"+viewHolder2.ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+                        final String currentRider = ridersRequestsListInDriver.get(position).getMakeRequest().getCurrent_rider();
+                        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Rating");
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.hasChild(currentRider)) {
+
+                                    float ratingg = Float.valueOf( dataSnapshot.child(currentRider).getValue().toString());
+                                    float newRating = viewHolder2.ratingBar.getRating();
+//                                    float latestRating = (ratingg + newRating)/2;
+                                    databaseReference.child(currentRider).setValue(4);
+
+
+                                    Toast.makeText(context, "ratinggg "+dataSnapshot.child(currentRider).getValue(), Toast.LENGTH_SHORT).show();
+                                }else{
+                                    databaseReference.child(currentRider).setValue(viewHolder2.ratingBar.getRating());
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
 
                     }
                 });
