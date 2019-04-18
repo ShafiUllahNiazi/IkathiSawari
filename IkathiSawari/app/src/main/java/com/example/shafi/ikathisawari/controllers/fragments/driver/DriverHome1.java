@@ -35,6 +35,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
@@ -50,20 +55,33 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DirectionsLeg;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
+import com.google.maps.model.Duration;
+import com.google.maps.model.TravelMode;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DriverHome1 extends Fragment implements OnMapReadyCallback {
+public class DriverHome1 extends Fragment implements OnMapReadyCallback,RoutingListener {
 
     private static final String TAG = "DriverHome1";
 
@@ -177,19 +195,38 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
         showRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Hello", Toast.LENGTH_SHORT).show();
 
-                String seats = driverSeats.getText().toString();
-                String price = driverPricePerKM.getText().toString();
+                if (latLngCurrent != null && latLngDestination != null) {
 
-                String dtStart = "2010-10-15T09:27";
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-                try {
-                    Date date = format.parse(dtStart);
-                    Toast.makeText(getActivity(), ""+date, Toast.LENGTH_SHORT).show();
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    makeRoute(latLngCurrent,latLngDestination);
+
+                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
                 }
+
+
+
+
+
+
+
+
+
+
+//                Toast.makeText(getActivity(), "Hello", Toast.LENGTH_SHORT).show();
+//
+//                String seats = driverSeats.getText().toString();
+//                String price = driverPricePerKM.getText().toString();
+//
+//                String dtStart = "2010-10-15T09:27";
+//                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+//                try {
+//                    Date date = format.parse(dtStart);
+//                    Toast.makeText(getActivity(), ""+date, Toast.LENGTH_SHORT).show();
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
 
 //                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
 //                builder.setSmallIcon(R.mipmap.ic_launcher);
@@ -262,6 +299,51 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
 
         return view;
     }
+
+    private void makeRoute(LatLng start, LatLng end) {
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .key("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
+                .withListener(this)
+                .alternativeRoutes(false )
+                .waypoints(start, end)
+                .build();
+        routing.execute();
+    }
+//
+//    public String getDurationForRoute(LatLng origin, LatLng destination){
+//        // - We need a context to access the API
+////        GeoApiContext geoApiContext = new GeoApiContext.Builder()
+////                .apiKey("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
+////                .build();
+////
+////        // - Perform the actual request
+////        DirectionsResult directionsResult = null;
+////        try {
+////            directionsResult = DirectionsApi.newRequest(geoApiContext)
+////                    .mode(TravelMode.DRIVING)
+////                    .origin(origin.latitude+""+origin.longitude)
+////                    .destination(destination.latitude+""+destination.longitude)
+////                    .await();
+////        } catch (ApiException e) {
+////            e.printStackTrace();
+////        } catch (InterruptedException e) {
+////            e.printStackTrace();
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////        }
+////
+////        // - Parse the result
+////        DirectionsRoute route = directionsResult.routes[0];
+////        DirectionsLeg leg = route.legs[0];
+////        Duration duration = leg.duration;
+////
+////        Toast.makeText(getActivity(), "dd "+duration.humanReadable, Toast.LENGTH_SHORT).show();
+////        return duration.humanReadable;
+//
+//    }
+
+
 
 
     private void setSchedule() {
@@ -523,6 +605,63 @@ public class DriverHome1 extends Fragment implements OnMapReadyCallback {
             searchItem.setVisible(false);
         }
 
+
+    }
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+
+        if(e != null) {
+            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(getActivity(), "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+
+
+
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+
+        Log.d("routeeee",route.toString()+" " +route.size());
+
+        polylines = new ArrayList<>();
+        PolylineOptions polyOptions = new PolylineOptions();
+        polyOptions.color(getResources().getColor(COLORS[0]));
+        polyOptions.width(10);
+        polyOptions.addAll(route.get(0).getPoints());
+        Polyline polyline = mMap.addPolyline(polyOptions);
+        polylines.add(polyline);
+
+        Toast.makeText(getActivity(),"Route: "+ (1) +": distance - "+ route.get(0).getDistanceValue()+": duration - "+ route.get(0).getDurationValue(),Toast.LENGTH_SHORT).show();
+        //add route(s) to the map.
+//        for (int i = 0; i <route.size(); i++) {
+//
+//            //In case of more than 5 alternative routes
+//            int colorIndex = i % COLORS.length;
+//
+//            PolylineOptions polyOptions = new PolylineOptions();
+//            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+//            polyOptions.width(10 + i * 3);
+//            polyOptions.addAll(route.get(i).getPoints());
+//            Polyline polyline = mMap.addPolyline(polyOptions);
+//            polylines.add(polyline);
+//
+//            Toast.makeText(getActivity(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
+//        }
+    }
+
+    @Override
+    public void onRoutingCancelled() {
 
     }
 }

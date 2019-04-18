@@ -2,17 +2,17 @@ package com.example.shafi.ikathisawari.controllers.fragments.driver;
 
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,13 +24,12 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.controllers.adapters.DriverPaymentAdapter;
+import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RiderRidePointsDriver;
-import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
-import com.google.android.gms.common.ConnectionResult;
+import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -59,6 +58,12 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
     ArrayList<LatLng> pointsDriverArrayList;
     PolylineOptions lineOptions = null;
+    String currentDriver;
+
+    ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    DriverPaymentAdapter driverPaymentAdapter;
 
 
     private GoogleMap mMap;
@@ -66,6 +71,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
     Button stoppService;
 
     private RatingBar ratingBar;
+    View view;
 
 
     public DriverRide() {
@@ -78,8 +84,60 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_driver_ride, container, false);
-        ratingBar =  view.findViewById(R.id.driverRatingBar);
+        view = inflater.inflate(R.layout.fragment_driver_ride, container, false);
+
+
+
+        currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ridersRequestsListInDriver =new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    MakeRequest rider = snapshot.getValue(MakeRequest.class);
+//                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
+                    RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
+                    if(!(riderRequestInDriver.getMakeRequest().getStatus().equals("rejected"))){
+                        ridersRequestsListInDriver.add(riderRequestInDriver);
+                        Log.d("Time1_Datess",snapshot.getKey()+" "+ rider);
+                    }
+
+                    Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
+                }
+
+                if (getActivity() != null) {
+                    recyclerView = view.findViewById(R.id.driverRide_rider_recyclerView);
+                    layoutManager = new LinearLayoutManager(getActivity());
+                    recyclerView.setLayoutManager(layoutManager);
+//        driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), driverRequestsList);
+
+
+                    driverPaymentAdapter = new DriverPaymentAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
+
+
+                    recyclerView.setAdapter(driverPaymentAdapter);
+
+                    driverPaymentAdapter.notifyDataSetChanged();
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
         pointsDriverArrayList= new ArrayList<>();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -102,12 +160,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 //                Intent intent = new Intent(getActivity(),UpdateDriverLocation.class);
 //                getActivity().stopService(intent);
 //                ratingBar.setVisibility(View.VISIBLE);
-                ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        Toast.makeText(getActivity(), "rr ."+rating, Toast.LENGTH_SHORT).show();
-                    }
-                });
+
 
             }
         });

@@ -42,13 +42,14 @@ import java.util.Map;
  */
 public class DriverRequests extends Fragment {
 
+    ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private DriverRequestsAdapter driverRequestsAdapter;
 
     View view;
 
-    ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
+
 
 
     public DriverRequests() {
@@ -166,18 +167,22 @@ public class DriverRequests extends Fragment {
 
                    Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
                }
-               recyclerView = view.findViewById(R.id.recyclerViewRequestDrivers);
-               layoutManager = new LinearLayoutManager(getActivity());
-               recyclerView.setLayoutManager(layoutManager);
+
+               if (getActivity() != null) {
+                   recyclerView = view.findViewById(R.id.recyclerViewRequestDrivers);
+                   layoutManager = new LinearLayoutManager(getActivity());
+                   recyclerView.setLayoutManager(layoutManager);
 //        driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), driverRequestsList);
 
 
-               driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
+                   driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
 
 
-               recyclerView.setAdapter(driverRequestsAdapter);
+                   recyclerView.setAdapter(driverRequestsAdapter);
 
-               driverRequestsAdapter.notifyDataSetChanged();
+                   driverRequestsAdapter.notifyDataSetChanged();
+               }
+
 
            }
 
