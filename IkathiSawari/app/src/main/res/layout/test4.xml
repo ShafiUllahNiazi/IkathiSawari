@@ -14,40 +14,32 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/message"
+            android:id="@+id/requestRider_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
             android:text="Please take me with you"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/driver_offered_seats"
-            app:layout_constraintTop_toBottomOf="@+id/status" />
+            app:layout_constraintStart_toEndOf="@+id/requestRider_message_heading"
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_status_type" />
 
         <TextView
-            android:id="@+id/status"
+            android:id="@+id/requestRider_status_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:text="pending"
             android:textColor="@android:color/holo_red_light"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/driver_date"
-            app:layout_constraintTop_toBottomOf="@+id/driver_car_model" />
+            app:layout_constraintStart_toEndOf="@+id/requestRider_status_heading"
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_mobileNo" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/driver_image"
+            android:id="@+id/requestRider_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
@@ -59,7 +51,7 @@
             tools:ignore="VectorDrawableCompat" />
 
         <TextView
-            android:id="@+id/passenger_requested_name"
+            android:id="@+id/requestRider_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -71,7 +63,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/driver_age"
+            android:id="@+id/requestRider_age_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -79,10 +71,10 @@
             android:text="22/ Male"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passenger_requested_name" />
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_name" />
 
         <TextView
-            android:id="@+id/driver_car_model"
+            android:id="@+id/requestRider_mobileNo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -91,25 +83,23 @@
             android:text="03039214425"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/driver_age" />
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_age_gender" />
 
         <TextView
-            android:id="@+id/driver_offered_seats"
+            android:id="@+id/requestRider_message_heading"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:text="Message: "
             android:textColor="@android:color/black"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/driver_date" />
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_status_heading" />
 
         <TextView
-            android:id="@+id/driver_date"
+            android:id="@+id/requestRider_status_heading"
             android:layout_width="0dp"
             android:textColor="@android:color/black"
             android:layout_height="wrap_content"
@@ -119,10 +109,10 @@
             android:text="status:"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/driver_car_model" />
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_mobileNo" />
 
         <LinearLayout
-            android:id="@+id/container_seats"
+            android:id="@+id/container_accept_reject"
             android:layout_width="match_parent"
             android:layout_height="41dp"
             android:layout_marginTop="8dp"
@@ -131,12 +121,11 @@
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status">
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_message">
 
             <TextView
-                android:id="@+id/available_seats"
+                android:id="@+id/accept_cancel_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -153,7 +142,7 @@
                 android:background="@android:color/white" />
 
             <TextView
-                android:id="@+id/price_per_seats"
+                android:id="@+id/reject_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -163,6 +152,38 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/requestRider_From"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center"
+            android:text="From"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/requestRider_mobileNo"
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_age_gender" />
+
+        <TextView
+            android:id="@+id/requestRider_To"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center"
+            android:text="To"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/requestRider_status_type"
+            app:layout_constraintTop_toBottomOf="@+id/requestRider_From" />
 
 
     </android.support.constraint.ConstraintLayout>

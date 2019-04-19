@@ -80,7 +80,9 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         switch (viewHolder.getItemViewType()) {
             case 0:
                 ViewHolder0 viewHolder0 = (ViewHolder0) viewHolder;
-                viewHolder0.content.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
+                viewHolder0.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
+                viewHolder0.status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
+                viewHolder0.requestRider_mobileNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getMobile());
                 viewHolder0.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -96,7 +98,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         fragmentTransaction.commit();
                     }
                 });
-                viewHolder0.acceptRequest.setOnClickListener(new View.OnClickListener() {
+                viewHolder0.accept_cancel_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 //                        Toast.makeText(context, "accepttt", Toast.LENGTH_SHORT).show();
@@ -105,7 +107,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
                     }
                 });
-                viewHolder0.rejectRequest.setOnClickListener(new View.OnClickListener() {
+                viewHolder0.reject_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -117,7 +119,9 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             case 2:
                 ViewHolder2 viewHolder2 = (ViewHolder2)viewHolder;
-                viewHolder2.content.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
+                viewHolder2.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
+                viewHolder2.status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
+                viewHolder2.requestRider_mobileNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getMobile());
                 viewHolder2.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -139,6 +143,14 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     public void onClick(View v) {
                         String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
+                        FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("pending");
+                    }
+                });
+                viewHolder2.reject_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("rejected");
                     }
                 });
@@ -154,28 +166,31 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     class ViewHolder0 extends RecyclerView.ViewHolder {
-        TextView content,date;
-        Button acceptRequest, rejectRequest;
+        TextView name,status, requestRider_mobileNo;
+        TextView accept_cancel_btn, reject_btn;
 
         public ViewHolder0(@NonNull View itemView) {
             super(itemView);
-            content = itemView.findViewById(R.id.content_pending);
-            date = itemView.findViewById(R.id.date_pending);
-            acceptRequest = itemView.findViewById(R.id.accept_request);
-            rejectRequest = itemView.findViewById(R.id.reject_request);
+            name = itemView.findViewById(R.id.requestRider_name);
+            status = itemView.findViewById(R.id.requestRider_status_type);
+            requestRider_mobileNo = itemView.findViewById(R.id.requestRider_mobileNo);
+            accept_cancel_btn = itemView.findViewById(R.id.accept_cancel_btn);
+            reject_btn = itemView.findViewById(R.id.reject_btn);
 
         }
     }
 
     class ViewHolder2 extends RecyclerView.ViewHolder {
-        TextView content,date;
-        Button cancelRequest;
+        TextView name, status, requestRider_mobileNo;
+        TextView cancelRequest,reject_btn;
 
         public ViewHolder2(@NonNull View itemView) {
             super(itemView);
-            content = itemView.findViewById(R.id.content_accepted);
-            date = itemView.findViewById(R.id.date_accepted);
-            cancelRequest = itemView.findViewById(R.id.cancel_request);
+            name = itemView.findViewById(R.id.requestRider_name_p);
+            status = itemView.findViewById(R.id.requestRider_status_type_p);
+            requestRider_mobileNo = itemView.findViewById(R.id.requestRider_mobileNo_p);
+            cancelRequest = itemView.findViewById(R.id.cancel_btn_p);
+            reject_btn = itemView.findViewById(R.id.reject_btn_p);
 
         }
 

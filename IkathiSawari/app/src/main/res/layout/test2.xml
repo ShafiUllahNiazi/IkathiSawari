@@ -14,7 +14,7 @@
         android:layout_height="150dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/driver_image"
+            android:id="@+id/available_driver_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="24dp"
@@ -26,7 +26,7 @@
             tools:ignore="VectorDrawableCompat" />
 
         <TextView
-            android:id="@+id/passenger_requested_name"
+            android:id="@+id/available_driver_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -34,52 +34,52 @@
             android:layout_marginTop="8dp"
             android:textColor="@android:color/black"
             android:text="Shafi Ullah Khan"
-            app:layout_constraintStart_toEndOf="@+id/driver_image"
+            app:layout_constraintStart_toEndOf="@+id/available_driver_image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/driver_age"
+            android:id="@+id/available_driver_age_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textColor="@android:color/black"
             android:layout_marginLeft="8dp"
             android:text="22/ Male"
-            app:layout_constraintStart_toEndOf="@+id/driver_image"
-            app:layout_constraintTop_toBottomOf="@+id/passenger_requested_name" />
+            app:layout_constraintStart_toEndOf="@+id/available_driver_image"
+            app:layout_constraintTop_toBottomOf="@+id/available_driver_name" />
 
         <TextView
-            android:id="@+id/driver_car_model"
+            android:id="@+id/available_driver_vehicle_model"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:textSize="12sp"
             android:text="Bua 61632"
-            app:layout_constraintStart_toEndOf="@+id/driver_image"
-            app:layout_constraintTop_toBottomOf="@+id/driver_age" />
+            app:layout_constraintStart_toEndOf="@+id/available_driver_image"
+            app:layout_constraintTop_toBottomOf="@+id/available_driver_age_gender" />
 
         <TextView
-            android:id="@+id/driver_offered_seats"
+            android:id="@+id/available_driver_offered_seats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:textSize="12sp"
             android:text="Offered 4 seats"
-            app:layout_constraintStart_toEndOf="@+id/driver_image"
-            app:layout_constraintTop_toBottomOf="@+id/driver_car_model" />
+            app:layout_constraintStart_toEndOf="@+id/available_driver_image"
+            app:layout_constraintTop_toBottomOf="@+id/available_driver_vehicle_model" />
 
         <TextView
-            android:id="@+id/driver_date"
+            android:id="@+id/available_driver_ride_date"
             android:layout_width="103dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:textSize="12sp"
             android:text="18 april 2019 4:30"
-            app:layout_constraintStart_toEndOf="@+id/driver_image"
-            app:layout_constraintTop_toBottomOf="@+id/driver_offered_seats" />
+            app:layout_constraintStart_toEndOf="@+id/available_driver_image"
+            app:layout_constraintTop_toBottomOf="@+id/available_driver_offered_seats" />
 
         <LinearLayout
             android:id="@+id/container_seats"
@@ -90,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/driver_date"
+            app:layout_constraintTop_toBottomOf="@+id/available_driver_ride_date"
             app:layout_constraintVertical_bias="1.0">
 
             <TextView

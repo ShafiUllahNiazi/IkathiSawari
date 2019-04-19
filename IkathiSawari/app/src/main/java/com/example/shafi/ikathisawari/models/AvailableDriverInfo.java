@@ -8,7 +8,7 @@ public class AvailableDriverInfo implements Parcelable{
     String driverKey;
     DriverInfo driverInfo;
     DriverRoutInfo driverRoutInfo;
-    String time, seats, price;
+    String time, seats, price,date;
     Location riderOriginAtRoad, riderDestinationAtRoad;
     String timeAndDateRider, seatsRider, priceRider;
     int traveledDistanceRider;
@@ -16,10 +16,11 @@ public class AvailableDriverInfo implements Parcelable{
     int rideCharges;
 
 
-    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String time, String seats, String price, Location riderOriginAtRoad, Location riderDestinationAtRoad, String timeAndDateRider, String seatsRider, int traveledDistanceRider, int traveledTimeRider, int rideCharges) {
+    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String date, String time, String seats, String price, Location riderOriginAtRoad, Location riderDestinationAtRoad, String timeAndDateRider, String seatsRider, int traveledDistanceRider, int traveledTimeRider, int rideCharges) {
         this.driverKey = driverKey;
         this.driverInfo = driverInfo;
         this.driverRoutInfo = driverRoutInfo;
+        this.date = date;
         this.time = time;
         this.seats = seats;
         this.price = price;
@@ -38,6 +39,7 @@ public class AvailableDriverInfo implements Parcelable{
         time = in.readString();
         seats = in.readString();
         price = in.readString();
+        date = in.readString();
         riderOriginAtRoad = in.readParcelable(Location.class.getClassLoader());
         riderDestinationAtRoad = in.readParcelable(Location.class.getClassLoader());
         timeAndDateRider = in.readString();
@@ -84,6 +86,10 @@ public class AvailableDriverInfo implements Parcelable{
         return price;
     }
 
+    public String getDate() {
+        return date;
+    }
+
     public Location getRiderOriginAtRoad() {
         return riderOriginAtRoad;
     }
@@ -127,6 +133,7 @@ public class AvailableDriverInfo implements Parcelable{
         dest.writeString(time);
         dest.writeString(seats);
         dest.writeString(price);
+        dest.writeString(date);
         dest.writeParcelable(riderOriginAtRoad, flags);
         dest.writeParcelable(riderDestinationAtRoad, flags);
         dest.writeString(timeAndDateRider);

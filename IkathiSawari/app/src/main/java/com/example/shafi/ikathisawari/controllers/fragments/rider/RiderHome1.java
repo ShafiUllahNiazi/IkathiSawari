@@ -14,11 +14,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +42,7 @@ import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.controllers.adapters.AvailableDriversAdapter;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
 import com.example.shafi.ikathisawari.models.DriverInfo;
@@ -78,41 +82,25 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingListener {
+public class RiderHome1 extends Fragment implements RoutingListener{
 
     private static final String TAG = "RiderHome1";
 
     private static final int PICKUP_Origin_PLACE_PICKER_REQUEST = 256;
     private static final int PICKUP_Destination_PLACE_PICKER_REQUEST = 671;
 
-    private static final int ERROR_DIALOGE_REQUEST = 9001;
-    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1122;
 
-    private final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
-    private boolean mLocationPermissionGranted;
-
-
-    Button selectOriginRider, selectDestinationRider,showRouteRider,saveRouteRider, selectTime;
-    TextView originLocationTextRider, destinationLocationTextRider,dateTimeText;
-    EditText riderSeats, riderPricePerKM;
-
-    private GoogleMap mMap;
     private LatLng latLngCurrent, latLngDestination;
     Double originLat, originLong, destinationLat, destinationLong;
 
-    private static final float DEFAULT_ZOOM = 15f;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
 
-
-    private DatabaseReference mRiderLocationPoints;
-    ArrayList<AvailableDriverInfo> availableDriversList;
     private float radius = 100;
     private DatabaseReference mDriverData;
 
     int myHour, myMinute, myYear, myMonth, myDay;
     boolean isDate,isTime;
-    String time, seats, price;
-    String timeAndDateRider, seatsRider, priceRider;
+    String dateDriver, timeDriver, seatsDriver, priceDriver;
+    String dateRider, seatsRider;
     int traveledDistanceRider,traveledTimeRider;
 
 
@@ -121,24 +109,68 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
     Location riderDestinationAtRoad;
 
 
+    Button saveRouteRider;
 
+    EditText  selectOriginRider, selectDestinationRider,selectDateRideRider,riderSeats;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private AvailableDriversAdapter availableDriversAdapter;
 
+    ArrayList<AvailableDriverInfo> availableDriversList;
 
-
-
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putDouble("selectOriginRiderlat", latLngCurrent.latitude);
+//        outState.putDouble("selectOriginRiderlng", latLngCurrent.longitude);
+//        outState.putDouble("selectDestinationRiderlat", latLngDestination.latitude);
+//        outState.putDouble("selectDestinationRiderlng", latLngDestination.longitude);
+//
+//        outState.putString("selectOriginRiderText", selectOriginRider.getText().toString());
+//        outState.putString("selectDestinationRiderText", selectDestinationRider.getText().toString());
+//
+//        outState.putString("selectDateRideRider", selectDateRideRider.getText().toString());
+//        outState.putString("riderSeats", riderSeats.getText().toString());
+//
+//        outState.putParcelableArrayList("availableDriversList", availableDriversList);
+//    }
+//
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//        if(savedInstanceState!=null) {
+//            Double latCurrent = savedInstanceState.getDouble("selectOriginRiderlat");
+//            Double lngCurrnet = savedInstanceState.getDouble("selectOriginRiderlng");
+//            latLngCurrent = new LatLng(latCurrent, lngCurrnet);
+//            Double latDestination = savedInstanceState.getDouble("selectDestinationRiderlat");
+//            Double lngDestination = savedInstanceState.getDouble("selectDestinationRiderlng");
+//            latLngDestination = new LatLng(latDestination, lngDestination);
+//            selectOriginRider.setText(savedInstanceState.getString("selectOriginRiderText"));
+//            selectDestinationRider.setText(savedInstanceState.getString("selectDestinationRiderText"));
+//            selectDateRideRider.setText(savedInstanceState.getString("selectDateRideRider"));
+//            riderSeats.setText(savedInstanceState.getString("riderSeats"));
+//
+//            availableDriversList = savedInstanceState.getParcelableArrayList("availableDriversList");
+//        }
+//    }
 
     public RiderHome1() {
         // Required empty public constructor
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
         View view =  inflater.inflate(R.layout.fragment_rider_home1, container, false);
-        mLocationPermissionGranted = false;
+
+        recyclerView = view.findViewById(R.id.recyclerViewAvailableDrivers1);
+//        availableDriversList = new ArrayList<>();
+
         latLngCurrent = null;
         latLngDestination = null;
 
@@ -146,38 +178,20 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
         isTime = false;
 
 
-
-//        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd hhmmss");
-//        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd hhmmss");
-//        dateFormatter.setLenient(false);
-//        Date today = new Date();
-//        String s = dateFormatter.format(today);
-//        Toast.makeText(getActivity(), "ss "+ s, Toast.LENGTH_SHORT).show();
-
-
-        originLocationTextRider = view.findViewById(R.id.textselectOriginRider);
-        destinationLocationTextRider = view.findViewById(R.id.textselectDestinationRider);
         selectOriginRider = view.findViewById(R.id.selectOriginRider);
         selectDestinationRider = view.findViewById(R.id.selectDestinationRider);
-        showRouteRider = view.findViewById(R.id.showRouteR1);
-        saveRouteRider = view.findViewById(R.id.saveRouteR1);
-        dateTimeText = view.findViewById(R.id.textRiderDateTime);
-        selectTime = view.findViewById(R.id.selectRiderDateTime);
+        selectDateRideRider = view.findViewById(R.id.selectDateRideRider);
         riderSeats = view.findViewById(R.id.riderSeats);
-        riderPricePerKM = view.findViewById(R.id.pricePerKMRider);
+        saveRouteRider = view.findViewById(R.id.saveRouteR1);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.mapRiderFragment1);
+        riderSeats = view.findViewById(R.id.riderSeats);
 
-
-        if (mapFragment == null) {
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            mapFragment = SupportMapFragment.newInstance();
-            ft.replace(R.id.mapRiderFragment1, mapFragment).commit();
-        }
-
-        mapFragment.getMapAsync(this);
+        selectOriginRider.setFocusable(false);
+        selectOriginRider.setClickable(true);
+        selectDestinationRider.setFocusable(false);
+        selectDestinationRider.setClickable(true);
+        selectDateRideRider.setFocusable(false);
+        selectDateRideRider.setClickable(true);
 
         selectOriginRider.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,27 +219,6 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
             }
         });
 
-        showRouteRider.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-//                Toast.makeText(getActivity(), traveledTimeRider+"..."+traveledDistanceRider, Toast.LENGTH_SHORT).show();
-
-
-                if (latLngCurrent != null && latLngDestination != null) {
-
-
-//                    new FetchURL(mMap,"showRoute",getActivity(), latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
-                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
-                }
-
-
-
-            }
-        });
-
         saveRouteRider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,51 +233,21 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
                     Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
                 }
 
-
-
-
-
-//                if (latLngCurrent!=null && latLngDestination!=null){
-////                    sendData();
-//                    originLat = latLngCurrent.latitude;
-//                    originLong = latLngCurrent.longitude;
-//                    destinationLat = latLngDestination.latitude;
-//                    destinationLong = latLngDestination.longitude;
-//
-//                    Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
-//
-//                    availableDriversList = new ArrayList<>();
-//                    saveIntoFirebase();
-//                    getNearByDrivers();
-//
-//                    Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
-//                }else {
-//                    Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
-//                }
-
     }
 });
-        selectTime.setOnClickListener(new View.OnClickListener() {
+        selectDateRideRider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setSchedule();
+                setDTW();
             }
         });
+
+
 
 
         return view;
     }
 
-    private void calculateDistanceAndTime(LatLng latLngCurrent, LatLng latLngDestination) {
-        Routing routing = new Routing.Builder()
-                .travelMode(AbstractRouting.TravelMode.DRIVING)
-                .key("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
-                .withListener(this)
-                .alternativeRoutes(false )
-                .waypoints(latLngCurrent, latLngDestination)
-                .build();
-        routing.execute();
-    }
 
     private void setSchedule() {
         Calendar calendar = Calendar.getInstance();
@@ -292,8 +255,18 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 //                Toast.makeText(getContext(), hourOfDay+""+minute, Toast.LENGTH_SHORT).show();
+                String h,min;
                 myHour = hourOfDay;
                 myMinute = minute;
+                if(myHour<10)
+                    h = "0"+myHour;
+                else
+                    h = ""+myHour;
+                if(myMinute<10)
+                    min = "0"+myMinute;
+                else
+                    min = ""+myMinute;
+//                selectTimeRideRider.setText(h+":"+min);
                 isTime = true;
                 setDTW();
             }
@@ -306,7 +279,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 //                Toast.makeText(getContext(), dayOfMonth+"", Toast.LENGTH_SHORT).show();
-                String y,mon,d,h,min;
+                String y,mon,d;
                 myYear = year;
                 myMonth = month+1;
                 myDay = dayOfMonth;
@@ -319,16 +292,9 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
                     d = "0"+myDay;
                 else
                     d = ""+myDay;
-                if(myHour<10)
-                    h = "0"+myHour;
-                else
-                    h = ""+myHour;
-                if(myMinute<10)
-                    min = "0"+myMinute;
-                else
-                    min = ""+myMinute;
+
 //                dateTimeText.setText(myHour+":"+myMinute+" on "+myDay+" "+myMonth+":"+myYear);
-                dateTimeText.setText(y+"-"+mon+"-"+d+"T"+h+":"+min);
+                selectDateRideRider.setText(y+"-"+mon+"-"+d);
 
                 isDate = true;
 
@@ -360,7 +326,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
         if (requestCode == PICKUP_Origin_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
-                originLocationTextRider.setText(pickUpPlace.getAddress());
+                selectOriginRider.setText(pickUpPlace.getAddress());
                 latLngCurrent = pickUpPlace.getLatLng();
                 Toast.makeText(getActivity(), pickUpPlace.getAddress() + "origin " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
@@ -368,7 +334,7 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
         if (requestCode == PICKUP_Destination_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
-                destinationLocationTextRider.setText(pickUpPlace.getAddress());
+                selectDestinationRider.setText(pickUpPlace.getAddress());
                 latLngDestination = pickUpPlace.getLatLng();
                 Toast.makeText(getActivity(), "Destination  " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
@@ -393,22 +359,23 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
                     final DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
 
                     driverRoutInfo.setRoutes((List<List<HashMap<String, String>>>) dd.get("routes"));
-                    time = (String) dd.get("start_ride");
-                    seats = (String) dd.get("no_of_seats");
-                    price = (String) dd.get("price_per_km");
+                    dateDriver = (String) dd.get("start_ride_date");
+                    timeDriver = (String) dd.get("start_ride_time");
+                    seatsDriver = (String) dd.get("no_of_seats");
+                    priceDriver = (String) dd.get("price_per_km");
 
                     Log.d(TAG, "onDataChange: "+dd.get("routes").toString());
-                    final String availableDriver=fetchNearbyDriver(driver, driverRoutInfo, time, seats, price);
+                    final String availableDriver=fetchNearbyDriver(driver, driverRoutInfo, timeDriver, seatsDriver, priceDriver);
                     Log.d(TAG,"String "+ availableDriver);
 
                     if(availableDriver != null){
-                        final int  rideCharges = (Integer.valueOf(price)*traveledDistanceRider)/1000;
+                        final int  rideCharges = (Integer.valueOf(priceDriver)*traveledDistanceRider)/1000;
                         mDriverData = FirebaseDatabase.getInstance().getReference("users").child("Driver");
                         mDriverData.child(availableDriver).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,time, seats, price,riderOriginAtRoad,riderDestinationAtRoad,timeAndDateRider,seatsRider,traveledDistanceRider,traveledTimeRider,rideCharges);
+                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,dateDriver,timeDriver, seatsDriver, priceDriver,riderOriginAtRoad,riderDestinationAtRoad,dateRider,seatsRider,traveledDistanceRider,traveledTimeRider,rideCharges);
                                 availableDriversList.add(availableDriverInfo);
                             }
 
@@ -440,6 +407,18 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
     }
 
     private void showAvailableDrivers(ArrayList<AvailableDriverInfo> availableDriversList) {
+
+//
+//        layoutManager = new LinearLayoutManager(getActivity());
+//        recyclerView.setLayoutManager(layoutManager);
+//        availableDriversAdapter = new AvailableDriversAdapter(getActivity(),getActivity().getSupportFragmentManager(), availableDriversList);
+//
+//        recyclerView.setAdapter(availableDriversAdapter);
+//
+//        availableDriversAdapter.notifyDataSetChanged();
+
+
+
 
         AvailableDrivers availableDrivers = new AvailableDrivers();
         Bundle b = new Bundle();
@@ -567,13 +546,14 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
 //                    availableDrivers.add(driverKey);
 
                     Log.d("ddddriver",driverKey);
+//                    return driverKey;
 
 
                     ///////////////////////////////////////////
 
 
 
-                    if(time.compareTo(dateTimeText.getText().toString())<= 0){
+                    if(time.compareTo(selectDateRideRider.getText().toString())<= 0){
                         if(Integer.parseInt(seats)>= Integer.parseInt(riderSeats.getText().toString())){
 
 
@@ -608,163 +588,8 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
         return null;
     }
 
-    private void saveIntoFirebase() {
-
-        mRiderLocationPoints = FirebaseDatabase.getInstance().getReference("Rider Routs");
-        String rider_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        Map locationData = new HashMap();
-        locationData.put("originLat", latLngCurrent.latitude);
-        locationData.put("originLong", latLngCurrent.longitude);
-        locationData.put("destinationLat", latLngDestination.latitude);
-        locationData.put("destinationLong", latLngDestination.longitude);
-        mRiderLocationPoints.child(rider_id).setValue(locationData).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-//                    Toast.makeText(getActivity(), "data has been added.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Unable to add data", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            if (isServicesOK()) {
-                if (isLocationEnabled()) {
-                    getLocationPermission();
-                    if (mLocationPermissionGranted) {
-                        Toast.makeText(getActivity(), "permission in on map ready", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } else {
-                showSettingAlert();
-            }
 
 
-
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        getDeviceLocation();
-    }
-
-    private void getDeviceLocation() {
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        try {
-            Task locationResult = mFusedLocationProviderClient.getLastLocation();
-            locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()) {
-                        Location currentLocation = (Location) task.getResult();
-                        if (currentLocation != null) {
-                            latLngCurrent = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-//                            Log.i(TAG, "onComplete: current location" + latLngCurrent.latitude + " " + latLngCurrent.longitude);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngCurrent, DEFAULT_ZOOM));
-                            mMap.addMarker(new MarkerOptions().position(latLngCurrent).title("My Location"));
-                        } else
-                            Toast.makeText(getActivity(), "Unable to Fetch Current Location", Toast.LENGTH_LONG).show();
-                    } else {
-                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    }
-                }
-            });
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }
-
-    private boolean isServicesOK() {
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
-        if (available == ConnectionResult.SUCCESS) {
-            return true;
-        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-            // an error occured but we can resolve it
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOGE_REQUEST);
-            dialog.show();
-        } else {
-            Toast.makeText(getActivity(), "You can't make map requests", Toast.LENGTH_SHORT).show();
-        }
-        return false;
-    }
-
-    private boolean isLocationEnabled() {
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
-                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            showSettingAlert();
-            return false;
-        }
-        return true;
-    }
-
-    private void showSettingAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        alertDialog.setTitle("Confirm");
-        alertDialog.setMessage("location?");
-        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-        });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
-    }
-
-    private void getLocationPermission() {
-        Log.i(TAG, "getLocationPermission: getting location permissions");
-        String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION};
-        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "getLocationPermission: all permission granted");
-            mLocationPermissionGranted = true;
-            Intent intent = getActivity().getIntent();
-            getActivity().finish();
-            startActivity(intent);
-        } else {
-            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionsResult: called");
-
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "onRequestPermissionsResult: permission failed");
-                    return;
-                }
-            }
-            mLocationPermissionGranted = true;
-            Log.i(TAG, "onRequestPermissionsResult: permission granted");
-        }
-    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -776,6 +601,17 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
         }
 
 
+    }
+
+    private void calculateDistanceAndTime(LatLng latLngCurrent, LatLng latLngDestination) {
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .key("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
+                .withListener(this)
+                .alternativeRoutes(false )
+                .waypoints(latLngCurrent, latLngDestination)
+                .build();
+        routing.execute();
     }
 
     @Override
@@ -812,12 +648,12 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
     }
 
     private void saveRoute() {
-        if(isTime & isDate){
-            timeAndDateRider =dateTimeText.getText().toString();
+        if(isDate){
+            dateRider =selectDateRideRider.getText().toString();
             seatsRider = riderSeats.getText().toString();
-            priceRider = riderPricePerKM.getText().toString();
+
             if(!(seatsRider.equals(""))){
-                if(!(priceRider.equals(""))){
+
                     originLat = latLngCurrent.latitude;
                     originLong = latLngCurrent.longitude;
                     destinationLat = latLngDestination.latitude;
@@ -827,22 +663,19 @@ public class RiderHome1 extends Fragment implements OnMapReadyCallback,RoutingLi
 
                     availableDriversList = new ArrayList<>();
                     if(traveledDistanceRider!=0 && traveledTimeRider!=0){
-                        saveIntoFirebase();
+
                         getNearByDrivers(traveledDistanceRider,traveledTimeRider);
                     }
 
 
                     Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
 
-                }else {
-                    Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
-                }
 
             }else {
                 Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
             }
         }else{
-            Toast.makeText(getActivity(), "Select Date and Time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Select Date ", Toast.LENGTH_SHORT).show();
         }
     }
 

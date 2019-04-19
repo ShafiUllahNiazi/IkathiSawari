@@ -59,8 +59,8 @@ public class AvailableDriverProfile extends Fragment {
         View view = inflater.inflate(R.layout.fragment_available_driver_profile, container, false);
         availableDriversList=getArguments().getParcelableArrayList("availableDriversList");
         final int position = getArguments().getInt("position");
-        final LatLng fromPosition = getArguments().getParcelable("from_position");
-        final LatLng toPosition = getArguments().getParcelable("to_position");
+//        final LatLng fromPosition = getArguments().getParcelable("from_position");
+//        final LatLng toPosition = getArguments().getParcelable("to_position");
         name = view.findViewById(R.id.availableDriverName);
         name.setText(availableDriversList.get(position).getDriverInfo().getName());
         sendRequest = view.findViewById(R.id.sendRequest);

@@ -84,7 +84,7 @@ public class AvailableDrivers extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerViewAvailableDrivers);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        availableDriversAdapter = new AvailableDriversAdapter(getActivity(),getActivity().getSupportFragmentManager(), availableDriversList,fromPosition,toPosition);
+        availableDriversAdapter = new AvailableDriversAdapter(getActivity(),getActivity().getSupportFragmentManager(), availableDriversList);
 
         recyclerView.setAdapter(availableDriversAdapter);
 

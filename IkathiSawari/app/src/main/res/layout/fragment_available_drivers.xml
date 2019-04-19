@@ -6,21 +6,14 @@
     tools:context=".controllers.fragments.rider.AvailableDrivers">
 
     <!-- TODO: Update blank fragment layout -->
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayoutAvailableDrivers"
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewAvailableDrivers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewAvailableDrivers"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        />
 
-            />
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

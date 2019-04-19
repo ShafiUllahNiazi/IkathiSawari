@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +32,11 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
     LatLng fromPosition;
     LatLng toPosition;
 
-    public AvailableDriversAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<AvailableDriverInfo> availableDriversList, LatLng fromPosition, LatLng toPosition) {
+    public AvailableDriversAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<AvailableDriverInfo> availableDriversList) {
         this.context = context;
         this.supportFragmentManager = supportFragmentManager;
         this.availableDriversList = availableDriversList;
-        this.fromPosition = fromPosition;
-        this.toPosition = toPosition;
+
     }
 
 
@@ -51,7 +51,7 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.driversKey.setText(availableDriversList.get(i).getDriverInfo().getName());
+        viewHolder.available_driver_name.setText(availableDriversList.get(i).getDriverInfo().getName());
         int traveledDistanceRider = availableDriversList.get(i).getTraveledDistanceRider();
         int pricePerKm = Integer.valueOf(availableDriversList.get(i).getPrice());
         Toast.makeText(context, traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
@@ -62,7 +62,7 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 
 
 
-        viewHolder.rideCharges.setText(charges+"");
+        viewHolder.available_driver_price_of_ride.setText(charges+"");
 
         final int position = i;
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -74,8 +74,8 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("availableDriversList",availableDriversList);
                 bundle.putInt("position",position);
-                bundle.putParcelable("from_position", fromPosition);
-                bundle.putParcelable("to_position", toPosition);
+//                bundle.putParcelable("from_position", fromPosition);
+//                bundle.putParcelable("to_position", toPosition);
                 availableDriverProfile.setArguments(bundle);
 //                FragmentManager fragmentManager = context.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
@@ -96,12 +96,20 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView driversKey,rideCharges;
+        ImageView available_driver_image;
+        TextView available_driver_name,available_driver_age_gender,available_driver_vehicle_model,available_driver_offered_seats,
+                available_driver_ride_date,available_driver_available_seats,available_driver_price_of_ride;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            driversKey = itemView.findViewById(R.id.driverKey);
-            rideCharges = itemView.findViewById(R.id.rideCharges);
+            available_driver_name = itemView.findViewById(R.id.available_driver_name);
+            available_driver_age_gender = itemView.findViewById(R.id.available_driver_age_gender);
+            available_driver_vehicle_model = itemView.findViewById(R.id.available_driver_vehicle_model);
+            available_driver_offered_seats = itemView.findViewById(R.id.available_driver_offered_seats);
+            available_driver_ride_date = itemView.findViewById(R.id.available_driver_ride_date);
+            available_driver_available_seats = itemView.findViewById(R.id.available_driver_available_seats);
+            available_driver_price_of_ride = itemView.findViewById(R.id.available_driver_price_of_ride);
+
 
         }
     }
