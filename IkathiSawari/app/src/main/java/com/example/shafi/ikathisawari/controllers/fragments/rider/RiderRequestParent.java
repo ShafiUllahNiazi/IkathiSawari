@@ -36,7 +36,7 @@ public class RiderRequestParent extends Fragment {
 
         riderRequestViewPagerAdapter=new DriverRequestViewPagerAdapter(getChildFragmentManager());
         riderRequestViewPagerAdapter.addFragment(new RiderRequests(),"Current Ride");
-        riderRequestViewPagerAdapter.addFragment(new RiderRequests(),"History");
+        riderRequestViewPagerAdapter.addFragment(new RiderRequestHistory(),"History");
 
         rider_request_tablayout = view.findViewById(R.id.rider_request_parent_tablayout);
         rider_request_viewPager = view.findViewById(R.id.rider_request_parent_viewPager);

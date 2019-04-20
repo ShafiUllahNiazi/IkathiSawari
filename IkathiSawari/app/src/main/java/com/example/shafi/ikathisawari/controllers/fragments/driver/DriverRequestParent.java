@@ -42,7 +42,7 @@ public class DriverRequestParent extends Fragment {
         view =  inflater.inflate(R.layout.fragment_driver_request_parent, container, false);
         driverRequestViewPagerAdapter=new DriverRequestViewPagerAdapter(getChildFragmentManager());
         driverRequestViewPagerAdapter.addFragment(new DriverRequests(),"Current Ride");
-        driverRequestViewPagerAdapter.addFragment(new DriverNotification(),"History");
+        driverRequestViewPagerAdapter.addFragment(new DriverRequestHistory(),"History");
 
         driver_request_tablayout = view.findViewById(R.id.driver_request_parent_tablayout);
         driver_request_viewPager = view.findViewById(R.id.driver_request_parent_viewPager);

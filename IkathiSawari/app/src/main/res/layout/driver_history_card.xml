@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="3dp">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/driver_image_driver_history"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/ic_home_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            android:id="@+id/driver_name_driver_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Shafi Ullah Khan"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/driver_image_driver_history"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/age_gender_driver_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="22/ Male"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/driver_image_driver_history"
+            app:layout_constraintTop_toBottomOf="@+id/driver_name_driver_history" />
+
+        <TextView
+            android:id="@+id/vehicle_model_driver_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="Bua 61632"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/driver_image_driver_history"
+            app:layout_constraintTop_toBottomOf="@+id/age_gender_driver_history" />
+
+        <TextView
+            android:id="@+id/mobileNo_driver_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="03076088258"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/driver_image_driver_history"
+            app:layout_constraintTop_toBottomOf="@+id/vehicle_model_driver_history" />
+
+        <TextView
+            android:id="@+id/ride_date_driver_history"
+            android:layout_width="103dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="18 april 2019 4:30"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/driver_image_driver_history"
+            app:layout_constraintTop_toBottomOf="@+id/mobileNo_driver_history" />
+
+        <LinearLayout
+            android:id="@+id/historyRiderContainer"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/light_red"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ride_status_driver_history">
+
+            <TextView
+                android:id="@+id/rider_seats_driver_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="4 Seats Available"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:background="@android:color/white" />
+
+            <TextView
+                android:id="@+id/rider_charges_driver_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="156 / seat"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ride_status_driver_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="Status"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/driver_image_driver_history"
+            app:layout_constraintTop_toBottomOf="@+id/ride_date_driver_history" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>

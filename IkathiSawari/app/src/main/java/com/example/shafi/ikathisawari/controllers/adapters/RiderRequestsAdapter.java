@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.CancelRequestDriverProfile;
 import com.example.shafi.ikathisawari.models.MakeRequest;
+import com.example.shafi.ikathisawari.models.RideHistory;
 import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +36,7 @@ import java.util.Map;
 
 public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdapter.ViewHolder> implements Filterable {
     Context context;
-    Map map;
+
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriverFull;
     FragmentManager supportFragmentManager;
@@ -73,19 +74,18 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
                 currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 MakeRequest makeRequest = ridersRequestsListInDriver.get(position).getMakeRequest();
 
-                map = new HashMap();
-                map.put("request", makeRequest);
-                map.put("status", "rejected");
-                map.put("rejected_by", currentRider);
 
-                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("history_rider").child(currentRider).child(ridersRequestsListInDriver.get(position).getDateAndTime()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                final RideHistory rideHistory = new RideHistory(makeRequest,"rejected","rider");
+
+                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("history_rider").child(currentRider).child(ridersRequestsListInDriver.get(position).getDateAndTime()).setValue(rideHistory).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(currentRider).child(ridersRequestsListInDriver.get(position).getDateAndTime()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
 
-                                FirebaseDatabase.getInstance().getReference().child("requests").child("history_driver").child(driver).child(ridersRequestsListInDriver.get(position).getDateAndTime()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                FirebaseDatabase.getInstance().getReference().child("requests").child("history_driver").child(driver).child(ridersRequestsListInDriver.get(position).getDateAndTime()).setValue(rideHistory).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(driver).child(ridersRequestsListInDriver.get(position).getDateAndTime()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {

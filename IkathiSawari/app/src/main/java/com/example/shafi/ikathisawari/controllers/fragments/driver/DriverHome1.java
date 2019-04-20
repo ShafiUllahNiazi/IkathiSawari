@@ -207,9 +207,6 @@ public class DriverHome1 extends Fragment  {
                 if (latLngCurrent != null) {
 
 
-
-
-
                 if (latLngDestination != null) {
                     if(isDate){
                         String date = selectDateRideDriver.getText().toString();
