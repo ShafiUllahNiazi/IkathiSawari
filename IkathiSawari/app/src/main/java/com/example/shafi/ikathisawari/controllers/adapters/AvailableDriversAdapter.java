@@ -7,17 +7,30 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.AvailableDriverProfile;
+import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderHome1;
 import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
+import com.example.shafi.ikathisawari.models.MakeRequest;
+import com.example.shafi.ikathisawari.models.RiderInfo;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -65,6 +78,79 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
         viewHolder.available_driver_price_of_ride.setText(charges+"");
 
         final int position = i;
+
+        viewHolder.availableDriverSendRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                dateFormatter.setLenient(false);
+                Date today = new Date();
+                final String timeSting = dateFormatter.format(today);
+
+                final String current_Rider = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                String driver = availableDriversList.get(position).getDriverKey();
+//                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(availableDriversList.get(position).getDriverKey()).child("request").child(timeSting);
+                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(driver).child(timeSting);
+
+//                final RiderInfo[] riderInfo = new RiderInfo[1];
+                DatabaseReference databaseReferenceRider = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(current_Rider);
+
+                databaseReferenceRider.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        RiderInfo riderInfo = new RiderInfo();
+                        riderInfo = dataSnapshot.getValue(RiderInfo.class);
+
+                        final MakeRequest makeRequest = new MakeRequest("pending",current_Rider,riderInfo,
+                                availableDriversList.get(position).getRiderOriginAtRoad().getLatitude(),
+                                availableDriversList.get(position).getRiderOriginAtRoad().getLongitude(),
+                                availableDriversList.get(position).getRiderDestinationAtRoad().getLatitude(),
+                                availableDriversList.get(position).getRiderDestinationAtRoad().getLongitude(),
+                                availableDriversList.get(position).getTimeAndDateRider(),
+                                availableDriversList.get(position).getSeatsRider(),
+                                availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
+                                availableDriversList.get(position).getDriverRoutInfo(),
+                                availableDriversList.get(position).getTraveledDistanceRider(),
+                                availableDriversList.get(position).getTraveledTimeRider(),
+                                availableDriversList.get(position).getRideCharges());
+                        databaseReference.setValue(makeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(current_Rider).child(timeSting).setValue(makeRequest);
+                            }
+                        });
+//                        databaseReference.setValue(availableDriversList.get(position));
+
+
+
+
+
+                        RiderHome1 riderHome1 = new RiderHome1();
+
+                        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.rider_container, riderHome1);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+            }
+        });
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +185,7 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
         ImageView available_driver_image;
         TextView available_driver_name,available_driver_age_gender,available_driver_vehicle_model,available_driver_offered_seats,
                 available_driver_ride_date,available_driver_available_seats,available_driver_price_of_ride;
+        Button availableDriverSendRequest;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -109,6 +196,7 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
             available_driver_ride_date = itemView.findViewById(R.id.available_driver_ride_date);
             available_driver_available_seats = itemView.findViewById(R.id.available_driver_available_seats);
             available_driver_price_of_ride = itemView.findViewById(R.id.available_driver_price_of_ride);
+            availableDriverSendRequest = itemView.findViewById(R.id.availableDriverSendRequest);
 
 
         }

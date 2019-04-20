@@ -29,10 +29,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdapter.ViewHolder> implements Filterable {
     Context context;
+    Map map;
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriverFull;
     FragmentManager supportFragmentManager;
@@ -58,38 +61,50 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final int position = i;
 //        viewHolder.content_rider_request.setText("Driver");
-        viewHolder.content_rider_request.setText("Driver"+ ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getName());
-        viewHolder.rider_request_status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
+        viewHolder.nameDriver.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getName());
+
         viewHolder.cancelRiderRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(context, "canclll "+viewHolder.cancelRiderRequest.getText(), Toast.LENGTH_SHORT).show();
 
 
+                final String driver = ridersRequestsListInDriver.get(position).getMakeRequest().getDriverId();
                 currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(currentRider).child(ridersRequestsListInDriver.get(position).getDateAndTime()).addValueEventListener(new ValueEventListener() {
+                MakeRequest makeRequest = ridersRequestsListInDriver.get(position).getMakeRequest();
+
+                map = new HashMap();
+                map.put("request", makeRequest);
+                map.put("status", "rejected");
+                map.put("rejected_by", currentRider);
+
+                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("history_rider").child(currentRider).child(ridersRequestsListInDriver.get(position).getDateAndTime()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            MakeRequest makeRequest = dataSnapshot.getValue(MakeRequest.class);
-                            FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("history_rider").child(currentRider).child(ridersRequestsListInDriver.get(position).getDateAndTime()).setValue(makeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(currentRider).child(ridersRequestsListInDriver.get(position).getDateAndTime()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(currentRider).child(ridersRequestsListInDriver.get(position).getDateAndTime()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                                        }
-                                    });
-                                }
-                            });
+                                FirebaseDatabase.getInstance().getReference().child("requests").child("history_driver").child(driver).child(ridersRequestsListInDriver.get(position).getDateAndTime()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(driver).child(ridersRequestsListInDriver.get(position).getDateAndTime()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Toast.makeText(context, "Successfully cancel Request", Toast.LENGTH_SHORT).show();
 
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                            }
+                                        });
+                                        FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(driver).child(ridersRequestsListInDriver.get(position).getDateAndTime()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Toast.makeText(context, "Successfully cancel Request", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
                 
@@ -130,13 +145,13 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView content_rider_request;
-        TextView rider_request_status;
+        TextView nameDriver;
+        TextView mobileDriver;
         Button cancelRiderRequest;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            content_rider_request = itemView.findViewById(R.id.content_rider_request);
-            rider_request_status = itemView.findViewById(R.id.rider_request_status);
+            nameDriver = itemView.findViewById(R.id.requested_driver_name);
+//            mobileDriver = itemView.findViewById(R.id.rider_request_status);
             cancelRiderRequest = itemView.findViewById(R.id.cancel_rider_request);
 
         }

@@ -11,7 +11,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/available_driver_image"
@@ -88,11 +88,9 @@
             android:layout_height="36dp"
             android:background="@color/light_red"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/available_driver_ride_date"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toBottomOf="@+id/available_driver_ride_date">
 
             <TextView
                 android:id="@+id/available_driver_available_seats"
@@ -122,6 +120,20 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/availableDriverSendRequest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/container_seats"
+            android:background="@android:color/black"
+            android:text="Send Request"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"/>
 
 
     </android.support.constraint.ConstraintLayout>

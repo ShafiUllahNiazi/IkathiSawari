@@ -100,8 +100,6 @@ public class RequestRiderProfile extends Fragment {
 
                 Toast.makeText(getActivity(), "hhhhhh", Toast.LENGTH_SHORT).show();
                 String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-
                 final String currentRequest= ridersRequestsListInDrivers.get(position).getDateAndTime();
                 FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
                 String requestRider = ridersRequestsListInDrivers.get(position).getMakeRequest().getCurrent_rider();
@@ -200,8 +198,6 @@ public class RequestRiderProfile extends Fragment {
 
                 Toast.makeText(getActivity(), "hhhhhh", Toast.LENGTH_SHORT).show();
                 final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-
                 final String currentRequest= ridersRequestsListInDrivers.get(position).getDateAndTime();
                 FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("rejected");
 //                FirebaseDatabase.getInstance().getReference().child("requests").child(currentDriver).child(currentRequest).addListenerForSingleValueEvent(new ValueEventListener() {
