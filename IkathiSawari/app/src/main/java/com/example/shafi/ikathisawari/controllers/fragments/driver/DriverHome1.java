@@ -6,9 +6,12 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -75,6 +78,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -338,7 +342,7 @@ public class DriverHome1 extends Fragment  {
         if (requestCode == PICKUP_Origin_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
-                selectOriginDriver.setText(pickUpPlace.getAddress());
+                selectOriginDriver.setText(pickUpPlace.getName());
                 latLngCurrent = pickUpPlace.getLatLng();
                 Toast.makeText(getActivity(), pickUpPlace.getAddress() + "origin " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
@@ -346,12 +350,30 @@ public class DriverHome1 extends Fragment  {
         if (requestCode == PICKUP_Destination_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
-                selectDestinationDriver.setText(pickUpPlace.getAddress());
+//                selectDestinationDriver.setText(pickUpPlace.getName());
                 latLngDestination = pickUpPlace.getLatLng();
+
+                String gg = getRegionName(latLngDestination.latitude,latLngDestination.longitude);
+                selectDestinationDriver.setText(gg);
                 Toast.makeText(getActivity(), "Destination  " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
         }
 
+    }
+
+    private  String getRegionName(double lati, double longi) {
+        String regioName = "";
+        Geocoder gcd = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = gcd.getFromLocation(lati, longi, 1);
+            if (addresses.size() > 0) {
+//                regioName = addresses.get(0).getLocality();
+                regioName = addresses.get(0)+" kk";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return regioName;
     }
 
 

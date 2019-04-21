@@ -126,7 +126,7 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
                         Toast.makeText(context, "okkk"+viewHolder2.ratingBar.getRating(), Toast.LENGTH_SHORT).show();
                         final String currentRider = ridersRequestsListInDriver.get(position).getMakeRequest().getCurrent_rider();
                         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Rating");
-                        databaseReference.addValueEventListener(new ValueEventListener() {
+                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -134,10 +134,12 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                     float ratingg = Float.valueOf( dataSnapshot.child(currentRider).getValue().toString());
                                     float newRating = viewHolder2.ratingBar.getRating();
-//                                    float latestRating = (ratingg + newRating)/2;
-                                    databaseReference.child(currentRider).setValue(4);
+                                    float latestRating = (ratingg + newRating)/2;
+                                    Toast.makeText(context, "aaaa "+ ratingg+" "+newRating+"="+latestRating, Toast.LENGTH_SHORT).show();
+                                    databaseReference.child(currentRider).setValue(latestRating);
 
 
+                                    Log.d("rrrr",ratingg+" "+newRating+"="+latestRating);
                                     Toast.makeText(context, "ratinggg "+dataSnapshot.child(currentRider).getValue(), Toast.LENGTH_SHORT).show();
                                 }else{
                                     databaseReference.child(currentRider).setValue(viewHolder2.ratingBar.getRating());

@@ -1,12 +1,22 @@
 package com.example.shafi.ikathisawari.controllers.activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +35,8 @@ import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRide;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 import com.example.shafi.ikathisawari.services.DriverNotificationsService;
 import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Driver_Screen extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener/*, DriverHome.OnRequirePoints */{
@@ -36,9 +48,30 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver__screen);
+        Log.d(TAG,"creattt");
+        bottomNavigationView = findViewById(R.id.navigationDriver);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 //        Toolbar toolbar = findViewById(R.id.driverToolbar);
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            Toast.makeText(this, "no per", Toast.LENGTH_SHORT).show();
+            Log.d(TAG,"no perrrr");
+            if (isServicesOK()){
+                if(isLocationEnabled()){
+                    getLocationPermission();
+
+                }
+            }else {
+                showSettingAlert();
+            }
+            return;
+        }
+
+        Toast.makeText(this, " permiiiii", Toast.LENGTH_SHORT).show();
+        Log.d(TAG,"perrrr");
 
 
 
@@ -49,8 +82,7 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
         Intent intent3 = new Intent(this, DriverNotificationsService.class);
         startService(intent3);
 
-        bottomNavigationView = findViewById(R.id.navigationDriver);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
 //        bottomNavigationView.setSelectedItemId(R.id.navigation_home_rider);
 
 
@@ -158,5 +190,98 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
 
         return true;
 
+    }
+
+    private static final int ERROR_DIALOGE_REQUEST = 9001;
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1122;
+    private final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
+    private boolean mLocationPermissionGranted = false;
+    private static final String TAG = "Driver_Screen";
+
+    private boolean isServicesOK() {
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+        if (available == ConnectionResult.SUCCESS) {
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            // an error occured but we can resolve it
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, available, ERROR_DIALOGE_REQUEST);
+            dialog.show();
+        } else {
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    public void getLocationPermission(){
+        Log.i(TAG, "getLocationPermission: getting location permissions");
+        String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION};
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            Log.d(TAG, "getLocationPermission: all permission granted");
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionsResult: called");
+
+        switch (requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE:{
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED ){
+                    Log.i(TAG, "onRequestPermissionsResult: permission failed");
+                    return;
+                }
+            }
+            mLocationPermissionGranted = true;
+
+            if(android.os.Build.VERSION.SDK_INT >= 11){
+                Log.d(TAG, "onRequestPermissionsResult: in1");
+                recreate();
+            }else {
+                Log.d(TAG, "onRequestPermissionsResult: in2");
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+
+
+
+            Log.i(TAG, "onRequestPermissionsResult: permission granted");
+        }
+    }
+
+    private boolean isLocationEnabled(){
+        LocationManager locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            showSettingAlert();
+            return false;
+        }
+        return true;
+    }
+
+
+    public void showSettingAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Confirm");
+        alertDialog.setMessage("location?");
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
     }
 }

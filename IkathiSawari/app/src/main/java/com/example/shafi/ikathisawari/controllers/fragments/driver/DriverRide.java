@@ -24,6 +24,7 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.controllers.adapters.CustomInfoWindowAdapter;
 import com.example.shafi.ikathisawari.controllers.adapters.DriverPaymentAdapter;
 import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RiderRidePointsDriver;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,6 +69,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
 
     private GoogleMap mMap;
+    private Marker mMarker;
 
     Button stoppService;
 
@@ -177,6 +180,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
+            Log.d("rrrrrr","noooooooper");
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -186,6 +190,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 //            Toast.makeText(getActivity(), "retttt", Toast.LENGTH_SHORT).show();
             return;
         }
+        Log.d("rrrrrr","perrrrrr");
 //        Toast.makeText(getActivity(), "nott", Toast.LENGTH_SHORT).show();
 
         mMap.setMyLocationEnabled(true);
@@ -193,6 +198,8 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+
 
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("DriverRidePoints");
@@ -219,10 +226,20 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
                         Log.d("tststs","my "+item.toString());
                     }
 
+                    ArrayList<String> s = new ArrayList<>();
+                    s.add("1");
+                    s.add("2");
+                    s.add("3");
+
                     mMap.clear();
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(pointsDriverArrayList.get(pointsDriverArrayList.size()-1)));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                    mMap.addMarker(new MarkerOptions().position(pointsDriverArrayList.get(pointsDriverArrayList.size()-1)));
+                    mMarker = mMap.addMarker(new MarkerOptions()
+                            .position(pointsDriverArrayList.get(pointsDriverArrayList.size()-1))
+                    .title("abc")
+                    );
+                    onMarkerClicked();
+                    mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(getActivity(),s));
 
                     lineOptions = new PolylineOptions();
                     lineOptions.addAll(pointsDriverArrayList);
@@ -266,5 +283,28 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         }
 
 
+    }
+
+    public void onMarkerClicked() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+//                LatLng latLng = marker.getPosition();
+//                Toast.makeText(getActivity(), "markerclicked "+latLng.latitude, Toast.LENGTH_SHORT).show();
+                try{
+                    if(mMarker.isInfoWindowShown()){
+                        mMarker.hideInfoWindow();
+                    }else{
+
+                        mMarker.showInfoWindow();
+                    }
+                }catch (NullPointerException e){
+//                    Log.e(TAG, "onClick: NullPointerException: " + e.getMessage() );
+                }
+
+
+                return true;
+            }
+        });
     }
 }
