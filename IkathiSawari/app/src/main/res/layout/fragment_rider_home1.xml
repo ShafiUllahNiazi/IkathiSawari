@@ -227,7 +227,7 @@
                 android:layout_marginRight="6dp"
                 android:layout_marginBottom="6dp"
                 android:background="@android:color/black"
-                android:text="Offer Ride"
+                android:text="Take Ride"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="12sp" />

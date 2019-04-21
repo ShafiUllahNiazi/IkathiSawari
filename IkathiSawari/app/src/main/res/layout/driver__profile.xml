@@ -31,19 +31,5 @@
         android:padding="5dp"
         android:text="CNIC" />
 
-    <TextView
-        android:id="@+id/profile_Vehicle_TypeModel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="5dp"
-        android:text="Vehicle Type and Model" />
 
-    <TextView
-        android:id="@+id/profile_Vehicle_regNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="5dp"
-        android:text="Registration no" />
 </LinearLayout>

@@ -45,6 +45,7 @@ import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
+import com.example.shafi.ikathisawari.models.FetchRouteData;
 import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -101,7 +102,9 @@ public class DriverHome1 extends Fragment  {
 
     Button saveRoute;
 
-    EditText selectOriginDriver, selectDestinationDriver,selectDateRideDriver, selectTimeRideDriver,driverSeats, driverPricePerKM;
+    String pickUpPlaceName, destinationPlaceName;
+
+    EditText selectOriginDriver, selectDestinationDriver,carModel,selectDateRideDriver, selectTimeRideDriver,driverSeats, driverPricePerKM,driver_message;
 
     private GoogleMap mMap;
     private LatLng latLngCurrent, latLngDestination;
@@ -146,6 +149,8 @@ public class DriverHome1 extends Fragment  {
         selectTimeRideDriver = view.findViewById(R.id.selectTimeRideDriver);
         driverSeats = view.findViewById(R.id.driverSeats);
         driverPricePerKM = view.findViewById(R.id.driverPricePerKM);
+        driver_message = view.findViewById(R.id.driver_message);
+        carModel = view.findViewById(R.id.carModel);
         saveRoute = view.findViewById(R.id.saveRouteD1);
         selectOriginDriver.setFocusable(false);
         selectOriginDriver.setClickable(true);
@@ -212,34 +217,43 @@ public class DriverHome1 extends Fragment  {
 
 
                 if (latLngDestination != null) {
-                    if(isDate){
-                        String date = selectDateRideDriver.getText().toString();
 
-                    if(isTime){
-                        String time =selectTimeRideDriver.getText().toString();
-                        String seats = driverSeats.getText().toString();
-                        String price = driverPricePerKM.getText().toString();
+                    String carModel1 = carModel.getText().toString();
+                    if(!(carModel1.equals(""))){
+                        if(isDate){
+                            String date = selectDateRideDriver.getText().toString();
+
+                            if(isTime){
+                                String time =selectTimeRideDriver.getText().toString();
+                                String seats = driverSeats.getText().toString();
+                                String price = driverPricePerKM.getText().toString();
 //                        Toast.makeText(getActivity(), seats +" "+ price, Toast.LENGTH_SHORT).show();
-                        if(!(seats.equals(""))){
-                            if(!(price.equals(""))){
-                                Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
-                                new FetchURL(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination,date,time,seats,price).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+                                if(!(seats.equals(""))){
+                                    if(!(price.equals(""))){
+                                        String driver_message1 = driver_message.getText().toString();
+                                        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
+                                        new FetchURL(new FetchRouteData(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination,pickUpPlaceName,destinationPlaceName,carModel1,date,time,seats,price,driver_message1)).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
 
-                                Log.d("dddddddddddd",seats+" "+price);
+                                        Log.d("dddddddddddd",seats+" "+price);
 
-                            }else {
-                                Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
-                            }
+                                    }else {
+                                        Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
+                                    }
 
-                        }else {
-                            Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }else{
+                                Toast.makeText(getActivity(), "Select  Time", Toast.LENGTH_SHORT).show();
+                            }}else {
+                            Toast.makeText(getActivity(), "Select  Date", Toast.LENGTH_SHORT).show();
                         }
-
-                    }else{
-                        Toast.makeText(getActivity(), "Select  Time", Toast.LENGTH_SHORT).show();
-                    }}else {
-                        Toast.makeText(getActivity(), "Select  Date", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getActivity(), "Kindly provide the vehicle model", Toast.LENGTH_SHORT).show();
                     }
+
+
 
 //                    new FetchURL(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
 //                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
@@ -336,13 +350,15 @@ public class DriverHome1 extends Fragment  {
     }
 
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICKUP_Origin_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
-                selectOriginDriver.setText(pickUpPlace.getName());
+                pickUpPlaceName = pickUpPlace.getName().toString();
+                selectOriginDriver.setText(pickUpPlaceName);
                 latLngCurrent = pickUpPlace.getLatLng();
                 Toast.makeText(getActivity(), pickUpPlace.getAddress() + "origin " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
@@ -350,11 +366,12 @@ public class DriverHome1 extends Fragment  {
         if (requestCode == PICKUP_Destination_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
-//                selectDestinationDriver.setText(pickUpPlace.getName());
+                destinationPlaceName = pickUpPlace.getName().toString();
+                selectDestinationDriver.setText(destinationPlaceName);
                 latLngDestination = pickUpPlace.getLatLng();
 
-                String gg = getRegionName(latLngDestination.latitude,latLngDestination.longitude);
-                selectDestinationDriver.setText(gg);
+//                String gg = getRegionName(latLngDestination.latitude,latLngDestination.longitude);
+//                selectDestinationDriver.setText(gg);
                 Toast.makeText(getActivity(), "Destination  " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
         }

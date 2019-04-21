@@ -1,5 +1,6 @@
 package com.example.shafi.ikathisawari;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 
 
 import com.example.shafi.ikathisawari.models.DriverInfo;
+import com.example.shafi.ikathisawari.models.RiderInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,40 +49,23 @@ public class DriverSignUp  extends Fragment {
     private EditText rePassword_Driver;
     private EditText mobile_Driver;
     private EditText cnic_Driver;
-    private EditText type_and_model;
-    private EditText regNumber;
-    private EditText noOfSeats;
+    private EditText dob;
+    private EditText gender;
+//    private EditText noOfSeats;
     private Button signUpBtn_Driver;
 
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    RiderInfo riderInfo;
+    String currentUserUid;
+    int myYear, myMonth, myDay;
+    boolean isDate = true;
 
 
     String email;
-    String selectedPosition;
-    String selectedItem;
 
-    ///////////////////////////////
-    Button ownerlist_select_button;
-    TextView selected_owners_shower;
-
-    String [] all_owners_name_list;
-    ArrayList<String> all_owners_uid_list;
-
-    ArrayList<String> selected_owners_name_list;
-    ArrayList<String> selected_owners_uid_list;
-
-    boolean[] checkedItems;
-    ArrayList<Integer> selected_owner_positions;
-
-    ArrayList <String> temp_owners_name_Arraylist;
-
-    String uid_of_selected_owner;
-    String name_of_selected_owner;
-
-    ///////////////////////////////////
 
     View sign_up_view;
 
@@ -98,10 +85,21 @@ public class DriverSignUp  extends Fragment {
         rePassword_Driver=(EditText) sign_up_view.findViewById(R.id.repassword_Driver);
         mobile_Driver=(EditText) sign_up_view.findViewById(R.id.mobile_Driver);
         cnic_Driver=(EditText) sign_up_view.findViewById(R.id.cnic_Driver);
-        type_and_model=(EditText) sign_up_view.findViewById(R.id.type_and_model);
-        regNumber=(EditText) sign_up_view.findViewById(R.id.regNumber);
-        noOfSeats=(EditText) sign_up_view.findViewById(R.id.noOfSeats);
+        dob=(EditText) sign_up_view.findViewById(R.id.dob_Driver);
+        gender=(EditText) sign_up_view.findViewById(R.id.gender_Driver);
+//        noOfSeats=(EditText) sign_up_view.findViewById(R.id.noOfSeats);
         signUpBtn_Driver=(Button) sign_up_view.findViewById(R.id.signUpBtn_Driver);
+        dob.setFocusable(false);
+        dob.setClickable(true);
+
+
+        dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDTW();
+            }
+        });
+
 
         progressDialog=new ProgressDialog(this.getActivity());
 
@@ -117,6 +115,39 @@ public class DriverSignUp  extends Fragment {
 
 
         return sign_up_view;
+    }
+
+
+
+    private void setDTW() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog= new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                Toast.makeText(getContext(), dayOfMonth+"", Toast.LENGTH_SHORT).show();
+                String y,mon,d;
+                myYear = year;
+                myMonth = month+1;
+                myDay = dayOfMonth;
+                y = myYear+"";
+                if(myMonth<10)
+                    mon = "0"+myMonth;
+                else
+                    mon = ""+myMonth;
+                if(myDay<10)
+                    d = "0"+myDay;
+                else
+                    d = ""+myDay;
+
+//                dateTimeText.setText(myHour+":"+myMinute+" on "+myDay+" "+myMonth+":"+myYear);
+                dob.setText(y+"-"+mon+"-"+d);
+
+                isDate = true;
+
+            }
+        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+
     }
 
 
@@ -165,23 +196,31 @@ public class DriverSignUp  extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                            String currentUserUid = currentUser.getUid();
+                            currentUserUid = currentUser.getUid();
                             String name = name_Driver.getText().toString();
                             String email = email_Driver.getText().toString();
                             String mobile = mobile_Driver.getText().toString();
                             String cnic =  cnic_Driver.getText().toString();
-                            String type_model = type_and_model.getText().toString();
-                            String reg_no =  regNumber.getText().toString();
-                            String seats = noOfSeats.getText().toString();
+                            String dob1 = dob.getText().toString();
+                            String gender1 =  gender.getText().toString();
+//                            String seats = noOfSeats.getText().toString();
 
-                            DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic, type_model, reg_no, seats);
+                            DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"");
+                            riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"");
 
                             firebaseDatabase = FirebaseDatabase.getInstance();
                             databaseReference=firebaseDatabase.getReference();
 
 
 
-                            databaseReference.child("users").child("Driver").child(currentUserUid).setValue(driverInfo);
+                            databaseReference.child("users").child("Driver").child(currentUserUid).setValue(driverInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    databaseReference.child("users").child("Rider").child(currentUserUid).setValue(riderInfo);
+                                }
+                            });
+
+
 
                             progressDialog.cancel();
                             Toast.makeText(getActivity(), "Authentication Successful.", Toast.LENGTH_SHORT).show();

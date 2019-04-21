@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.shafi.ikathisawari.models.FetchRouteData;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
@@ -27,19 +28,33 @@ public class FetchURL extends AsyncTask<String, Void, String> {
     Context context;
     private LatLng latLngCurrent, latLngDestination;
     String date,time, seats,price;
+    String pickUpPlaceName;
+    String destinationPlaceName;
+    String carModel1;
+    String driver_message1;
+    FetchRouteData fetchRouteData;
 
-    public FetchURL(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
-                    LatLng latLngDestination, String date, String time, String seats, String price) {
-        this.mMap = map;
-        this.clickButton = clickButton;
-        this.context = context;
-        this.latLngCurrent = latLngCurrent;
-        this.latLngDestination = latLngDestination;
-        this.date = date;
-        this.time = time;
-        this.seats = seats;
-        this.price = price;
+    public FetchURL(FetchRouteData fetchRouteData) {
+        this.fetchRouteData = fetchRouteData;
+
     }
+
+//    public FetchURL(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
+//                    LatLng latLngDestination, String pickUpPlaceName, String destinationPlaceName, String carModel1, String date, String time, String seats, String price, String driver_message1) {
+//        this.mMap = map;
+//        this.clickButton = clickButton;
+//        this.context = context;
+//        this.latLngCurrent = latLngCurrent;
+//        this.latLngDestination = latLngDestination;
+//        this.date = date;
+//        this.time = time;
+//        this.seats = seats;
+//        this.price = price;
+//        this.pickUpPlaceName =pickUpPlaceName;
+//        this.destinationPlaceName = destinationPlaceName;
+//        this.carModel1 = carModel1;
+//        this.driver_message1 = driver_message1;
+//    }
 
 //    public FetchURL(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
 //                    LatLng latLngDestination) {
@@ -68,7 +83,7 @@ public class FetchURL extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        PointsParser parserTask = new PointsParser(mMap, clickButton, context, latLngCurrent, latLngDestination,date,time,seats,price, directionMode);
+        PointsParser parserTask = new PointsParser(fetchRouteData, directionMode);
         // Invokes the thread for parsing the JSON data
         parserTask.execute(s);
     }

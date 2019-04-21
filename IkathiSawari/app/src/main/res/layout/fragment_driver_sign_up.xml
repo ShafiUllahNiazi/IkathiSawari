@@ -66,29 +66,19 @@
                 android:hint="CNIC"
                 android:inputType="number"
                 android:paddingBottom="10dp" />
-
             <EditText
-                android:id="@+id/type_and_model"
+                android:id="@+id/dob_Driver"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Vehicle type and model"
+                android:hint="Date of Birth"
+                android:inputType="date"
+                android:paddingBottom="10dp" />
+            <EditText
+                android:id="@+id/gender_Driver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Gender"
                 android:inputType="text"
-                android:paddingBottom="10dp" />
-
-            <EditText
-                android:id="@+id/regNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Vehicle Regestration no."
-                android:inputType="number"
-                android:paddingBottom="10dp" />
-
-            <EditText
-                android:id="@+id/noOfSeats"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="No. of Seats"
-                android:inputType="number"
                 android:paddingBottom="10dp" />
 
 

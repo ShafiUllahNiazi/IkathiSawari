@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.example.shafi.ikathisawari.DriverHomeMap;
 import com.example.shafi.ikathisawari.RoutesObserver;
 import com.example.shafi.ikathisawari.models.DriverRoutInfo;
+import com.example.shafi.ikathisawari.models.FetchRouteData;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -41,26 +42,51 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
     Context context;
     private LatLng latLngCurrent, latLngDestination;
     String date,time, seats,price;
+    String pickUpPlaceName;
+    String destinationPlaceName;
+    String carModel1;
+    String driver_message1;
+
+    public PointsParser(FetchRouteData fetchRouteData, String directionMode) {
+        this.directionMode = directionMode;
+        this.mMap = fetchRouteData.getmMap();
+        this.clickButton = fetchRouteData.getClickButton();
+        this.context =fetchRouteData.getContext();
+        this.latLngCurrent = fetchRouteData.getLatLngCurrent();
+        this.latLngDestination = fetchRouteData.getLatLngDestination();
+        this.date = fetchRouteData.getDate();
+        this.time = fetchRouteData.getTime();
+        this.seats = fetchRouteData.getSeats();
+        this.price = fetchRouteData.getPrice();
+        this.carModel1 = fetchRouteData.getCarModel1();
+        this.driver_message1 = fetchRouteData.getDriver_message1();
+        this.pickUpPlaceName =fetchRouteData.getPickUpPlaceName();
+        this.destinationPlaceName = fetchRouteData.getDestinationPlaceName();
+    }
 
     public interface TaskLoadedCallback {
         void onTaskDone(Object... values);
     }
 
-    public PointsParser(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
-                        LatLng latLngDestination,String date, String time, String seats, String price, String directionMode) {
-//        this.taskCallback = (TaskLoadedCallback) mContext;
-        this.directionMode = directionMode;
-        this.mMap = map;
-        this.clickButton = clickButton;
-        this.context =context;
-        this.latLngCurrent = latLngCurrent;
-        this.latLngDestination = latLngDestination;
-        this.date = date;
-        this.time = time;
-        this.seats = seats;
-        this.price = price;
-        Toast.makeText(context, "in poinsts parser", Toast.LENGTH_SHORT).show();
-    }
+//    public PointsParser(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
+//                        LatLng latLngDestination, String pickUpPlaceName, String destinationPlaceName,String carModel1, String date, String time, String seats, String price,String driver_message1, String directionMode) {
+////        this.taskCallback = (TaskLoadedCallback) mContext;
+//        this.directionMode = directionMode;
+//        this.mMap = map;
+//        this.clickButton = clickButton;
+//        this.context =context;
+//        this.latLngCurrent = latLngCurrent;
+//        this.latLngDestination = latLngDestination;
+//        this.date = date;
+//        this.time = time;
+//        this.seats = seats;
+//        this.price = price;
+//        this.carModel1 = carModel1;
+//        this.driver_message1 = driver_message1;
+//        this.pickUpPlaceName =pickUpPlaceName;
+//        this.destinationPlaceName = destinationPlaceName;
+//        Toast.makeText(context, "in poinsts parser", Toast.LENGTH_SHORT).show();
+//    }
 
     // Parsing the data in non-ui thread
     @Override
@@ -105,9 +131,18 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
             map.put("driver_origin_long", latLngCurrent.longitude);
             map.put("driver_destination_lat", latLngDestination.latitude);
             map.put("driver_destination_long", latLngDestination.longitude);
+
+            map.put("driver_origin_name", pickUpPlaceName);
+            map.put("driver_destination_name", destinationPlaceName);
+            map.put("vehicle_Model1", carModel1);
+
             map.put("start_ride_date", date);
             map.put("start_ride_time", time);
             map.put("no_of_seats", seats);
+            map.put("no_of_available_seats", seats);
+            map.put("driver_message", driver_message1);
+
+
             map.put("price_per_km", price);
 
 

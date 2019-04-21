@@ -19,8 +19,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shafi.ikathisawari.controllers.activities.AppHome;
 import com.example.shafi.ikathisawari.controllers.activities.Driver_Screen;
 import com.example.shafi.ikathisawari.controllers.activities.Rider_Screen;
+import com.example.shafi.ikathisawari.controllers.activities.Splash_Screen;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText logIn_password;
     private Button logIn_button;
 
-    private TextView sign_up;
+    private Button sign_up;
 
 
     private FirebaseAuth firebaseAuth;
@@ -49,14 +51,27 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        Intent intent = new Intent(MainActivity.this,Splash_Screen.class);
+//
+//        startActivity(intent);
+
+
+
+
+
+
+
         firebaseAuth = FirebaseAuth.getInstance();
 //        logIn_progressBar=(ProgressBar) findViewById(R.id.logIn_progressbar);
         progressDialog = new ProgressDialog(this);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         logIn_email = (EditText) findViewById(R.id.email_Login);
         logIn_password = (EditText) findViewById(R.id.password_Login);
@@ -107,23 +122,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean isDriver = dataSnapshot.child("Driver").hasChild(userId);
+//                boolean isDriver = dataSnapshot.child("Driver").hasChild(userId);
                 boolean isRider = dataSnapshot.child("Rider").hasChild(userId);
 
 
-                if(isDriver){
+                if(isRider){
                     progressDialog.cancel();
-                    startActivity(new Intent(MainActivity.this, Driver_Screen.class));
+                    startActivity(new Intent(MainActivity.this, AppHome.class));
                     finish();
                 }else {
-
-                    if(isRider){
-                        progressDialog.cancel();
-                        startActivity(new Intent(MainActivity.this, Rider_Screen.class));
-                        finish();
-                    }else {
-                        Toast.makeText(MainActivity.this, "No such user exist", Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(MainActivity.this, "No such user exist", Toast.LENGTH_LONG).show();
                 }
 
 //                for (DataSnapshot dt : dataSnapshot.child("Driver").getChildren()) {

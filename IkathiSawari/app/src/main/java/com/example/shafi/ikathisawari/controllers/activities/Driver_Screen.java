@@ -29,6 +29,7 @@ import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverHome;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverHome1;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverNotification;
+import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverProfile;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRequestParent;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRequests;
 import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverRide;
@@ -116,6 +117,7 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
 //    DriverRequests driverRequests = new DriverRequests();
     DriverRequestParent driverRequests = new DriverRequestParent();
     DriverNotification driverNotification = new DriverNotification();
+    DriverProfile driverProfile = new DriverProfile();
     DriverRide driverRide = new DriverRide();
 
     @Override
@@ -140,7 +142,8 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverRequests).commit();
                 return true;
             case R.id.navigation_notifications_rider:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverNotification).commit();
+//                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverNotification).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverProfile).commit();
                 return true;
             case R.id.navigation_ride_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverRide).commit();

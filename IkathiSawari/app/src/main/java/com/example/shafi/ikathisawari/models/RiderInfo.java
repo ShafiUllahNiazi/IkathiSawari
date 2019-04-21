@@ -2,16 +2,43 @@ package com.example.shafi.ikathisawari.models;
 
 public class RiderInfo {
 
-    private String name, email, mobile, cnic,uid;
+    private String name, email, mobile, cnic,uid,gender, dob,image;
     public RiderInfo() {
     }
 
-    public RiderInfo(String uid,String name, String email, String mobile, String cnic) {
+    public RiderInfo(String uid,String name, String email, String mobile, String cnic,String dob, String gender,String profileImg) {
+        this.image = profileImg;
         this.name = name;
         this.email = email;
         this.mobile = mobile;
         this.cnic = cnic;
         this.uid = uid;
+        this.dob = dob;
+        this.gender = gender;
+    }
+
+    public String getProfileImg() {
+        return image;
+    }
+
+    public void setProfileImg(String profileImg) {
+        this.image = profileImg;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     public String getUid() {
@@ -55,13 +82,16 @@ public class RiderInfo {
     }
 
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "RiderInfo{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", cnic='" + cnic + '\'' +
                 ", uid='" + uid + '\'' +
+                ", gender='" + gender + '\'' +
+                ", dob='" + dob + '\'' +
                 '}';
     }
 }

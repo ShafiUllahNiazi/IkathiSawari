@@ -326,7 +326,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         if (requestCode == PICKUP_Origin_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
-                selectOriginRider.setText(pickUpPlace.getAddress());
+                selectOriginRider.setText(pickUpPlace.getName());
                 latLngCurrent = pickUpPlace.getLatLng();
                 Toast.makeText(getActivity(), pickUpPlace.getAddress() + "origin " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
@@ -334,7 +334,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         if (requestCode == PICKUP_Destination_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
-                selectDestinationRider.setText(pickUpPlace.getAddress());
+                selectDestinationRider.setText(pickUpPlace.getName());
                 latLngDestination = pickUpPlace.getLatLng();
                 Toast.makeText(getActivity(), "Destination  " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }

@@ -3,20 +3,45 @@ package com.example.shafi.ikathisawari.models;
 public class DriverInfo {
 
 
-    private String uid,name, email, mobile, cnic, type_and_model, registration_no, no_of_seats;
+    private String uid,name, email, mobile, cnic,gender, dob ,image;
 
     public DriverInfo() {
     }
 
-    public DriverInfo(String uid, String name, String email, String mobile, String cnic, String type_and_model, String registration_no, String no_of_seats) {
+    public DriverInfo(String uid, String name, String email, String mobile, String cnic,String dob, String gender ,String image) {
         this.uid = uid;
+        this.image = image;
         this.name = name;
         this.email = email;
         this.mobile = mobile;
         this.cnic = cnic;
-        this.type_and_model = type_and_model;
-        this.registration_no = registration_no;
-        this.no_of_seats = no_of_seats;
+        this.dob = dob;
+        this.gender = gender;
+
+    }
+
+    public String getimage() {
+        return image;
+    }
+
+    public void setimage(String image) {
+        this.image = image;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     public String getUid() {
@@ -59,29 +84,6 @@ public class DriverInfo {
         this.cnic = cnic;
     }
 
-    public String getType_and_model() {
-        return type_and_model;
-    }
-
-    public void setType_and_model(String type_and_model) {
-        this.type_and_model = type_and_model;
-    }
-
-    public String getRegistration_no() {
-        return registration_no;
-    }
-
-    public void setRegistration_no(String registration_no) {
-        this.registration_no = registration_no;
-    }
-
-    public String getNo_of_seats() {
-        return no_of_seats;
-    }
-
-    public void setNo_of_seats(String no_of_seats) {
-        this.no_of_seats = no_of_seats;
-    }
 
     @Override
     public String toString() {
@@ -91,9 +93,8 @@ public class DriverInfo {
                 ", email='" + email + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", cnic='" + cnic + '\'' +
-                ", type_and_model='" + type_and_model + '\'' +
-                ", registration_no='" + registration_no + '\'' +
-                ", no_of_seats='" + no_of_seats + '\'' +
+                ", gender='" + gender + '\'' +
+                ", dob='" + dob + '\'' +
                 '}';
     }
 }

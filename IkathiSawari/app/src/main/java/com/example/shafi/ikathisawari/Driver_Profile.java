@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Driver_Profile extends AppCompatActivity {
 
-    TextView name_DriverProfile,mob_DriverProfile,cnic_DriverProfile,vehicleTypeModelProfile, vehicleRegNo;
+    TextView name_DriverProfile,mob_DriverProfile,cnic_DriverProfile;
 
     private DatabaseReference mDriverData;
 
@@ -56,16 +56,15 @@ public class Driver_Profile extends AppCompatActivity {
         name_DriverProfile.setText(driverInfo.getName());
         mob_DriverProfile.setText(driverInfo.getMobile());
         cnic_DriverProfile.setText(driverInfo.getCnic());
-        vehicleTypeModelProfile.setText(driverInfo.getType_and_model());
-        vehicleRegNo.setText(driverInfo.getRegistration_no());
+
     }
 
     private void initializeView() {
         name_DriverProfile = findViewById(R.id.profile_driver_Name);
         mob_DriverProfile = findViewById(R.id.profile_driver_mob);
         cnic_DriverProfile = findViewById(R.id.profile_driver_cnic);
-        vehicleTypeModelProfile = findViewById(R.id.profile_Vehicle_TypeModel);
-        vehicleRegNo = findViewById(R.id.profile_Vehicle_regNo);
+
+
     }
 
 

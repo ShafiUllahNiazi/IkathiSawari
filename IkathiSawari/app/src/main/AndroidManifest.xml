@@ -19,13 +19,14 @@
         android:roundIcon="@mipmap/iks"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".controllers.activities.Splash_Screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity"></activity>
         <activity android:name=".SignUpScreen" />
         <activity android:name=".Rider_Home" />
         <activity android:name=".Driver_Home" />
@@ -81,7 +82,10 @@
         <service
             android:name=".services.RiderNotificationsService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".controllers.activities.AppHome" />
+        <!--<activity android:name=".controllers.activities.Splash_Screen"></activity>-->
     </application>
 
 </manifest>
