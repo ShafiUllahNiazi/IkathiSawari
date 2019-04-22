@@ -83,7 +83,7 @@ tools:context=".SignUpScreen">
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="password"
-            android:inputType="textPassword"
+            android:inputType="numberPassword"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
     </android.support.design.widget.TextInputLayout>
@@ -97,7 +97,7 @@ tools:context=".SignUpScreen">
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="confirm password"
-            android:inputType="textPassword"
+            android:inputType="numberPassword"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
     </android.support.design.widget.TextInputLayout>
@@ -111,7 +111,7 @@ tools:context=".SignUpScreen">
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Mobile Number"
-            android:inputType="textPassword"
+            android:inputType="number"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
     </android.support.design.widget.TextInputLayout>
@@ -124,7 +124,7 @@ tools:context=".SignUpScreen">
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="CNIC"
-            android:inputType="textPassword"
+            android:inputType="number"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
     </android.support.design.widget.TextInputLayout>
@@ -137,9 +137,10 @@ tools:context=".SignUpScreen">
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Date of Birth"
-            android:inputType="textPassword"
+            android:inputType="date"
             android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black" />
+            android:textColorHint="@android:color/black"
+            android:focusable="false"/>
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -150,7 +151,7 @@ tools:context=".SignUpScreen">
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Gender"
-            android:inputType="textPassword"
+            android:inputType="text"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
     </android.support.design.widget.TextInputLayout>
@@ -162,7 +163,7 @@ tools:context=".SignUpScreen">
         android:layout_height="wrap_content"
         android:layout_marginTop="20dip"
         android:background="@color/colorPrimaryDark"
-        android:text="Sign in"
+        android:text="Sign up"
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:textStyle="bold" />

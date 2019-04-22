@@ -42,7 +42,7 @@ public class RiderNotificationsService extends Service {
 
         FirebaseApp.initializeApp(getApplicationContext());
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
-            Toast.makeText(this, "notification Driver", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "notification Driver", Toast.LENGTH_SHORT).show();
             String currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(currentRider);
             databaseReference.addValueEventListener(new ValueEventListener() {

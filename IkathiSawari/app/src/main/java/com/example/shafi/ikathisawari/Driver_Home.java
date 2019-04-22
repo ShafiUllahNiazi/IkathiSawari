@@ -211,13 +211,6 @@ public class Driver_Home extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId()==R.id.profile){
-
-
-            startActivity(new Intent(this,Driver_Profile.class));
-
-            return true;
-        }
         if(item.getItemId()==R.id.sign_out){
 
             FirebaseAuth.getInstance().signOut();

@@ -47,15 +47,17 @@ public class DriverProfile extends Fragment {
  
     private EditText mobile_Driver;
     private EditText cnic_Driver;
-    private EditText dob;
-    private EditText gender;
+    private EditText dob_Driver;
+    private EditText gender_Driver;
     ImageView driverProfileImage_profile;
     Button update_driver_profile;
     RiderInfo riderInfo;
     String currentUserUid;
     DatabaseReference databaseReference;
 
-    TextView update_driver_profile_img;
+    Button update_driver_profile_img;
+    String uid,name, email, mobile, cnic,gender, dob ;
+    String image = "default";
 
     public DriverProfile() {
         // Required empty public constructor
@@ -67,6 +69,9 @@ public class DriverProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_driver_profile, container, false);
+
+
+
         driverProfileImage_profile = view.findViewById(R.id.driverProfileImage_profile);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         currentUserUid = currentUser.getUid();
@@ -74,10 +79,24 @@ public class DriverProfile extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(currentUserUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String image = dataSnapshot.child("image").getValue().toString();
+                DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
+                name = driverInfo.getName();
+                email = driverInfo.getEmail();
+                mobile = driverInfo.getMobile();
+                cnic = driverInfo.getCnic();
+                gender = driverInfo.getGender();
+                dob = driverInfo.getDob();
+                image = driverInfo.getimage();
+
                 if (!image.equals("default")) {
                     Picasso.get().load(image).into(driverProfileImage_profile);
                 }
+                name_Driver.setText(name);
+                email_Driver.setText(email);
+                mobile_Driver.setText(mobile);
+                cnic_Driver.setText(cnic);
+                gender_Driver.setText(gender);
+                dob_Driver.setText(dob);
             }
 
             @Override
@@ -93,15 +112,22 @@ public class DriverProfile extends Fragment {
         
         mobile_Driver= view.findViewById(R.id.mobile_Driver_profile);
         cnic_Driver= view.findViewById(R.id.cnic_Driver_profile);
-        dob= view.findViewById(R.id.dob_Driver_profile);
-        gender= view.findViewById(R.id.gender_Driver_profile);
+        dob_Driver= view.findViewById(R.id.dob_Driver_profile);
+        gender_Driver= view.findViewById(R.id.gender_Driver_profile);
         update_driver_profile= view.findViewById(R.id.update_driver_profile);
         update_driver_profile_img= view.findViewById(R.id.update_driver_profile_img);
+        name_Driver.setFocusable(false);
+        email_Driver.setFocusable(false);
+        mobile_Driver.setFocusable(false);
+        cnic_Driver.setFocusable(false);
+        dob_Driver.setFocusable(false);
+        gender_Driver.setFocusable(false);
 
 
         update_driver_profile_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -112,25 +138,51 @@ public class DriverProfile extends Fragment {
         update_driver_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = name_Driver.getText().toString();
-                String email = email_Driver.getText().toString();
-                String mobile = mobile_Driver.getText().toString();
-                String cnic =  cnic_Driver.getText().toString();
-                String dob1 = dob.getText().toString();
-                String gender1 =  gender.getText().toString();
-                DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"");
-                riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"");
+                if(update_driver_profile.getText().equals("edit profile")){
+                    name_Driver.setFocusable(true);
+                    name_Driver.setFocusableInTouchMode(true);
+                    name_Driver.requestFocus();
+                    email_Driver.setFocusable(true);
+                    email_Driver.setFocusableInTouchMode(true);
+                    email_Driver.requestFocus();
+                    mobile_Driver.setFocusable(true);
+                    mobile_Driver.setFocusableInTouchMode(true);
+                    mobile_Driver.requestFocus();
+                    cnic_Driver.setFocusable(true);
+                    cnic_Driver.setFocusableInTouchMode(true);
+                    cnic_Driver.requestFocus();
+                    dob_Driver.setFocusable(true);
+                    dob_Driver.setFocusableInTouchMode(true);
+                    dob_Driver.requestFocus();
+                    gender_Driver.setFocusable(true);
+                    gender_Driver.setFocusableInTouchMode(true);
+                    gender_Driver.requestFocus();
+                    update_driver_profile.setText("update profile");
+                }
+                if(update_driver_profile.getText().equals("update profile")){
+                    String name = name_Driver.getText().toString();
+                    String email = email_Driver.getText().toString();
+                    String mobile = mobile_Driver.getText().toString();
+                    String cnic =  cnic_Driver.getText().toString();
+                    String dob1 = dob_Driver.getText().toString();
+                    String gender1 =  gender_Driver.getText().toString();
+                    DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,image);
+                    riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"");
 
-                databaseReference = FirebaseDatabase.getInstance().getReference();
+                    databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
 
-                databaseReference.child("users").child("Driver").child(currentUserUid).setValue(driverInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        databaseReference.child("users").child("Rider").child(currentUserUid).setValue(riderInfo);
-                    }
-                });
+                    databaseReference.child("users").child("Driver").child(currentUserUid).setValue(driverInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            databaseReference.child("users").child("Rider").child(currentUserUid).setValue(riderInfo);
+                        }
+                    });
+                }
+
+
+
             }
         });
 

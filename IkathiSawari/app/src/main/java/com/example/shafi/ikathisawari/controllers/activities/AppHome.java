@@ -3,11 +3,17 @@ package com.example.shafi.ikathisawari.controllers.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.shafi.ikathisawari.MainActivity;
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.services.DriverNotificationsService;
+import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class AppHome extends AppCompatActivity {
 
@@ -34,6 +40,37 @@ public class AppHome extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+//        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        if(item.getItemId()==R.id.sign_out){
+
+            Intent intent = new Intent(this, com.example.shafi.ikathisawari.services.DriverNotification.class);
+            stopService(intent);
+            Intent intent2 = new Intent(this, UpdateDriverLocation.class);
+            stopService(intent2);
+            Intent intent3 = new Intent(this, DriverNotificationsService.class);
+            stopService(intent3);
+
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this,MainActivity.class));
+
+            return true;
+        }
+
+        return true;
 
     }
 }

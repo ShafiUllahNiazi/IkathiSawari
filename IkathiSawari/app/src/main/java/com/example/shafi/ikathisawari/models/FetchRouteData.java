@@ -1,5 +1,6 @@
 package com.example.shafi.ikathisawari.models;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -18,12 +19,13 @@ public class FetchRouteData {
     String destinationPlaceName;
     String carModel1;
     String driver_message1;
+    ProgressDialog progressDialog;
 
     public FetchRouteData() {
     }
 
     public FetchRouteData(GoogleMap map, String clickButton, Context context, LatLng latLngCurrent,
-                          LatLng latLngDestination, String pickUpPlaceName, String destinationPlaceName, String carModel1, String date, String time, String seats, String price, String driver_message1) {
+                          LatLng latLngDestination, String pickUpPlaceName, String destinationPlaceName, String carModel1, String date, String time, String seats, String price, String driver_message1,ProgressDialog progressDialog) {
         this.mMap = map;
         this.clickButton = clickButton;
         this.context = context;
@@ -37,6 +39,11 @@ public class FetchRouteData {
         this.destinationPlaceName = destinationPlaceName;
         this.carModel1 = carModel1;
         this.driver_message1 = driver_message1;
+        this.progressDialog =progressDialog;
+    }
+
+    public ProgressDialog getProgressDialog() {
+        return progressDialog;
     }
 
     public GoogleMap getmMap() {

@@ -94,7 +94,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
     Double originLat, originLong, destinationLat, destinationLong;
 
 
-    private float radius = 100;
+    private float radius = 1000;
     private DatabaseReference mDriverData;
 
     int myHour, myMinute, myYear, myMonth, myDay;
@@ -320,13 +320,17 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         return url;
     }
 
+    String rider_origin_name,rider_destination_name;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICKUP_Origin_PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
                 selectOriginRider.setText(pickUpPlace.getName());
+                rider_origin_name = pickUpPlace.getName().toString();
                 latLngCurrent = pickUpPlace.getLatLng();
                 Toast.makeText(getActivity(), pickUpPlace.getAddress() + "origin " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
@@ -335,14 +339,16 @@ public class RiderHome1 extends Fragment implements RoutingListener{
             if (resultCode == RESULT_OK) {
                 final Place pickUpPlace = PlacePicker.getPlace(getActivity(), data);
                 selectDestinationRider.setText(pickUpPlace.getName());
+                rider_destination_name = pickUpPlace.getName().toString();
                 latLngDestination = pickUpPlace.getLatLng();
                 Toast.makeText(getActivity(), "Destination  " + pickUpPlace.getLatLng().longitude, Toast.LENGTH_SHORT).show();
             }
         }
 
     }
+    String messagedriver,driver_origin_name,driver_destination_name,no_of_available_seats,vehicle_Model1;
 
-    private void getNearByDrivers(final int traveledDistanceRider, final int traveledTimeRider) {
+    private void getNearByDrivers(final int traveledDistanceRider, final int traveledTimeRider, final String seatsRider) {
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Available Routs");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -359,23 +365,27 @@ public class RiderHome1 extends Fragment implements RoutingListener{
                     final DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
 
                     driverRoutInfo.setRoutes((List<List<HashMap<String, String>>>) dd.get("routes"));
+                    driver_origin_name = (String) dd.get("driver_origin_name");
+                    driver_destination_name = (String) dd.get("driver_destination_name");
+                    vehicle_Model1 = (String) dd.get("vehicle_Model1");
                     dateDriver = (String) dd.get("start_ride_date");
                     timeDriver = (String) dd.get("start_ride_time");
                     seatsDriver = (String) dd.get("no_of_seats");
                     priceDriver = (String) dd.get("price_per_km");
-
+                    messagedriver = (String) dd.get("driver_message");
+                    no_of_available_seats = (String) dd.get("no_of_available_seats");
                     Log.d(TAG, "onDataChange: "+dd.get("routes").toString());
-                    final String availableDriver=fetchNearbyDriver(driver, driverRoutInfo, timeDriver, seatsDriver, priceDriver);
+                    final String availableDriver=fetchNearbyDriver(driver, driverRoutInfo, dateDriver, no_of_available_seats, priceDriver);
                     Log.d(TAG,"String "+ availableDriver);
 
                     if(availableDriver != null){
-                        final int  rideCharges = (Integer.valueOf(priceDriver)*traveledDistanceRider)/1000;
+                        final int  rideCharges = ((Integer.valueOf(priceDriver)*traveledDistanceRider)/1000)*Integer.valueOf(seatsRider);
                         mDriverData = FirebaseDatabase.getInstance().getReference("users").child("Driver");
                         mDriverData.child(availableDriver).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,dateDriver,timeDriver, seatsDriver, priceDriver,riderOriginAtRoad,riderDestinationAtRoad,dateRider,seatsRider,traveledDistanceRider,traveledTimeRider,rideCharges);
+                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,dateDriver,timeDriver, seatsDriver, priceDriver,riderOriginAtRoad,riderDestinationAtRoad,dateRider, RiderHome1.this.seatsRider,traveledDistanceRider,traveledTimeRider,rideCharges,vehicle_Model1,driver_origin_name,driver_destination_name,messagedriver,rider_origin_name,rider_destination_name,no_of_available_seats);
                                 availableDriversList.add(availableDriverInfo);
                             }
 
@@ -433,7 +443,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         fragmentTransaction.commit();
     }
 
-    private String fetchNearbyDriver(String driverKey, DriverRoutInfo driverRoutInfo, String time, String seats, String price) {
+    private String fetchNearbyDriver(String driverKey, DriverRoutInfo driverRoutInfo, String date, String seats, String price) {
 
         Log.d("dddriver",driverKey );
 
@@ -553,7 +563,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
 
 
 
-                    if(time.compareTo(selectDateRideRider.getText().toString())<= 0){
+                    if(date.compareTo(selectDateRideRider.getText().toString())<= 0){
                         if(Integer.parseInt(seats)>= Integer.parseInt(riderSeats.getText().toString())){
 
 
@@ -654,6 +664,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
 
             if(!(seatsRider.equals(""))){
 
+
                     originLat = latLngCurrent.latitude;
                     originLong = latLngCurrent.longitude;
                     destinationLat = latLngDestination.latitude;
@@ -664,11 +675,11 @@ public class RiderHome1 extends Fragment implements RoutingListener{
                     availableDriversList = new ArrayList<>();
                     if(traveledDistanceRider!=0 && traveledTimeRider!=0){
 
-                        getNearByDrivers(traveledDistanceRider,traveledTimeRider);
+                        getNearByDrivers(traveledDistanceRider,traveledTimeRider,seatsRider);
                     }
 
 
-                    Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
 
 
             }else {

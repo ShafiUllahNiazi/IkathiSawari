@@ -64,6 +64,13 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
 //        viewHolder.content_rider_request.setText("Driver");
         viewHolder.nameDriver.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getName());
 
+        viewHolder.available_driver_price_of_ride.setText("Charges: "+ridersRequestsListInDriver.get(i).getMakeRequest().getRideCharges()+"");
+        viewHolder.available_driver_age_gender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getGender()+"");
+        viewHolder.status.setText("Status: "+ridersRequestsListInDriver.get(i).getMakeRequest().getStatus()+"");
+        viewHolder.available_driver_mobile.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getMobile()+"");
+        viewHolder.available_driver_ride_date.setText("Date: "+ridersRequestsListInDriver.get(i).getMakeRequest().getTimeAndDateRider());
+        viewHolder.available_driver_available_seats.setText("Your reserve seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getSeatsRider()+"");
+
         viewHolder.cancelRiderRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,12 +153,22 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameDriver;
-        TextView mobileDriver;
+        TextView available_driver_age_gender,available_driver_vehicle_model,available_driver_offered_seats,
+                available_driver_ride_date,available_driver_available_seats,available_driver_price_of_ride;
+        TextView available_driver_mobile,status;
+
         Button cancelRiderRequest;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameDriver = itemView.findViewById(R.id.requested_driver_name);
+            available_driver_age_gender = itemView.findViewById(R.id.requested_driver_age_gender);
 //            mobileDriver = itemView.findViewById(R.id.rider_request_status);
+            status = itemView.findViewById(R.id.requested_driver_vehicle_model);
+            available_driver_mobile= itemView.findViewById(R.id.requested_driver_offered_seats);
+            available_driver_ride_date = itemView.findViewById(R.id.requested_driver_ride_date);
+            available_driver_available_seats = itemView.findViewById(R.id.requested_driver_available_seats);
+            available_driver_price_of_ride = itemView.findViewById(R.id.requested_driver_price_of_ride);
+
             cancelRiderRequest = itemView.findViewById(R.id.cancel_rider_request);
 
         }

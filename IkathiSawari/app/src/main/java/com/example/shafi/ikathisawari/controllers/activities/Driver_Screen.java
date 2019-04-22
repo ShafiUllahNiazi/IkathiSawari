@@ -141,7 +141,7 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
             case R.id.navigation_requests_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverRequests).commit();
                 return true;
-            case R.id.navigation_notifications_rider:
+            case R.id.navigation_profile_rider:
 //                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverNotification).commit();
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverProfile).commit();
                 return true;
@@ -169,13 +169,7 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId()==R.id.profile){
 
-
-            startActivity(new Intent(this,Driver_Profile.class));
-
-            return true;
-        }
         if(item.getItemId()==R.id.sign_out){
 
             Intent intent = new Intent(this, com.example.shafi.ikathisawari.services.DriverNotification.class);

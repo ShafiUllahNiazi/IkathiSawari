@@ -20,7 +20,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="12dp"
-            android:src="@drawable/ic_home_black_24dp"
+            android:src="@drawable/ic_account_circle_black_24dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="VectorDrawableCompat" />
@@ -72,8 +72,8 @@
 
         <TextView
             android:id="@+id/available_driver_ride_date"
-            android:layout_width="103dp"
-            android:layout_height="20dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:text="18 april 2019 4:30"
@@ -86,6 +86,7 @@
             android:id="@+id/container_seats"
             android:layout_width="match_parent"
             android:layout_height="36dp"
+            android:layout_marginTop="8dp"
             android:background="@color/light_red"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"

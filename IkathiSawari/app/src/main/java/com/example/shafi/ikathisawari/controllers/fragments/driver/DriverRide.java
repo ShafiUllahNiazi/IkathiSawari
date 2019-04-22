@@ -2,6 +2,7 @@ package com.example.shafi.ikathisawari.controllers.fragments.driver;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -29,6 +30,7 @@ import com.example.shafi.ikathisawari.controllers.adapters.DriverPaymentAdapter;
 import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RiderRidePointsDriver;
 import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
+import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -160,6 +162,15 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         stoppService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(stoppService.getText().toString().equals("start ride")){
+                    Intent intent2 = new Intent(getActivity(), UpdateDriverLocation.class);
+                    getActivity().startService(intent2);
+                    stoppService.setText("stop ride");
+                }
+                if(stoppService.getText().toString().equals("stop ride")){
+                    Intent intent2 = new Intent(getActivity(), UpdateDriverLocation.class);
+                    getActivity().stopService(intent2);
+                }
 //                Intent intent = new Intent(getActivity(),UpdateDriverLocation.class);
 //                getActivity().stopService(intent);
 //                ratingBar.setVisibility(View.VISIBLE);

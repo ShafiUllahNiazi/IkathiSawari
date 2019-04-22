@@ -100,7 +100,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="4 Seats Available"
+                android:text="4 Seats "
                 android:textColor="@android:color/holo_red_light"
                 android:textSize="12sp" />
 
@@ -117,7 +117,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="156 / seat"
+                android:text="156 "
                 android:textSize="12sp" />
 
         </LinearLayout>

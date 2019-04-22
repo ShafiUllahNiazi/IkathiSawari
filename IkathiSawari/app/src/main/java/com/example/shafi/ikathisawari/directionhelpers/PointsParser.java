@@ -1,8 +1,10 @@
 package com.example.shafi.ikathisawari.directionhelpers;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,6 +18,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +50,7 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
     String destinationPlaceName;
     String carModel1;
     String driver_message1;
+    ProgressDialog progressDialog;
 
     public PointsParser(FetchRouteData fetchRouteData, String directionMode) {
         this.directionMode = directionMode;
@@ -62,6 +67,7 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
         this.driver_message1 = fetchRouteData.getDriver_message1();
         this.pickUpPlaceName =fetchRouteData.getPickUpPlaceName();
         this.destinationPlaceName = fetchRouteData.getDestinationPlaceName();
+        this.progressDialog = fetchRouteData.getProgressDialog();
     }
 
     public interface TaskLoadedCallback {
@@ -152,8 +158,13 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
             String currentUserUid = currentUser.getUid();
 
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-            databaseReference.child("Available Routs").child(currentUserUid).setValue(map);
-            Toast.makeText(context, "data inserted", Toast.LENGTH_SHORT).show();
+            databaseReference.child("Available Routs").child(currentUserUid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    progressDialog.cancel();
+                }
+            });
+
 
 
         }

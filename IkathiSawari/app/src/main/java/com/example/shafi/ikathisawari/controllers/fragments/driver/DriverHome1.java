@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,6 +45,7 @@ import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.controllers.fragments.ShowRoute;
 import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 import com.example.shafi.ikathisawari.models.FetchRouteData;
 import com.example.shafi.ikathisawari.services.UpdateDriverLocation;
@@ -100,7 +102,7 @@ public class DriverHome1 extends Fragment  {
     private boolean mLocationPermissionGranted;
 
 
-    Button saveRoute;
+    Button saveRoute,showRouteD1;
 
     String pickUpPlaceName, destinationPlaceName;
 
@@ -115,6 +117,7 @@ public class DriverHome1 extends Fragment  {
 
     int myHour, myMinute, myYear, myMonth, myDay;
     boolean isDate,isTime;
+    private ProgressDialog progressDialog;
 
 
     public DriverHome1() {
@@ -128,9 +131,11 @@ public class DriverHome1 extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        setHasOptionsMenu(true);
+
         Toast.makeText(getActivity(), "oncreatee", Toast.LENGTH_SHORT).show();
         View view = inflater.inflate(R.layout.fragment_driver_home1, container, false);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
 
 
 
@@ -152,6 +157,7 @@ public class DriverHome1 extends Fragment  {
         driver_message = view.findViewById(R.id.driver_message);
         carModel = view.findViewById(R.id.carModel);
         saveRoute = view.findViewById(R.id.saveRouteD1);
+        showRouteD1 = view.findViewById(R.id.showRouteD1);
         selectOriginDriver.setFocusable(false);
         selectOriginDriver.setClickable(true);
         selectDestinationDriver.setFocusable(false);
@@ -164,11 +170,22 @@ public class DriverHome1 extends Fragment  {
         selectTimeRideDriver.setClickable(true);
 
 
-
-
-
-
-
+        showRouteD1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (latLngCurrent != null) {
+                    if (latLngDestination != null) {
+                        seeRoute();
+                    }else {
+                        Toast.makeText(getActivity(), "Select Destination", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(getActivity(), "Select Origin", Toast.LENGTH_SHORT).show();
+                }
+                
+            }
+        });
         selectOriginDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,8 +248,10 @@ public class DriverHome1 extends Fragment  {
                                 if(!(seats.equals(""))){
                                     if(!(price.equals(""))){
                                         String driver_message1 = driver_message.getText().toString();
-                                        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
-                                        new FetchURL(new FetchRouteData(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination,pickUpPlaceName,destinationPlaceName,carModel1,date,time,seats,price,driver_message1)).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+//                                        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
+                                        progressDialog.setMessage("Offering Ride");
+                                        progressDialog.show();
+                                        new FetchURL(new FetchRouteData(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination,pickUpPlaceName,destinationPlaceName,carModel1,date,time,seats,price,driver_message1,progressDialog)).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
 
                                         Log.d("dddddddddddd",seats+" "+price);
 
@@ -351,6 +370,7 @@ public class DriverHome1 extends Fragment  {
 
 
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -404,6 +424,20 @@ public class DriverHome1 extends Fragment  {
         }
 
 
+    }
+
+    private void seeRoute(){
+        ShowRoute showRoute = new ShowRoute();
+        Bundle b = new Bundle();
+
+        b.putParcelable("from_position", latLngCurrent);
+        b.putParcelable("to_position", latLngDestination);
+        showRoute.setArguments(b);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.driver_container, showRoute);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 

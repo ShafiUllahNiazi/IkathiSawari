@@ -31,21 +31,24 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/driverProfileImage_profile"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
 
 
                     android:layout_gravity="center"
-
-                    android:layout_margin="50dp"
-                    android:src="@drawable/ic_home_black_24dp"
+                    android:layout_marginTop="50dp"
+                    android:src="@drawable/ic_account_circle_black_24dp"
                     tools:ignore="VectorDrawableCompat" />
 
-                <TextView
+                <Button
                     android:id="@+id/update_driver_profile_img"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="qqq" />
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:text="Edit profile pic"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimaryDark" />
 
             </LinearLayout>
 
@@ -116,7 +119,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:text="SignUp" />
+                            android:background="@android:color/black"
+                            android:text="edit profile"
+                            android:textColor="@android:color/white" />
                     </LinearLayout>
 
                 </FrameLayout>

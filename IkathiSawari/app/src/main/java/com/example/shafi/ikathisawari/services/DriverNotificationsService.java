@@ -49,7 +49,7 @@ public class DriverNotificationsService extends Service {
 
         FirebaseApp.initializeApp(getApplicationContext());
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            Toast.makeText(this, "notification Driver", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "notification Driver", Toast.LENGTH_SHORT).show();
             String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver);
             databaseReference.addValueEventListener(new ValueEventListener() {

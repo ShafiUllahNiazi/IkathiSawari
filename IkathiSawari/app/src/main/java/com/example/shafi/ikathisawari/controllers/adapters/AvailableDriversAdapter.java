@@ -65,17 +65,20 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.available_driver_name.setText(availableDriversList.get(i).getDriverInfo().getName());
-        int traveledDistanceRider = availableDriversList.get(i).getTraveledDistanceRider();
-        int pricePerKm = Integer.valueOf(availableDriversList.get(i).getPrice());
-        Toast.makeText(context, traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
+//        int traveledDistanceRider = availableDriversList.get(i).getTraveledDistanceRider();
+//        int pricePerKm = Integer.valueOf(availableDriversList.get(i).getPrice());
+//        Toast.makeText(context, traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
 
-        int  charges = (pricePerKm*traveledDistanceRider)/1000;
-        Toast.makeText(context, charges+" ddd"+traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
+//        int  charges = (pricePerKm*traveledDistanceRider)/1000;
+//        Toast.makeText(context, charges+" ddd"+traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
+        viewHolder.available_driver_price_of_ride.setText("Charges: "+availableDriversList.get(i).getRideCharges()+"");
+        viewHolder.available_driver_age_gender.setText(availableDriversList.get(i).getDriverInfo().getGender()+"");
+        viewHolder.available_driver_vehicle_model.setText("Vehicle Model: "+availableDriversList.get(i).getVehicle_Model1()+"");
+        viewHolder.available_driver_offered_seats.setText("Offered seats: "+availableDriversList.get(i).getSeats()+"");
+        viewHolder.available_driver_ride_date.setText("Date: "+availableDriversList.get(i).getDate()+" "+availableDriversList.get(i).getTime());
+        viewHolder.available_driver_available_seats.setText("Available seats: "+availableDriversList.get(i).getNo_of_available_seats()+" ");
 
 
-
-
-        viewHolder.available_driver_price_of_ride.setText(charges+"");
 
         final int position = i;
 

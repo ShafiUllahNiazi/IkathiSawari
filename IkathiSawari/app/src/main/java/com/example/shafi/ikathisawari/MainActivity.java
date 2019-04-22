@@ -103,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        Toast.makeText(this, "abc "+ currentUser, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "abc "+ currentUser, Toast.LENGTH_SHORT).show();
         if(currentUser != null){
-            Toast.makeText(this, "not nulll ", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "not nulll ", Toast.LENGTH_SHORT).show();
             progressDialog.setMessage("Logging in");
             progressDialog.show();
             goHome();

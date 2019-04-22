@@ -15,6 +15,7 @@ import com.example.shafi.ikathisawari.MainActivity;
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.Rider_Profile;
 
+import com.example.shafi.ikathisawari.controllers.fragments.driver.DriverProfile;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderHome1;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderNotification;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRequestParent;
@@ -49,6 +50,8 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
     RiderNotification riderNotification = new RiderNotification();
     RiderRide riderRide = new RiderRide();
 
+    DriverProfile profile = new DriverProfile();
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         Log.d("asdfg","clicked");
@@ -60,8 +63,8 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
             case R.id.navigation_requests_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderRequestParent).commit();
                 return true;
-            case R.id.navigation_notifications_rider:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderNotification).commit();
+            case R.id.navigation_profile_rider:
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,profile).commit();
                 return true;
             case R.id.navigation_ride_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderRide).commit();
@@ -80,13 +83,7 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId()==R.id.profile){
 
-
-            startActivity(new Intent(this,Rider_Profile.class));
-
-            return true;
-        }
         if(item.getItemId()==R.id.sign_out){
 
             Intent intent = new Intent(this, RiderNotificationsService.class);

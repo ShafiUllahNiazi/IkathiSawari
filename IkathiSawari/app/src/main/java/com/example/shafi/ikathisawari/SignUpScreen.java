@@ -84,6 +84,7 @@ public class SignUpScreen extends AppCompatActivity {
         signIn_Btn_signup = findViewById(R.id.signup_Btn_signup);
 
         progressDialog=new ProgressDialog(this);
+        progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth = FirebaseAuth.getInstance();
 
         dob.setOnClickListener(new View.OnClickListener() {

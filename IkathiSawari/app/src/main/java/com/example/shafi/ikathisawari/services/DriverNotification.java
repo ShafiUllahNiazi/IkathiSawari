@@ -39,12 +39,12 @@ public class DriverNotification extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "notification startt", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "notification startt", Toast.LENGTH_SHORT).show();
         Log.d("cccccccc","startttttt");
         FirebaseApp.initializeApp(getApplicationContext());
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             Log.d("cccccc", "notttt");
-            Toast.makeText(this, "req notification startt111", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "req notification startt111", Toast.LENGTH_SHORT).show();
             String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(currentDriver);
             databaseReference.addValueEventListener(new ValueEventListener() {

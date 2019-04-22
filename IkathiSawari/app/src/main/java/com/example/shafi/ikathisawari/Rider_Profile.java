@@ -74,13 +74,7 @@ public class Rider_Profile extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId()==R.id.profile){
 
-
-            startActivity(new Intent(this,Rider_Profile.class));
-
-            return true;
-        }
         if(item.getItemId()==R.id.sign_out){
 
             FirebaseAuth.getInstance().signOut();
