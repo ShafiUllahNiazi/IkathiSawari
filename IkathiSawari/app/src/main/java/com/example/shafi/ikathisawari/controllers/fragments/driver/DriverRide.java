@@ -204,6 +204,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         Log.d("rrrrrr","perrrrrr");
 //        Toast.makeText(getActivity(), "nott", Toast.LENGTH_SHORT).show();
 
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -224,7 +225,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
                     GenericTypeIndicator<ArrayList<RiderRidePointsDriver>> t = new GenericTypeIndicator<ArrayList<RiderRidePointsDriver>>() {};
                     ArrayList<RiderRidePointsDriver> yourStringArray = dataSnapshot.getValue(t);
-                    Toast.makeText(getContext(),yourStringArray.get(0).toString(),Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getContext(),yourStringArray.get(0).toString(),Toast.LENGTH_LONG).show();
 
                     Log.d("tststs",yourStringArray.toString());
 
@@ -244,7 +245,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
                     mMap.clear();
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(pointsDriverArrayList.get(pointsDriverArrayList.size()-1)));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(pointsDriverArrayList.get(pointsDriverArrayList.size()-1))
                     .title("abc")

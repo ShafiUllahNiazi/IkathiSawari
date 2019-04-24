@@ -105,7 +105,7 @@ public class RiderRide extends Fragment implements OnMapReadyCallback {
 
                     GenericTypeIndicator<ArrayList<RiderRidePointsDriver>> t = new GenericTypeIndicator<ArrayList<RiderRidePointsDriver>>() {};
                     ArrayList<RiderRidePointsDriver> yourStringArray = dataSnapshot.getValue(t);
-                    Toast.makeText(getContext(),yourStringArray.get(0).toString(),Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getContext(),yourStringArray.get(0).toString(),Toast.LENGTH_LONG).show();
 
                     Log.d("tststs",yourStringArray.toString());
 

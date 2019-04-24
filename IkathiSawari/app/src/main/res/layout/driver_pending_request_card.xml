@@ -40,12 +40,12 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/requestRider_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:src="@drawable/ic_home_black_24dp"
+            android:src="@drawable/ic_account_circle_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="VectorDrawableCompat" />
@@ -152,38 +152,6 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/requestRider_From"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="center"
-            android:text="From"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/requestRider_mobileNo"
-            app:layout_constraintTop_toBottomOf="@+id/requestRider_age_gender" />
-
-        <TextView
-            android:id="@+id/requestRider_To"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="center"
-            android:text="To"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/requestRider_status_type"
-            app:layout_constraintTop_toBottomOf="@+id/requestRider_From" />
 
 
     </android.support.constraint.ConstraintLayout>
