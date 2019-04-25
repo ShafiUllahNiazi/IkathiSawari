@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,10 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getSupportActionBar().hide();
         setContentView(R.layout.activity_driver__screen);
         Log.d(TAG,"creattt");
         bottomNavigationView = findViewById(R.id.navigationDriver);

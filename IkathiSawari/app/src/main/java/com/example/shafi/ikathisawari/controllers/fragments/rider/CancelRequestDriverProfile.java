@@ -49,7 +49,7 @@ public class CancelRequestDriverProfile extends Fragment {
         position = getArguments().getInt("position");
         driverName = view.findViewById(R.id.canceDriverName);
         cancelRequest = view.findViewById(R.id.cancel_request_review);
-        driverName.setText(ridersRequestsListInDriver.get(position).getMakeRequest().getDriverInfo().getName());
+        driverName.setText(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getName());
         cancelRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

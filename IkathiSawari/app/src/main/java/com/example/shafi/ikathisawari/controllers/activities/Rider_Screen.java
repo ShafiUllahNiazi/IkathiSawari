@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.example.shafi.ikathisawari.Driver_Profile;
 import com.example.shafi.ikathisawari.MainActivity;
@@ -31,6 +32,10 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getSupportActionBar().hide();
         setContentView(R.layout.rider__screen);
 
         Intent intent = new Intent(this, RiderNotificationsService.class);

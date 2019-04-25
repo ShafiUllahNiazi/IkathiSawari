@@ -89,9 +89,9 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         switch (viewHolder.getItemViewType()) {
             case 0:
                 ViewHolder0 viewHolder0 = (ViewHolder0) viewHolder;
-                viewHolder0.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
+                viewHolder0.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
                 viewHolder0.status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
-                viewHolder0.requestRider_mobileNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getMobile());
+                viewHolder0.requestRider_mobileNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
                 viewHolder0.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -116,7 +116,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         final String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
-                        String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getCurrent_rider();
+                        String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
                         String request = ridersRequestsListInDriver.get(position).getDateAndTime();
                         FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("accepted");
 
@@ -134,7 +134,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                        FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("rejected");
                         final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                        final String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getCurrent_rider();
+                        final String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
                         final String request = ridersRequestsListInDriver.get(position).getDateAndTime();
                         final MakeRequest makeRequest = ridersRequestsListInDriver.get(position).getMakeRequest();
 
@@ -166,9 +166,9 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             case 2:
                 ViewHolder2 viewHolder2 = (ViewHolder2)viewHolder;
-                viewHolder2.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
+                viewHolder2.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
                 viewHolder2.status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
-                viewHolder2.requestRider_mobileNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getMobile());
+                viewHolder2.requestRider_mobileNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
                 viewHolder2.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -192,7 +192,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
 
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("pending");
-                        String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getCurrent_rider();
+                        String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
                         String request = ridersRequestsListInDriver.get(position).getDateAndTime();
                         FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("pending");
                     }
@@ -203,7 +203,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                         final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                        final String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getCurrent_rider();
+                        final String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
                         final String request = ridersRequestsListInDriver.get(position).getDateAndTime();
                         final MakeRequest makeRequest = ridersRequestsListInDriver.get(position).getMakeRequest();
 
@@ -295,7 +295,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }else {
                 String filteredPattern = constraint.toString().toLowerCase().trim();
                 for (RidersRequestsListInDriver item:ridersRequestsListInDriverFull) {
-                    if(item.getMakeRequest().getRiderInfo().getName().toLowerCase().contains(filteredPattern)){
+                    if(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName().toLowerCase().contains(filteredPattern)){
                         filteredList.add(item);
                     }
                 }

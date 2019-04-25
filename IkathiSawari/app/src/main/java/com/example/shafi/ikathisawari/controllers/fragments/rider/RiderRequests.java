@@ -55,6 +55,7 @@ public class RiderRequests extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        setRetainInstance(true);
         setHasOptionsMenu(true);
         view =  inflater.inflate(R.layout.fragment_rider_requests, container, false);
         currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -116,15 +117,17 @@ public class RiderRequests extends Fragment {
 
                         Log.d("Time_Datess",snapshot.getKey()+" "+ makeRequest);
                     }
-                    recyclerView = view.findViewById(R.id.recyclerViewRequestRiders);
-                    layoutManager = new LinearLayoutManager(getActivity());
-                    recyclerView.setLayoutManager(layoutManager);
-                    riderRequestsAdapter = new RiderRequestsAdapter(getActivity(),getChildFragmentManager(), ridersRequestsListInDriver);
+                    if (getActivity() != null) {
+                        recyclerView = view.findViewById(R.id.recyclerViewRequestRiders);
+                        layoutManager = new LinearLayoutManager(getActivity());
+                        recyclerView.setLayoutManager(layoutManager);
+                        riderRequestsAdapter = new RiderRequestsAdapter(getActivity(), getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
 
 
-                    recyclerView.setAdapter(riderRequestsAdapter);
+                        recyclerView.setAdapter(riderRequestsAdapter);
 
-                    riderRequestsAdapter.notifyDataSetChanged();
+                        riderRequestsAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 

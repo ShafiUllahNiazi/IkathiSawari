@@ -36,8 +36,8 @@ public class DriverHistoryAdapter extends RecyclerView.Adapter<DriverHistoryAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.driverName.setText(rideHistoryArrayList.get(i).getMakeRequest().getDriverInfo().getName());
-        viewHolder.driverMobileNo.setText(rideHistoryArrayList.get(i).getMakeRequest().getDriverInfo().getMobile());
+        viewHolder.driverName.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getName());
+        viewHolder.driverMobileNo.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getMobile());
 
 
     }

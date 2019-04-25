@@ -62,14 +62,14 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final int position = i;
 //        viewHolder.content_rider_request.setText("Driver");
-        viewHolder.nameDriver.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getName());
+        viewHolder.nameDriver.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getName());
 
-        viewHolder.available_driver_price_of_ride.setText("Charges: "+ridersRequestsListInDriver.get(i).getMakeRequest().getRideCharges()+"");
-        viewHolder.available_driver_age_gender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getGender()+"");
+        viewHolder.available_driver_price_of_ride.setText("Charges: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
+        viewHolder.available_driver_age_gender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getGender()+"");
         viewHolder.status.setText("Status: "+ridersRequestsListInDriver.get(i).getMakeRequest().getStatus()+"");
-        viewHolder.available_driver_mobile.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getDriverInfo().getMobile()+"");
-        viewHolder.available_driver_ride_date.setText("Date: "+ridersRequestsListInDriver.get(i).getMakeRequest().getTimeAndDateRider());
-        viewHolder.available_driver_available_seats.setText("Your reserve seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getSeatsRider()+"");
+        viewHolder.available_driver_mobile.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getMobile()+"");
+        viewHolder.available_driver_ride_date.setText("Date: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTimeAndDateRider());
+        viewHolder.available_driver_available_seats.setText("Your reserve seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider()+"");
 
         viewHolder.cancelRiderRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +77,7 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
 //                Toast.makeText(context, "canclll "+viewHolder.cancelRiderRequest.getText(), Toast.LENGTH_SHORT).show();
 
 
-                final String driver = ridersRequestsListInDriver.get(position).getMakeRequest().getDriverId();
+                final String driver = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getDriverKey();
                 currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 MakeRequest makeRequest = ridersRequestsListInDriver.get(position).getMakeRequest();
 
@@ -187,10 +187,10 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
             }else {
                 String filteredPattern = constraint.toString().toLowerCase().trim();
                 for (RidersRequestsListInDriver item:ridersRequestsListInDriverFull) {
-                    if(item.getMakeRequest().getDriverInfo().getName().toLowerCase().contains(filteredPattern)){
+                    if(item.getMakeRequest().getAvailableDriverInfo().getDriverInfo().getName().toLowerCase().contains(filteredPattern)){
                         filteredList.add(item);
                     }
-                    if(item.getMakeRequest().getDriverInfo().getMobile().toLowerCase().contains(filteredPattern)){
+                    if(item.getMakeRequest().getAvailableDriverInfo().getDriverInfo().getMobile().toLowerCase().contains(filteredPattern)){
                         filteredList.add(item);
                     }
                 }

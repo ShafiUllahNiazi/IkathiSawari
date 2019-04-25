@@ -47,6 +47,8 @@ import com.example.shafi.ikathisawari.directionhelpers.FetchURL;
 import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
 import com.example.shafi.ikathisawari.models.DriverInfo;
 import com.example.shafi.ikathisawari.models.DriverRoutInfo;
+import com.example.shafi.ikathisawari.models.RiderInfo;
+import com.example.shafi.ikathisawari.models.RiderRidePointsDriver;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -82,7 +84,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RiderHome1 extends Fragment implements RoutingListener{
+public class RiderHome1 extends Fragment implements RoutingListener {
 
     private static final String TAG = "RiderHome1";
 
@@ -98,11 +100,10 @@ public class RiderHome1 extends Fragment implements RoutingListener{
     private DatabaseReference mDriverData;
 
     int myHour, myMinute, myYear, myMonth, myDay;
-    boolean isDate,isTime;
+    boolean isDate, isTime;
     String dateDriver, timeDriver, seatsDriver, priceDriver;
     String dateRider, seatsRider;
-    int traveledDistanceRider,traveledTimeRider;
-
+    int traveledDistanceRider, traveledTimeRider;
 
 
     Location riderOriginAtRoad;
@@ -111,11 +112,14 @@ public class RiderHome1 extends Fragment implements RoutingListener{
 
     Button saveRouteRider;
 
-    EditText  selectOriginRider, selectDestinationRider,selectDateRideRider,riderSeats;
+    EditText selectOriginRider, selectDestinationRider, selectDateRideRider, riderSeats;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private AvailableDriversAdapter availableDriversAdapter;
 
+
+    String current_Rider;
+    RiderInfo riderInfo;
     ArrayList<AvailableDriverInfo> availableDriversList;
 
 //    @Override
@@ -159,14 +163,13 @@ public class RiderHome1 extends Fragment implements RoutingListener{
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
-        View view =  inflater.inflate(R.layout.fragment_rider_home1, container, false);
+        View view = inflater.inflate(R.layout.fragment_rider_home1, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerViewAvailableDrivers1);
 //        availableDriversList = new ArrayList<>();
@@ -174,7 +177,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         latLngCurrent = null;
         latLngDestination = null;
 
-        isDate =false;
+        isDate = false;
         isTime = false;
 
 
@@ -192,6 +195,22 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         selectDestinationRider.setClickable(true);
         selectDateRideRider.setFocusable(false);
         selectDateRideRider.setClickable(true);
+
+        current_Rider = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference databaseReferenceRider = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(current_Rider);
+        databaseReferenceRider.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                riderInfo = new RiderInfo();
+                riderInfo = dataSnapshot.getValue(RiderInfo.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         selectOriginRider.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,25 +243,23 @@ public class RiderHome1 extends Fragment implements RoutingListener{
             public void onClick(View v) {
 
 
-                if (latLngCurrent!=null && latLngDestination!=null){
+                if (latLngCurrent != null && latLngDestination != null) {
 
-                    calculateDistanceAndTime(latLngCurrent,latLngDestination);
+                    calculateDistanceAndTime(latLngCurrent, latLngDestination);
 
 
-                }else {
+                } else {
                     Toast.makeText(getActivity(), "Locations empty...", Toast.LENGTH_SHORT).show();
                 }
 
-    }
-});
+            }
+        });
         selectDateRideRider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDTW();
             }
         });
-
-
 
 
         return view;
@@ -255,51 +272,52 @@ public class RiderHome1 extends Fragment implements RoutingListener{
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 //                Toast.makeText(getContext(), hourOfDay+""+minute, Toast.LENGTH_SHORT).show();
-                String h,min;
+                String h, min;
                 myHour = hourOfDay;
                 myMinute = minute;
-                if(myHour<10)
-                    h = "0"+myHour;
+                if (myHour < 10)
+                    h = "0" + myHour;
                 else
-                    h = ""+myHour;
-                if(myMinute<10)
-                    min = "0"+myMinute;
+                    h = "" + myHour;
+                if (myMinute < 10)
+                    min = "0" + myMinute;
                 else
-                    min = ""+myMinute;
+                    min = "" + myMinute;
 //                selectTimeRideRider.setText(h+":"+min);
                 isTime = true;
                 setDTW();
             }
-        },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true);
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
         timePickerDialog.show();
     }
+
     private void setDTW() {
         Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog= new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 //                Toast.makeText(getContext(), dayOfMonth+"", Toast.LENGTH_SHORT).show();
-                String y,mon,d;
+                String y, mon, d;
                 myYear = year;
-                myMonth = month+1;
+                myMonth = month + 1;
                 myDay = dayOfMonth;
-                y = myYear+"";
-                if(myMonth<10)
-                    mon = "0"+myMonth;
+                y = myYear + "";
+                if (myMonth < 10)
+                    mon = "0" + myMonth;
                 else
-                    mon = ""+myMonth;
-                if(myDay<10)
-                    d = "0"+myDay;
+                    mon = "" + myMonth;
+                if (myDay < 10)
+                    d = "0" + myDay;
                 else
-                    d = ""+myDay;
+                    d = "" + myDay;
 
 //                dateTimeText.setText(myHour+":"+myMinute+" on "+myDay+" "+myMonth+":"+myYear);
-                selectDateRideRider.setText(y+"-"+mon+"-"+d);
+                selectDateRideRider.setText(y + "-" + mon + "-" + d);
 
                 isDate = true;
 
             }
-        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
 
     }
@@ -320,7 +338,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         return url;
     }
 
-    String rider_origin_name,rider_destination_name;
+    String rider_origin_name, rider_destination_name;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -346,7 +364,8 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         }
 
     }
-    String messagedriver,driver_origin_name,driver_destination_name,no_of_available_seats,vehicle_Model1;
+
+    String messagedriver, driver_origin_name, driver_destination_name, no_of_available_seats, vehicle_Model1;
 
     private void getNearByDrivers(final int traveledDistanceRider, final int traveledTimeRider, final String seatsRider) {
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Available Routs");
@@ -355,12 +374,12 @@ public class RiderHome1 extends Fragment implements RoutingListener{
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                Map<String,Object> myDrivers = (Map<String, Object>) dataSnapshot.getValue();
+                Map<String, Object> myDrivers = (Map<String, Object>) dataSnapshot.getValue();
 
-                for (String driver: myDrivers.keySet()){
-                    Log.d(TAG, "driver- " + myDrivers.get(driver) );
+                for (String driver : myDrivers.keySet()) {
+                    Log.d(TAG, "driver- " + myDrivers.get(driver));
 
-                    Map<String,Object> dd = (Map<String, Object>) myDrivers.get(driver);
+                    Map<String, Object> dd = (Map<String, Object>) myDrivers.get(driver);
 
                     final DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
 
@@ -374,28 +393,35 @@ public class RiderHome1 extends Fragment implements RoutingListener{
                     priceDriver = (String) dd.get("price_per_km");
                     messagedriver = (String) dd.get("driver_message");
                     no_of_available_seats = (String) dd.get("no_of_available_seats");
-                    Log.d(TAG, "onDataChange: "+dd.get("routes").toString());
-                    final String availableDriver=fetchNearbyDriver(driver, driverRoutInfo, dateDriver, no_of_available_seats, priceDriver);
-                    Log.d(TAG,"String "+ availableDriver);
+                    Log.d(TAG, "onDataChange: " + dd.get("routes").toString());
+                    final String availableDriver = fetchNearbyDriver(driver, driverRoutInfo, dateDriver, no_of_available_seats, priceDriver);
+                    Log.d(TAG, "String " + availableDriver);
 
-                    if(availableDriver != null){
-                        final int  rideCharges = ((Integer.valueOf(priceDriver)*traveledDistanceRider)/1000)*Integer.valueOf(seatsRider);
-                        mDriverData = FirebaseDatabase.getInstance().getReference("users").child("Driver");
-                        mDriverData.child(availableDriver).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(availableDriver,driverInfo,driverRoutInfo,dateDriver,timeDriver, seatsDriver, priceDriver,riderOriginAtRoad,riderDestinationAtRoad,dateRider, RiderHome1.this.seatsRider,traveledDistanceRider,traveledTimeRider,rideCharges,vehicle_Model1,driver_origin_name,driver_destination_name,messagedriver,rider_origin_name,rider_destination_name,no_of_available_seats);
-                                availableDriversList.add(availableDriverInfo);
-                            }
+                    if (availableDriver != null) {
+                        if (riderInfo != null) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        });
+                            final int rideCharges = ((Integer.valueOf(priceDriver) * traveledDistanceRider) / 1000) * Integer.valueOf(seatsRider);
+                            mDriverData = FirebaseDatabase.getInstance().getReference("users").child("Driver");
+                            mDriverData.child(availableDriver).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
+
+                                    RiderRidePointsDriver riderOriginAtRoad1 = new RiderRidePointsDriver(riderOriginAtRoad.getLatitude(),riderOriginAtRoad.getLongitude());
+                                    RiderRidePointsDriver riderDestinationAtRoad1 = new RiderRidePointsDriver(riderDestinationAtRoad.getLatitude(),riderDestinationAtRoad.getLongitude());
+
+                                    AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(current_Rider,riderInfo,availableDriver, driverInfo, driverRoutInfo, dateDriver, timeDriver, seatsDriver, priceDriver, riderOriginAtRoad1, riderDestinationAtRoad1, dateRider, RiderHome1.this.seatsRider, traveledDistanceRider, traveledTimeRider, rideCharges, vehicle_Model1, driver_origin_name, driver_destination_name, messagedriver, rider_origin_name, rider_destination_name, no_of_available_seats);
+                                    availableDriversList.add(availableDriverInfo);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
                     }
-
 
 
                 }
@@ -428,11 +454,9 @@ public class RiderHome1 extends Fragment implements RoutingListener{
 //        availableDriversAdapter.notifyDataSetChanged();
 
 
-
-
         AvailableDrivers availableDrivers = new AvailableDrivers();
         Bundle b = new Bundle();
-        b.putParcelableArrayList("availableDriversList",availableDriversList);
+        b.putParcelableArrayList("availableDriversList", availableDriversList);
         b.putParcelable("from_position", latLngCurrent);
         b.putParcelable("to_position", latLngDestination);
         availableDrivers.setArguments(b);
@@ -445,7 +469,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
 
     private String fetchNearbyDriver(String driverKey, DriverRoutInfo driverRoutInfo, String date, String seats, String price) {
 
-        Log.d("dddriver",driverKey );
+        Log.d("dddriver", driverKey);
 
         boolean originFound = false;
         boolean destinationFound = false;
@@ -543,8 +567,8 @@ public class RiderHome1 extends Fragment implements RoutingListener{
                 float riderOriginToDriverOrigin = originFoundLocation.distanceTo(driverOriginLocation);
                 float riderDestinationToDriverOrigin = destinationFoundLocation.distanceTo(driverOriginLocation);
 
-                Log.d("diffff",""+riderOriginToDriverOrigin);
-                Log.d("diffff",""+riderDestinationToDriverOrigin);
+                Log.d("diffff", "" + riderOriginToDriverOrigin);
+                Log.d("diffff", "" + riderDestinationToDriverOrigin);
 
 
                 if (riderOriginToDriverOrigin < riderDestinationToDriverOrigin) {
@@ -555,16 +579,15 @@ public class RiderHome1 extends Fragment implements RoutingListener{
                     Log.d("availableDriver", "path Found");
 //                    availableDrivers.add(driverKey);
 
-                    Log.d("ddddriver",driverKey);
+                    Log.d("ddddriver", driverKey);
 //                    return driverKey;
 
 
                     ///////////////////////////////////////////
 
 
-
-                    if(date.compareTo(selectDateRideRider.getText().toString())<= 0){
-                        if(Integer.parseInt(seats)>= Integer.parseInt(riderSeats.getText().toString())){
+                    if (date.compareTo(selectDateRideRider.getText().toString()) <= 0) {
+                        if (Integer.parseInt(seats) >= Integer.parseInt(riderSeats.getText().toString())) {
 
 
                             riderOriginAtRoad = new Location(originFoundLocation);
@@ -572,16 +595,6 @@ public class RiderHome1 extends Fragment implements RoutingListener{
                             return driverKey;
                         }
                     }
-
-
-
-
-
-
-
-
-
-
 
 
 //                    return driverKey;
@@ -599,13 +612,11 @@ public class RiderHome1 extends Fragment implements RoutingListener{
     }
 
 
-
-
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
 
         super.onPrepareOptionsMenu(menu);
-        if(menu.findItem(R.id.action_search) !=null ){
+        if (menu.findItem(R.id.action_search) != null) {
             MenuItem searchItem = menu.findItem(R.id.action_search);
             searchItem.setVisible(false);
         }
@@ -618,7 +629,7 @@ public class RiderHome1 extends Fragment implements RoutingListener{
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .key("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
                 .withListener(this)
-                .alternativeRoutes(false )
+                .alternativeRoutes(false)
                 .waypoints(latLngCurrent, latLngDestination)
                 .build();
         routing.execute();
@@ -627,9 +638,9 @@ public class RiderHome1 extends Fragment implements RoutingListener{
     @Override
     public void onRoutingFailure(RouteException e) {
 
-        if(e != null) {
+        if (e != null) {
             Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }else {
+        } else {
             Toast.makeText(getActivity(), "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -647,9 +658,8 @@ public class RiderHome1 extends Fragment implements RoutingListener{
         saveRoute();
 
 
-        Toast.makeText(getActivity(),"Route: "+ (1) +": distance - "+ route.get(0).getDistanceValue()+": duration - "+ route.get(0).getDurationValue(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Route: " + (1) + ": distance - " + route.get(0).getDistanceValue() + ": duration - " + route.get(0).getDurationValue(), Toast.LENGTH_SHORT).show();
     }
-
 
 
     @Override
@@ -658,34 +668,34 @@ public class RiderHome1 extends Fragment implements RoutingListener{
     }
 
     private void saveRoute() {
-        if(isDate){
-            dateRider =selectDateRideRider.getText().toString();
+        if (isDate) {
+            dateRider = selectDateRideRider.getText().toString();
             seatsRider = riderSeats.getText().toString();
 
-            if(!(seatsRider.equals(""))){
+            if (!(seatsRider.equals(""))) {
 
 
-                    originLat = latLngCurrent.latitude;
-                    originLong = latLngCurrent.longitude;
-                    destinationLat = latLngDestination.latitude;
-                    destinationLong = latLngDestination.longitude;
+                originLat = latLngCurrent.latitude;
+                originLong = latLngCurrent.longitude;
+                destinationLat = latLngDestination.latitude;
+                destinationLong = latLngDestination.longitude;
 
-                    Log.d("locationssssss",latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude);
+                Log.d("locationssssss", latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude);
 
-                    availableDriversList = new ArrayList<>();
-                    if(traveledDistanceRider!=0 && traveledTimeRider!=0){
+                availableDriversList = new ArrayList<>();
+                if (traveledDistanceRider != 0 && traveledTimeRider != 0) {
 
-                        getNearByDrivers(traveledDistanceRider,traveledTimeRider,seatsRider);
-                    }
+                    getNearByDrivers(traveledDistanceRider, traveledTimeRider, seatsRider);
+                }
 
 
 //                    Toast.makeText(getActivity(), latLngCurrent.latitude+" "+latLngCurrent.longitude+" Locations ..."+ latLngDestination.latitude+" "+latLngDestination.longitude, Toast.LENGTH_SHORT).show();
 
 
-            }else {
+            } else {
                 Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             Toast.makeText(getActivity(), "Select Date ", Toast.LENGTH_SHORT).show();
         }
     }

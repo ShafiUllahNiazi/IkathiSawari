@@ -83,7 +83,7 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
         switch (viewHolder.getItemViewType()) {
             case 0:
                 ViewHolder0 viewHolder0 = (ViewHolder0) viewHolder;
-                viewHolder0.ridername.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
+                viewHolder0.ridername.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
                 viewHolder0.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -109,9 +109,9 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             case 2:
                 final ViewHolder2 viewHolder2 = (ViewHolder2)viewHolder;
-                viewHolder2.ridername.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getRiderInfo().getName());
-                viewHolder2.distance.setText(""+ridersRequestsListInDriver.get(i).getMakeRequest().getTraveledDistanceRider());
-                viewHolder2.charges.setText(""+ridersRequestsListInDriver.get(i).getMakeRequest().getRideCharges());
+                viewHolder2.ridername.setText(ridersRequestsListInDriver.get(i).getDateAndTime()+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
+                viewHolder2.distance.setText(""+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTraveledDistanceRider());
+                viewHolder2.charges.setText(""+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges());
 
                 viewHolder2.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -124,7 +124,7 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(context, "okkk"+viewHolder2.ratingBar.getRating(), Toast.LENGTH_SHORT).show();
-                        final String currentRider = ridersRequestsListInDriver.get(position).getMakeRequest().getCurrent_rider();
+                        final String currentRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
                         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Rating");
                         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

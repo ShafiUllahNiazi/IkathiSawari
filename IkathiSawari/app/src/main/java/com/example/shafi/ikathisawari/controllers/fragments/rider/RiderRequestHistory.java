@@ -67,7 +67,7 @@ public class RiderRequestHistory extends Fragment {
                     recyclerView = view.findViewById(R.id.riderRequestHistory);
                     layoutManager = new LinearLayoutManager(getActivity());
                     recyclerView.setLayoutManager(layoutManager);
-                    riderHistoryAdapter = new RiderHistoryAdapter(getActivity(),getChildFragmentManager(), rideHistoryArrayList);
+                    riderHistoryAdapter = new RiderHistoryAdapter(getActivity(),getActivity().getSupportFragmentManager(), rideHistoryArrayList);
 
 
                     recyclerView.setAdapter(riderHistoryAdapter);

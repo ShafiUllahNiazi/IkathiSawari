@@ -83,12 +83,12 @@ public class RiderNotificationsService extends Service {
                                     int i = 0;
                                     for (RidersRequestsListInDriver item : ridersRequestsListInDriver) {
                                         Location riderOriginLocation = new Location(LocationManager.GPS_PROVIDER);
-                                        riderOriginLocation.setLatitude(item.getMakeRequest().getRiderLatOriginAtRoad());
-                                        riderOriginLocation.setLatitude(item.getMakeRequest().getRiderLngOriginAtRoad());
+                                        riderOriginLocation.setLatitude(item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLat());
+                                        riderOriginLocation.setLatitude(item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLng());
 
                                         Location riderDestinationLocation = new Location(LocationManager.GPS_PROVIDER);
-                                        riderDestinationLocation.setLatitude(item.getMakeRequest().getRiderLatDestinationAtRoad());
-                                        riderDestinationLocation.setLatitude(item.getMakeRequest().getRiderLngDestinationAtRoad());
+                                        riderDestinationLocation.setLatitude(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat());
+                                        riderDestinationLocation.setLatitude(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLng());
 
                                         float originDistance = riderOriginLocation.distanceTo(driverCurrentLocation);
                                         float destinationDistance = riderDestinationLocation.distanceTo(driverCurrentLocation);
@@ -112,7 +112,7 @@ public class RiderNotificationsService extends Service {
                                             builder.setSmallIcon(R.mipmap.ic_launcher);
                                             builder.setContentTitle("Notification");
 //                    builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
-                                            builder.setContentText(item.getMakeRequest().getRiderInfo().getName() + "Driver is near 2KM to your origin");
+                                            builder.setContentText(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + "Driver is near 2KM to your origin");
 
                                             Intent intent = new Intent(RiderNotificationsService.this, Rider_Screen.class);
                                             intent.putExtra("orderNotification", "request");
@@ -144,7 +144,7 @@ public class RiderNotificationsService extends Service {
                                             builder.setSmallIcon(R.mipmap.ic_launcher);
                                             builder.setContentTitle("Notification");
 //                    builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
-                                            builder.setContentText(item.getMakeRequest().getRiderInfo().getName() + "Driver is near 2KM to your destination");
+                                            builder.setContentText(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + "Driver is near 2KM to your destination");
 
                                             Intent intent = new Intent(RiderNotificationsService.this, Rider_Screen.class);
                                             intent.putExtra("orderNotification", "request");

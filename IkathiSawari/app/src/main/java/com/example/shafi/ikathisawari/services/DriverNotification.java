@@ -79,7 +79,7 @@ public class DriverNotification extends Service {
                             builder.setSmallIcon(R.mipmap.ic_launcher);
                             builder.setContentTitle("Ride Request");
 //                    builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
-                            builder.setContentText(rider.getRiderInfo().getName() + "requested you");
+                            builder.setContentText(rider.getAvailableDriverInfo().getRiderInfo().getName() + "requested you");
 
                             Intent intent = new Intent(DriverNotification.this, Driver_Screen.class);
                             intent.putExtra("orderNotification", "request");

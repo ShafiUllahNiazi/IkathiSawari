@@ -88,6 +88,9 @@ public class AvailableDrivers extends Fragment {
 
         recyclerView.setAdapter(availableDriversAdapter);
 
+        availableDriversAdapter.notifyDataSetChanged();
+
+
         return view;
     }
 

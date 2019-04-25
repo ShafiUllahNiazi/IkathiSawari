@@ -98,56 +98,75 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 //                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(availableDriversList.get(position).getDriverKey()).child("request").child(timeSting);
                 final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(driver).child(timeSting);
 
-//                final RiderInfo[] riderInfo = new RiderInfo[1];
-                DatabaseReference databaseReferenceRider = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(current_Rider);
+                final MakeRequest makeRequest1 = new MakeRequest("pending",availableDriversList.get(position));
 
-                databaseReferenceRider.addValueEventListener(new ValueEventListener() {
+                databaseReference.setValue(makeRequest1).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        RiderInfo riderInfo = new RiderInfo();
-                        riderInfo = dataSnapshot.getValue(RiderInfo.class);
-
-                        final MakeRequest makeRequest = new MakeRequest("pending",current_Rider,riderInfo,
-                                availableDriversList.get(position).getRiderOriginAtRoad().getLatitude(),
-                                availableDriversList.get(position).getRiderOriginAtRoad().getLongitude(),
-                                availableDriversList.get(position).getRiderDestinationAtRoad().getLatitude(),
-                                availableDriversList.get(position).getRiderDestinationAtRoad().getLongitude(),
-                                availableDriversList.get(position).getTimeAndDateRider(),
-                                availableDriversList.get(position).getSeatsRider(),
-                                availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
-                                availableDriversList.get(position).getDriverRoutInfo(),
-                                availableDriversList.get(position).getTraveledDistanceRider(),
-                                availableDriversList.get(position).getTraveledTimeRider(),
-                                availableDriversList.get(position).getRideCharges());
-                        databaseReference.setValue(makeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(current_Rider).child(timeSting).setValue(makeRequest);
-                            }
-                        });
-//                        databaseReference.setValue(availableDriversList.get(position));
-
-
-
-
-
+                    public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(current_Rider).child(timeSting).setValue(makeRequest1);
                         RiderHome1 riderHome1 = new RiderHome1();
 
                         FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.rider_container, riderHome1);
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
-
-
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
+
+
+
+//                final RiderInfo[] riderInfo = new RiderInfo[1];
+//                DatabaseReference databaseReferenceRider = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(current_Rider);
+
+//                databaseReferenceRider.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        RiderInfo riderInfo = new RiderInfo();
+//                        riderInfo = dataSnapshot.getValue(RiderInfo.class);
+//
+//                        final MakeRequest makeRequest1 = new MakeRequest("pending",availableDriversList.get(position));
+//
+////                        final MakeRequest makeRequest = new MakeRequest("pending",current_Rider,riderInfo,
+////                                availableDriversList.get(position).getRiderOriginAtRoad().getLatitude(),
+////                                availableDriversList.get(position).getRiderOriginAtRoad().getLongitude(),
+////                                availableDriversList.get(position).getRiderDestinationAtRoad().getLatitude(),
+////                                availableDriversList.get(position).getRiderDestinationAtRoad().getLongitude(),
+////                                availableDriversList.get(position).getTimeAndDateRider(),
+////                                availableDriversList.get(position).getSeatsRider(),
+////                                availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
+////                                availableDriversList.get(position).getDriverRoutInfo(),
+////                                availableDriversList.get(position).getTraveledDistanceRider(),
+////                                availableDriversList.get(position).getTraveledTimeRider(),
+////                                availableDriversList.get(position).getRideCharges());
+//                        databaseReference.setValue(makeRequest1).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(current_Rider).child(timeSting).setValue(makeRequest1);
+//                            }
+//                        });
+////                        databaseReference.setValue(availableDriversList.get(position));
+//
+//
+//
+//
+//
+//                        RiderHome1 riderHome1 = new RiderHome1();
+//
+//                        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+//                        fragmentTransaction.replace(R.id.rider_container, riderHome1);
+//                        fragmentTransaction.addToBackStack(null);
+//                        fragmentTransaction.commit();
+//
+//
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
 
 
 

@@ -9,7 +9,7 @@ public class AvailableDriverInfo implements Parcelable{
     DriverInfo driverInfo;
     DriverRoutInfo driverRoutInfo;
     String time, seats, price,date;
-    Location riderOriginAtRoad, riderDestinationAtRoad;
+    RiderRidePointsDriver riderOriginAtRoad, riderDestinationAtRoad;
     String timeAndDateRider, seatsRider, priceRider;
     int traveledDistanceRider;
     int traveledTimeRider;
@@ -21,9 +21,16 @@ public class AvailableDriverInfo implements Parcelable{
     String rider_origin_name;
     String rider_destination_name;
     String no_of_available_seats;
+    String current_Rider;
+    RiderInfo riderInfo;
 
+    public AvailableDriverInfo() {
+    }
 
-    public AvailableDriverInfo(String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String date, String time, String seats, String price, Location riderOriginAtRoad, Location riderDestinationAtRoad, String timeAndDateRider, String seatsRider, int traveledDistanceRider, int traveledTimeRider, int rideCharges, String vehicle_Model1, String driver_origin_name, String driver_destination_name, String messagedriver, String rider_origin_name, String rider_destination_name,String no_of_available_seats) {
+    public AvailableDriverInfo(String current_Rider, RiderInfo riderInfo, String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String date, String time, String seats, String price, RiderRidePointsDriver riderOriginAtRoad, RiderRidePointsDriver riderDestinationAtRoad, String timeAndDateRider, String seatsRider, int traveledDistanceRider, int traveledTimeRider, int rideCharges, String vehicle_Model1, String driver_origin_name, String driver_destination_name, String messagedriver, String rider_origin_name, String rider_destination_name, String no_of_available_seats) {
+
+        this.current_Rider =current_Rider;
+        this.riderInfo = riderInfo;
         this.no_of_available_seats = no_of_available_seats;
         this.vehicle_Model1 = vehicle_Model1;
         this.rider_origin_name = rider_origin_name;
@@ -55,8 +62,6 @@ public class AvailableDriverInfo implements Parcelable{
         seats = in.readString();
         price = in.readString();
         date = in.readString();
-        riderOriginAtRoad = in.readParcelable(Location.class.getClassLoader());
-        riderDestinationAtRoad = in.readParcelable(Location.class.getClassLoader());
         timeAndDateRider = in.readString();
         seatsRider = in.readString();
         priceRider = in.readString();
@@ -70,6 +75,7 @@ public class AvailableDriverInfo implements Parcelable{
         rider_origin_name = in.readString();
         rider_destination_name = in.readString();
         no_of_available_seats = in.readString();
+        current_Rider = in.readString();
     }
 
     public static final Creator<AvailableDriverInfo> CREATOR = new Creator<AvailableDriverInfo>() {
@@ -112,11 +118,11 @@ public class AvailableDriverInfo implements Parcelable{
         return date;
     }
 
-    public Location getRiderOriginAtRoad() {
+    public RiderRidePointsDriver getRiderOriginAtRoad() {
         return riderOriginAtRoad;
     }
 
-    public Location getRiderDestinationAtRoad() {
+    public RiderRidePointsDriver getRiderDestinationAtRoad() {
         return riderDestinationAtRoad;
     }
 
@@ -172,6 +178,14 @@ public class AvailableDriverInfo implements Parcelable{
         return no_of_available_seats;
     }
 
+    public String getCurrent_Rider() {
+        return current_Rider;
+    }
+
+    public RiderInfo getRiderInfo() {
+        return riderInfo;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -184,8 +198,6 @@ public class AvailableDriverInfo implements Parcelable{
         dest.writeString(seats);
         dest.writeString(price);
         dest.writeString(date);
-        dest.writeParcelable(riderOriginAtRoad, flags);
-        dest.writeParcelable(riderDestinationAtRoad, flags);
         dest.writeString(timeAndDateRider);
         dest.writeString(seatsRider);
         dest.writeString(priceRider);
@@ -199,6 +211,7 @@ public class AvailableDriverInfo implements Parcelable{
         dest.writeString(rider_origin_name);
         dest.writeString(rider_destination_name);
         dest.writeString(no_of_available_seats);
+        dest.writeString(current_Rider);
     }
 }
 

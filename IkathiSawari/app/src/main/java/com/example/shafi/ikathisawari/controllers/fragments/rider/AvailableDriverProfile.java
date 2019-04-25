@@ -87,19 +87,19 @@ public class AvailableDriverProfile extends Fragment {
                         RiderInfo riderInfo = new RiderInfo();
                         riderInfo = dataSnapshot.getValue(RiderInfo.class);
                         Log.d(TAG,"innnnnn");
-                        MakeRequest makeRequest = new MakeRequest("pending",current_Rider,riderInfo,
-                                availableDriversList.get(position).getRiderOriginAtRoad().getLatitude(),
-                                availableDriversList.get(position).getRiderOriginAtRoad().getLongitude(),
-                                availableDriversList.get(position).getRiderDestinationAtRoad().getLatitude(),
-                                availableDriversList.get(position).getRiderDestinationAtRoad().getLongitude(),
-                                availableDriversList.get(position).getTimeAndDateRider(),
-                                availableDriversList.get(position).getSeatsRider(),
-                                availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
-                                availableDriversList.get(position).getDriverRoutInfo(),
-                                availableDriversList.get(position).getTraveledDistanceRider(),
-                                availableDriversList.get(position).getTraveledTimeRider(),
-                                availableDriversList.get(position).getRideCharges());
-                        databaseReference.setValue(makeRequest);
+//                        MakeRequest makeRequest = new MakeRequest("pending",current_Rider,riderInfo,
+//                                availableDriversList.get(position).getRiderOriginAtRoad().getLatitude(),
+//                                availableDriversList.get(position).getRiderOriginAtRoad().getLongitude(),
+//                                availableDriversList.get(position).getRiderDestinationAtRoad().getLatitude(),
+//                                availableDriversList.get(position).getRiderDestinationAtRoad().getLongitude(),
+//                                availableDriversList.get(position).getTimeAndDateRider(),
+//                                availableDriversList.get(position).getSeatsRider(),
+//                                availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
+//                                availableDriversList.get(position).getDriverRoutInfo(),
+//                                availableDriversList.get(position).getTraveledDistanceRider(),
+//                                availableDriversList.get(position).getTraveledTimeRider(),
+//                                availableDriversList.get(position).getRideCharges());
+//                        databaseReference.setValue(makeRequest);
 //                        databaseReference.setValue(availableDriversList.get(position));
 
 
