@@ -18,16 +18,26 @@ public class AvailableDriverInfo implements Parcelable{
     String driver_origin_name;
     String driver_destination_name;
     String messagedriver;
+    String messageRider;
     String rider_origin_name;
     String rider_destination_name;
     String no_of_available_seats;
     String current_Rider;
     RiderInfo riderInfo;
 
+
     public AvailableDriverInfo() {
     }
 
-    public AvailableDriverInfo(String current_Rider, RiderInfo riderInfo, String driverKey, DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String date, String time, String seats, String price, RiderRidePointsDriver riderOriginAtRoad, RiderRidePointsDriver riderDestinationAtRoad, String timeAndDateRider, String seatsRider, int traveledDistanceRider, int traveledTimeRider, int rideCharges, String vehicle_Model1, String driver_origin_name, String driver_destination_name, String messagedriver, String rider_origin_name, String rider_destination_name, String no_of_available_seats) {
+    public AvailableDriverInfo(String current_Rider, RiderInfo riderInfo, String driverKey,
+                               DriverInfo driverInfo, DriverRoutInfo driverRoutInfo, String date,
+                               String time, String seats, String price, RiderRidePointsDriver riderOriginAtRoad,
+                               RiderRidePointsDriver riderDestinationAtRoad, String timeAndDateRider,
+                               String seatsRider, int traveledDistanceRider, int traveledTimeRider,
+                               int rideCharges, String vehicle_Model1, String driver_origin_name,
+                               String driver_destination_name, String messagedriver, String rider_origin_name,
+                               String rider_destination_name, String no_of_available_seats,String messageRider) {
+
 
         this.current_Rider =current_Rider;
         this.riderInfo = riderInfo;
@@ -49,12 +59,12 @@ public class AvailableDriverInfo implements Parcelable{
         this.riderDestinationAtRoad = riderDestinationAtRoad;
         this.timeAndDateRider = timeAndDateRider;
         this.seatsRider = seatsRider;
-        this.priceRider = seatsRider;
+
         this.traveledDistanceRider = traveledDistanceRider;
         this.traveledTimeRider = traveledTimeRider;
         this.rideCharges = rideCharges;
+        this.messageRider = messageRider;
     }
-
 
     protected AvailableDriverInfo(Parcel in) {
         driverKey = in.readString();
@@ -72,6 +82,7 @@ public class AvailableDriverInfo implements Parcelable{
         driver_origin_name = in.readString();
         driver_destination_name = in.readString();
         messagedriver = in.readString();
+        messageRider = in.readString();
         rider_origin_name = in.readString();
         rider_destination_name = in.readString();
         no_of_available_seats = in.readString();
@@ -89,6 +100,10 @@ public class AvailableDriverInfo implements Parcelable{
             return new AvailableDriverInfo[size];
         }
     };
+
+    public void setMessageRider(String messageRider) {
+        this.messageRider = messageRider;
+    }
 
     public String getDriverKey() {
         return driverKey;
@@ -166,6 +181,10 @@ public class AvailableDriverInfo implements Parcelable{
         return messagedriver;
     }
 
+    public String getMessageRider() {
+        return messageRider;
+    }
+
     public String getRider_origin_name() {
         return rider_origin_name;
     }
@@ -208,6 +227,7 @@ public class AvailableDriverInfo implements Parcelable{
         dest.writeString(driver_origin_name);
         dest.writeString(driver_destination_name);
         dest.writeString(messagedriver);
+        dest.writeString(messageRider);
         dest.writeString(rider_origin_name);
         dest.writeString(rider_destination_name);
         dest.writeString(no_of_available_seats);

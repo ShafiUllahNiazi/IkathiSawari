@@ -57,26 +57,28 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.available_drivers_card, viewGroup, false);
+        View view = inflater.inflate(R.layout.available_drivers_card1, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.available_driver_name.setText(availableDriversList.get(i).getDriverInfo().getName());
-//        int traveledDistanceRider = availableDriversList.get(i).getTraveledDistanceRider();
-//        int pricePerKm = Integer.valueOf(availableDriversList.get(i).getPrice());
-//        Toast.makeText(context, traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
 
-//        int  charges = (pricePerKm*traveledDistanceRider)/1000;
-//        Toast.makeText(context, charges+" ddd"+traveledDistanceRider+"ggggg"+pricePerKm , Toast.LENGTH_SHORT).show();
-        viewHolder.available_driver_price_of_ride.setText("Charges: "+availableDriversList.get(i).getRideCharges()+"");
+
+        viewHolder.available_driver_name.setText(availableDriversList.get(i).getDriverInfo().getName());
+        viewHolder.available_driver_ride_date.setText("Date: "+availableDriversList.get(i).getDate()+" "+availableDriversList.get(i).getTime());
         viewHolder.available_driver_age_gender.setText(availableDriversList.get(i).getDriverInfo().getGender()+"");
+        viewHolder.available_driver_contactNo.setText(availableDriversList.get(i).getDriverInfo().getMobile()+"");
+
+
+
         viewHolder.available_driver_vehicle_model.setText("Vehicle Model: "+availableDriversList.get(i).getVehicle_Model1()+"");
         viewHolder.available_driver_offered_seats.setText("Offered seats: "+availableDriversList.get(i).getSeats()+"");
-        viewHolder.available_driver_ride_date.setText("Date: "+availableDriversList.get(i).getDate()+" "+availableDriversList.get(i).getTime());
-        viewHolder.available_driver_available_seats.setText("Available seats: "+availableDriversList.get(i).getNo_of_available_seats()+" ");
+
+        viewHolder.available_driver_available_seats.setText("Available seats: "+availableDriversList.get(i).getNo_of_available_seats()+"");
+        viewHolder.available_driver_reserved_seats.setText("Your seats: "+availableDriversList.get(i).getSeatsRider()+"");
+        viewHolder.available_driver_price_of_ride.setText("Charges: "+availableDriversList.get(i).getRideCharges()+"");
 
 
 
@@ -108,65 +110,14 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 
                         FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.rider_container, riderHome1);
-                        fragmentTransaction.addToBackStack(null);
+//                        fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                     }
                 });
 
 
 
-//                final RiderInfo[] riderInfo = new RiderInfo[1];
-//                DatabaseReference databaseReferenceRider = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(current_Rider);
 
-//                databaseReferenceRider.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        RiderInfo riderInfo = new RiderInfo();
-//                        riderInfo = dataSnapshot.getValue(RiderInfo.class);
-//
-//                        final MakeRequest makeRequest1 = new MakeRequest("pending",availableDriversList.get(position));
-//
-////                        final MakeRequest makeRequest = new MakeRequest("pending",current_Rider,riderInfo,
-////                                availableDriversList.get(position).getRiderOriginAtRoad().getLatitude(),
-////                                availableDriversList.get(position).getRiderOriginAtRoad().getLongitude(),
-////                                availableDriversList.get(position).getRiderDestinationAtRoad().getLatitude(),
-////                                availableDriversList.get(position).getRiderDestinationAtRoad().getLongitude(),
-////                                availableDriversList.get(position).getTimeAndDateRider(),
-////                                availableDriversList.get(position).getSeatsRider(),
-////                                availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
-////                                availableDriversList.get(position).getDriverRoutInfo(),
-////                                availableDriversList.get(position).getTraveledDistanceRider(),
-////                                availableDriversList.get(position).getTraveledTimeRider(),
-////                                availableDriversList.get(position).getRideCharges());
-//                        databaseReference.setValue(makeRequest1).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(current_Rider).child(timeSting).setValue(makeRequest1);
-//                            }
-//                        });
-////                        databaseReference.setValue(availableDriversList.get(position));
-//
-//
-//
-//
-//
-//                        RiderHome1 riderHome1 = new RiderHome1();
-//
-//                        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-//                        fragmentTransaction.replace(R.id.rider_container, riderHome1);
-//                        fragmentTransaction.addToBackStack(null);
-//                        fragmentTransaction.commit();
-//
-//
-//
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
 
 
 
@@ -205,20 +156,25 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView available_driver_image;
-        TextView available_driver_name,available_driver_age_gender,available_driver_vehicle_model,available_driver_offered_seats,
-                available_driver_ride_date,available_driver_available_seats,available_driver_price_of_ride;
+        TextView  available_driver_name,available_driver_age_gender,
+                available_driver_contactNo,available_driver_vehicle_model,available_driver_offered_seats,
+                available_driver_ride_date,available_driver_available_seats,available_driver_reserved_seats,available_driver_price_of_ride;
         Button availableDriverSendRequest;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            available_driver_name = itemView.findViewById(R.id.available_driver_name);
-            available_driver_age_gender = itemView.findViewById(R.id.available_driver_age_gender);
-            available_driver_vehicle_model = itemView.findViewById(R.id.available_driver_vehicle_model);
-            available_driver_offered_seats = itemView.findViewById(R.id.available_driver_offered_seats);
-            available_driver_ride_date = itemView.findViewById(R.id.available_driver_ride_date);
-            available_driver_available_seats = itemView.findViewById(R.id.available_driver_available_seats);
-            available_driver_price_of_ride = itemView.findViewById(R.id.available_driver_price_of_ride);
-            availableDriverSendRequest = itemView.findViewById(R.id.availableDriverSendRequest);
+
+            available_driver_name = itemView.findViewById(R.id.availableDriver1name);
+            available_driver_ride_date = itemView.findViewById(R.id.availableDriver1dateTime);
+            available_driver_contactNo = itemView.findViewById(R.id.availableDriver1contactNo);
+            available_driver_age_gender = itemView.findViewById(R.id.availableDriver1AgeGender);
+            available_driver_vehicle_model = itemView.findViewById(R.id.availableDriver1VehicleModel);
+            available_driver_offered_seats = itemView.findViewById(R.id.availableDriver1OfferedSeats);
+
+            available_driver_available_seats = itemView.findViewById(R.id.availableDriver1AvailableSeats);
+            available_driver_reserved_seats = itemView.findViewById(R.id.availableDriver1ReservedSeats);
+            available_driver_price_of_ride = itemView.findViewById(R.id.availableDriver1RidePrice);
+            availableDriverSendRequest = itemView.findViewById(R.id.availableDriver1SendRequest);
 
 
         }

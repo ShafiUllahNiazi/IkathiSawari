@@ -113,9 +113,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
     Button saveRouteRider;
 
     EditText selectOriginRider, selectDestinationRider, selectDateRideRider, riderSeats;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private AvailableDriversAdapter availableDriversAdapter;
+
 
 
     String current_Rider;
@@ -171,7 +169,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_rider_home1, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerViewAvailableDrivers1);
+
 //        availableDriversList = new ArrayList<>();
 
         latLngCurrent = null;
@@ -411,7 +409,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
                                     RiderRidePointsDriver riderOriginAtRoad1 = new RiderRidePointsDriver(riderOriginAtRoad.getLatitude(),riderOriginAtRoad.getLongitude());
                                     RiderRidePointsDriver riderDestinationAtRoad1 = new RiderRidePointsDriver(riderDestinationAtRoad.getLatitude(),riderDestinationAtRoad.getLongitude());
 
-                                    AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(current_Rider,riderInfo,availableDriver, driverInfo, driverRoutInfo, dateDriver, timeDriver, seatsDriver, priceDriver, riderOriginAtRoad1, riderDestinationAtRoad1, dateRider, RiderHome1.this.seatsRider, traveledDistanceRider, traveledTimeRider, rideCharges, vehicle_Model1, driver_origin_name, driver_destination_name, messagedriver, rider_origin_name, rider_destination_name, no_of_available_seats);
+                                    AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(current_Rider,riderInfo,availableDriver, driverInfo, driverRoutInfo, dateDriver, timeDriver, seatsDriver, priceDriver, riderOriginAtRoad1, riderDestinationAtRoad1, dateRider, RiderHome1.this.seatsRider, traveledDistanceRider, traveledTimeRider, rideCharges, vehicle_Model1, driver_origin_name, driver_destination_name, messagedriver, rider_origin_name, rider_destination_name, no_of_available_seats,"");
                                     availableDriversList.add(availableDriverInfo);
                                 }
 
@@ -444,16 +442,6 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
     private void showAvailableDrivers(ArrayList<AvailableDriverInfo> availableDriversList) {
 
-//
-//        layoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(layoutManager);
-//        availableDriversAdapter = new AvailableDriversAdapter(getActivity(),getActivity().getSupportFragmentManager(), availableDriversList);
-//
-//        recyclerView.setAdapter(availableDriversAdapter);
-//
-//        availableDriversAdapter.notifyDataSetChanged();
-
-
         AvailableDrivers availableDrivers = new AvailableDrivers();
         Bundle b = new Bundle();
         b.putParcelableArrayList("availableDriversList", availableDriversList);
@@ -463,7 +451,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.rider_container, availableDrivers);
-        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                     android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/requested_driver_image"
+                        android:id="@+id/available_driver_image"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
 
@@ -52,7 +52,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/requestedDrivername"
+                            android:id="@+id/availableDriver1name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
@@ -71,7 +71,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/requestedDriverAgeGender"
+                            android:id="@+id/availableDriver1AgeGender"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
@@ -109,7 +109,7 @@
                                 android:layout_gravity="center">
 
                                 <TextView
-                                    android:id="@+id/requestedDriverVehicleModel"
+                                    android:id="@+id/availableDriver1VehicleModel"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="5dp"
@@ -153,7 +153,7 @@
                                 android:layout_gravity="center">
 
                                 <TextView
-                                    android:id="@+id/requestedDrivercontactNo"
+                                    android:id="@+id/availableDriver1contactNo"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="5dp"
@@ -161,6 +161,7 @@
                                     android:layout_marginTop="5dp"
                                     android:layout_weight="1"
                                     android:text="contact"
+                                    android:textColor="@android:color/holo_blue_dark"
                                     android:textSize="12sp" />
 
 
@@ -198,7 +199,7 @@
 
 
                                 <TextView
-                                    android:id="@+id/requestedDriverdateTime"
+                                    android:id="@+id/availableDriver1dateTime"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="5dp"
@@ -243,7 +244,7 @@
 
 
                                 <TextView
-                                    android:id="@+id/requestedDriverOfferedSeats"
+                                    android:id="@+id/availableDriver1OfferedSeats"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="5dp"
@@ -260,7 +261,6 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
                             android:layout_weight="1">
 
                             <LinearLayout
@@ -271,12 +271,14 @@
 
 
                                 <TextView
-                                    android:id="@+id/requestedDriverAvailableSeats"
+                                    android:id="@+id/availableDriver1AvailableSeats"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
                                     android:layout_marginTop="5dp"
                                     android:layout_weight="1"
                                     android:text="available  seats"
+                                    android:textColor="@color/colorAccent"
                                     android:textSize="12sp" />
 
 
@@ -297,15 +299,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/requestedDriverStatus"
+                    android:id="@+id/availableDriver1ReservedSeats"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Status"
-                    android:textColor="@android:color/holo_red_light"
-                    android:textSize="12sp" />
+                    android:text="Your Seats"
+                    android:textColor="@color/design_default_color_primary_dark" />
 
                 <View
                     android:layout_width="1dp"
@@ -314,41 +315,23 @@
                     android:background="@android:color/white" />
 
                 <TextView
-                    android:id="@+id/requestedDriverReseerrvedSeats"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="your seats"
-                    android:textColor="@color/design_default_color_primary_dark"
-                    android:textSize="12sp" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
-                    android:background="@android:color/white" />
-
-                <TextView
-                    android:id="@+id/requestedDriverRidePrice"
+                    android:id="@+id/availableDriver1RidePrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="total price"
-                    android:textColor="@color/design_default_color_primary_dark"
-                    android:textSize="12sp" />
+                    android:textColor="@color/design_default_color_primary_dark" />
 
             </LinearLayout>
 
             <Button
-                android:id="@+id/requestedDriverCancelRequest"
+                android:id="@+id/availableDriver1SendRequest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/black"
-                android:text="Cancel Request"
+                android:text="Send Request"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="12sp" />
@@ -356,4 +339,3 @@
 
     </android.support.v7.widget.CardView>
 </LinearLayout>
-

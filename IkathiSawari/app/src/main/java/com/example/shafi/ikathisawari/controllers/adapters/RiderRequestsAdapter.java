@@ -60,16 +60,26 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+
         final int position = i;
 //        viewHolder.content_rider_request.setText("Driver");
         viewHolder.nameDriver.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getName());
-
-        viewHolder.available_driver_price_of_ride.setText("Charges: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
-        viewHolder.available_driver_age_gender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getGender()+"");
+        viewHolder.driver_age_gender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getGender());
+        viewHolder.driver_vehicle_model.setText("Vehicle Model: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getVehicle_Model1());
+        viewHolder.driver_mobile.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getMobile()+"");
+        viewHolder.driver_ride_date.setText("Date: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDate() +" at"+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTime());
+        viewHolder.driver_offered_seats.setText("Offered seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeats());
+        viewHolder.driver_available_seats.setText("Available seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getNo_of_available_seats()+"");
         viewHolder.status.setText("Status: "+ridersRequestsListInDriver.get(i).getMakeRequest().getStatus()+"");
-        viewHolder.available_driver_mobile.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getMobile()+"");
-        viewHolder.available_driver_ride_date.setText("Date: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTimeAndDateRider());
-        viewHolder.available_driver_available_seats.setText("Your reserve seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider()+"");
+        viewHolder.reserved_seats.setText("Your seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider());
+
+
+        viewHolder.driver_price_of_ride.setText("Charges: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
+//        viewHolder.driver_age_gender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getGender()+"");
+
+
+
+
 
         viewHolder.cancelRiderRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,9 +143,11 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
                 bundle.putInt("position",position);
                 cancelRequestDriverProfile.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.driver_container, cancelRequestDriverProfile);
+                fragmentTransaction.replace(R.id.rider_container, cancelRequestDriverProfile);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+
+
 
             }
         });
@@ -153,23 +165,28 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameDriver;
-        TextView available_driver_age_gender,available_driver_vehicle_model,available_driver_offered_seats,
-                available_driver_ride_date,available_driver_available_seats,available_driver_price_of_ride;
-        TextView available_driver_mobile,status;
+        TextView driver_age_gender,driver_vehicle_model,driver_offered_seats,
+                driver_ride_date,driver_available_seats,driver_price_of_ride;
+        TextView driver_mobile,status,reserved_seats;
 
         Button cancelRiderRequest;
+
+
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameDriver = itemView.findViewById(R.id.requested_driver_name);
-            available_driver_age_gender = itemView.findViewById(R.id.requested_driver_age_gender);
-//            mobileDriver = itemView.findViewById(R.id.rider_request_status);
-            status = itemView.findViewById(R.id.requested_driver_vehicle_model);
-            available_driver_mobile= itemView.findViewById(R.id.requested_driver_offered_seats);
-            available_driver_ride_date = itemView.findViewById(R.id.requested_driver_ride_date);
-            available_driver_available_seats = itemView.findViewById(R.id.requested_driver_available_seats);
-            available_driver_price_of_ride = itemView.findViewById(R.id.requested_driver_price_of_ride);
+            nameDriver = itemView.findViewById(R.id.requestedDrivername);
+            driver_age_gender = itemView.findViewById(R.id.requestedDriverAgeGender);
+            driver_vehicle_model = itemView.findViewById(R.id.requestedDriverVehicleModel);
+            driver_mobile= itemView.findViewById(R.id.requestedDrivercontactNo);
+            driver_ride_date = itemView.findViewById(R.id.requestedDriverdateTime);
+            driver_offered_seats = itemView.findViewById(R.id.requestedDriverOfferedSeats);
+            driver_available_seats = itemView.findViewById(R.id.requestedDriverAvailableSeats);
+            status = itemView.findViewById(R.id.requestedDriverStatus);
+            reserved_seats = itemView.findViewById(R.id.requestedDriverReseerrvedSeats);
+            driver_price_of_ride = itemView.findViewById(R.id.requestedDriverRidePrice);
 
-            cancelRiderRequest = itemView.findViewById(R.id.cancel_rider_request);
+            cancelRiderRequest = itemView.findViewById(R.id.requestedDriverCancelRequest);
 
         }
     }

@@ -157,9 +157,14 @@ public class DriverProfile extends Fragment {
                     gender_Driver.setFocusable(true);
                     gender_Driver.setFocusableInTouchMode(true);
                     gender_Driver.requestFocus();
-                    update_driver_profile.setText("update profile");
+
+                    update_driver_profile_img.setVisibility(View.VISIBLE);
+
+
                 }
-                if(update_driver_profile.getText().equals("update profile")){
+                if(update_driver_profile.getText().equals("save profile")){
+                    Toast.makeText(getActivity(), "saving", Toast.LENGTH_SHORT).show();
+                    
                     String name = name_Driver.getText().toString();
                     String email = email_Driver.getText().toString();
                     String mobile = mobile_Driver.getText().toString();
@@ -176,10 +181,54 @@ public class DriverProfile extends Fragment {
                     databaseReference.child("users").child("Driver").child(currentUserUid).setValue(driverInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            databaseReference.child("users").child("Rider").child(currentUserUid).setValue(riderInfo);
+                            databaseReference.child("users").child("Rider").child(currentUserUid).setValue(riderInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(getActivity(), "saved", Toast.LENGTH_SHORT).show();
+                                    update_driver_profile.setText("edit profile");
+                                    name_Driver.setFocusable(false);
+                                    email_Driver.setFocusable(false);
+                                    mobile_Driver.setFocusable(false);
+                                    cnic_Driver.setFocusable(false);
+                                    dob_Driver.setFocusable(false);
+                                    gender_Driver.setFocusable(false);
+                                    update_driver_profile_img.setVisibility(View.GONE);
+
+//                                    Uri imageUri = data.getData();
+//                                    driverProfileImage_profile.setImageURI(imageUri);
+//                                    StorageReference mStorageReference;
+//                                    mStorageReference = FirebaseStorage.getInstance().getReference();
+//
+//                                    final StorageReference imgPath = mStorageReference.child("profile_imgs").child(currentUserUid + ".jpg");
+//                                    imgPath.putFile(imageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//                                        @Override
+//                                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                                            if (!task.isSuccessful()) {
+//
+//                                                throw task.getException();
+//
+//                                            }
+//
+//                                            return imgPath.getDownloadUrl();
+//                                        }
+//                                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Uri> task) {
+//                                            if (task.isSuccessful()) {
+//                                                Uri downUri = task.getResult();
+//                                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(currentUserUid);
+//                                                databaseReference.child("image").setValue(downUri.toString());
+////                        Toast.makeText(Setting.this, downUri.toString(), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        }
+//                                    });
+
+                                }
+                            });
                         }
                     });
                 }
+                update_driver_profile.setText("save profile");
 
 
 
@@ -201,32 +250,33 @@ public class DriverProfile extends Fragment {
                 && data != null && data.getData() != null) {
 
             Uri imageUri = data.getData();
-            StorageReference mStorageReference;
-            mStorageReference = FirebaseStorage.getInstance().getReference();
-
-            final StorageReference imgPath = mStorageReference.child("profile_imgs").child(currentUserUid + ".jpg");
-            imgPath.putFile(imageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-
-                        throw task.getException();
-
-                    }
-
-                    return imgPath.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Uri downUri = task.getResult();
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(currentUserUid);
-                        databaseReference.child("image").setValue(downUri.toString());
-//                        Toast.makeText(Setting.this, downUri.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            driverProfileImage_profile.setImageURI(imageUri);
+//            StorageReference mStorageReference;
+//            mStorageReference = FirebaseStorage.getInstance().getReference();
+//
+//            final StorageReference imgPath = mStorageReference.child("profile_imgs").child(currentUserUid + ".jpg");
+//            imgPath.putFile(imageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//                @Override
+//                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                    if (!task.isSuccessful()) {
+//
+//                        throw task.getException();
+//
+//                    }
+//
+//                    return imgPath.getDownloadUrl();
+//                }
+//            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Uri> task) {
+//                    if (task.isSuccessful()) {
+//                        Uri downUri = task.getResult();
+//                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(currentUserUid);
+//                        databaseReference.child("image").setValue(downUri.toString());
+////                        Toast.makeText(Setting.this, downUri.toString(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
 
         }
 

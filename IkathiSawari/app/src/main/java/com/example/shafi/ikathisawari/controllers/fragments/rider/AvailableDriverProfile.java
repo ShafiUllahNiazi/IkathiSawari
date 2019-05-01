@@ -19,6 +19,8 @@ import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
 import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RiderInfo;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,9 +42,12 @@ public class AvailableDriverProfile extends Fragment {
 
     private static final String TAG = "AvailableDriverProfile";
 
-    TextView name;
+
     Button sendRequest;
     ArrayList<AvailableDriverInfo> availableDriversList;
+
+    TextView originName, destinationName,name, ageGender,vehicleType,contactNo,cnic,
+            travellDate,offerSeats,availableSeats, riderSeats, riderRidePrice, driverMessage,riderMessage;
 
 
     public AvailableDriverProfile() {
@@ -61,68 +66,80 @@ public class AvailableDriverProfile extends Fragment {
         final int position = getArguments().getInt("position");
 //        final LatLng fromPosition = getArguments().getParcelable("from_position");
 //        final LatLng toPosition = getArguments().getParcelable("to_position");
-        name = view.findViewById(R.id.availableDriverName);
-        name.setText(availableDriversList.get(position).getDriverInfo().getName());
-        sendRequest = view.findViewById(R.id.sendRequest);
+//        TextView originName, destinationName,name, ageGender,vehicleType,contactNo,cnic,
+//                travellDate,offerSeats,availableSeats, riderSeats, riderRidePrice, driverMessage,riderMessage;
+        originName = view.findViewById(R.id.availableDriverProfileOriginName);
+        destinationName = view.findViewById(R.id.availableDriverProfileDestinationName);
+        name = view.findViewById(R.id.availableDriverProfilename);
+        ageGender = view.findViewById(R.id.availableDriverProfileAgeGender);
+        vehicleType = view.findViewById(R.id.availableDriverProfileVehicleModel);
+        contactNo = view.findViewById(R.id.availableDriverProfilecontactNo);
+        cnic = view.findViewById(R.id.availableDriverProfilecnic);
+        travellDate = view.findViewById(R.id.availableDriverProfiledateTime);
+        offerSeats = view.findViewById(R.id.availableDriverProfileOfferedSeats);
+        availableSeats = view.findViewById(R.id.availableDriverProfileAvailableSeats);
+        riderSeats = view.findViewById(R.id.availableDriverProfileReserverdSeats);
+        riderRidePrice = view.findViewById(R.id.availableDriverProfileRidePrice);
+        driverMessage = view.findViewById(R.id.availableDriverProfileMessageDriver);
+        riderMessage = view.findViewById(R.id.availableDriverProfileMessageRider);
+
+
+
+        originName.setText(availableDriversList.get(position).getDriver_origin_name());
+        destinationName.setText(availableDriversList.get(position).getDriver_destination_name());
+
+        name.setText(availableDriversList.get(position).getDriverInfo().getName() + "");
+        ageGender.setText(availableDriversList.get(position).getDriverInfo().getGender() + "");
+        vehicleType.setText("Vehicle Model: "+ availableDriversList.get(position).getVehicle_Model1() + "");
+        contactNo.setText(availableDriversList.get(position).getDriverInfo().getMobile() + "");
+        cnic.setText(availableDriversList.get(position).getDriverInfo().getCnic() + "");
+        travellDate.setText("Date: "+ availableDriversList.get(position).getDate() + "");
+        offerSeats.setText("Offered seats: "+ availableDriversList.get(position).getSeats() + "");
+        availableSeats.setText("Available seats: "+ availableDriversList.get(position).getNo_of_available_seats() + "");
+        riderSeats.setText("Your seats: "+ availableDriversList.get(position).getSeatsRider() + "");
+        riderRidePrice.setText("Charges: "+ availableDriversList.get(position).getRideCharges() + "");
+        driverMessage.setText("Charges: "+ availableDriversList.get(position).getMessagedriver()+"");
+        sendRequest = view.findViewById(R.id.availableDriverProfileSendRequest);
+
 
         sendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "hhhhh", Toast.LENGTH_SHORT).show();
+
+                if(!(riderMessage.getText().toString().equals(""))){
+                    availableDriversList.get(position).setMessageRider(riderMessage.getText().toString());
+                }
+
                 DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
                 dateFormatter.setLenient(false);
                 Date today = new Date();
                 final String timeSting = dateFormatter.format(today);
-                Toast.makeText(getActivity(), "ss "+ timeSting, Toast.LENGTH_SHORT).show();
+
                 final String current_Rider = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                String driver = availableDriversList.get(position).getDriverKey();
 //                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(availableDriversList.get(position).getDriverKey()).child("request").child(timeSting);
-                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(availableDriversList.get(position).getDriverKey()).child(timeSting);
+                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(driver).child(timeSting);
 
-//                final RiderInfo[] riderInfo = new RiderInfo[1];
-                DatabaseReference databaseReferenceRider = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(current_Rider);
+                final MakeRequest makeRequest1 = new MakeRequest("pending",availableDriversList.get(position));
 
-                databaseReferenceRider.addValueEventListener(new ValueEventListener() {
+                databaseReference.setValue(makeRequest1).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        RiderInfo riderInfo = new RiderInfo();
-                        riderInfo = dataSnapshot.getValue(RiderInfo.class);
-                        Log.d(TAG,"innnnnn");
-//                        MakeRequest makeRequest = new MakeRequest("pending",current_Rider,riderInfo,
-//                                availableDriversList.get(position).getRiderOriginAtRoad().getLatitude(),
-//                                availableDriversList.get(position).getRiderOriginAtRoad().getLongitude(),
-//                                availableDriversList.get(position).getRiderDestinationAtRoad().getLatitude(),
-//                                availableDriversList.get(position).getRiderDestinationAtRoad().getLongitude(),
-//                                availableDriversList.get(position).getTimeAndDateRider(),
-//                                availableDriversList.get(position).getSeatsRider(),
-//                                availableDriversList.get(position).getDriverKey(),availableDriversList.get(position).getDriverInfo(),
-//                                availableDriversList.get(position).getDriverRoutInfo(),
-//                                availableDriversList.get(position).getTraveledDistanceRider(),
-//                                availableDriversList.get(position).getTraveledTimeRider(),
-//                                availableDriversList.get(position).getRideCharges());
-//                        databaseReference.setValue(makeRequest);
-//                        databaseReference.setValue(availableDriversList.get(position));
+                    public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(current_Rider).child(timeSting).setValue(makeRequest1);
+
+
 
 
                         RiderHome1 riderHome1 = new RiderHome1();
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.rider_container, riderHome1);
-                        fragmentTransaction.addToBackStack(null);
+//                        fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
-
-
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
 
-
-                Log.d(TAG,"ouuuttt");
 
 
             }

@@ -48,7 +48,8 @@
                     android:background="@null"
                     android:text="Edit profile pic"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:textColor="@color/colorPrimaryDark"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

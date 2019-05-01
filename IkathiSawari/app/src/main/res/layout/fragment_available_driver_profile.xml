@@ -1,26 +1,563 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".controllers.fragments.rider.AvailableDriverProfile">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/availableDriverName"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/sendRequest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send Request" />
-    </LinearLayout>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1">
+
+                            <ImageButton
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                app:srcCompat="@drawable/ic_location_on_green_24dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_gravity="center">
+
+                                <TextView
+                                    android:id="@+id/availableDriverProfileOriginName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+
+                                    android:layout_weight="1"
+                                    android:text="From: "
+
+                                    android:textColor="@android:color/black"
+                                    android:textSize="12sp" />
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1">
+
+                            <ImageButton
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                app:srcCompat="@drawable/ic_arrow_downward_black_24dp" />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1">
+
+                            <ImageButton
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                app:srcCompat="@drawable/ic_location_on_red_24dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_gravity="center">
+
+                                <TextView
+                                    android:id="@+id/availableDriverProfileDestinationName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+
+                                    android:layout_weight="1"
+                                    android:text="To: "
+
+                                    android:textColor="@android:color/black"
+                                    android:textSize="12sp" />
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/availableDriverProfile_image"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+
+                                android:layout_margin="8dp"
+                                android:background="@drawable/ic_account_circle_black_24dp" />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/availableDriverProfilename"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="5dp"
+
+                                    android:layout_weight="1"
+                                    android:text="Name"
+                                    android:textColor="@android:color/black" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/availableDriverProfileAgeGender"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+
+                                    android:layout_weight="1"
+                                    android:text="age/gender"
+                                    android:textColor="@android:color/black" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+                                        android:id="@+id/imageButtoncar"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_directions_car_black_24dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+                                        <TextView
+                                            android:id="@+id/availableDriverProfileVehicleModel"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+
+                                            android:layout_weight="1"
+                                            android:text="vehicle model"
+
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_phone_black_24dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+                                        <TextView
+                                            android:id="@+id/availableDriverProfilecontactNo"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="contact"
+                                            android:textColor="@android:color/holo_blue_dark"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+                                        android:id="@+id/imageButtonContact"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_phone_black_24dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+                                        <TextView
+                                            android:id="@+id/availableDriverProfilecnic"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="cnic"
+
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+                                        android:id="@+id/imageButtondate"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_date_range_black_24dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+
+                                        <TextView
+                                            android:id="@+id/availableDriverProfiledateTime"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="Date and time"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+                                        android:id="@+id/imageButton"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_airline_seat_recline_extra_black_24dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+
+                                        <TextView
+                                            android:id="@+id/availableDriverProfileOfferedSeats"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="offered seats"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+
+                                        <TextView
+                                            android:id="@+id/availableDriverProfileAvailableSeats"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="available  seats"
+                                            android:textColor="@color/colorAccent"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/availableDriverProfileMessageDriver"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:text="Message: hi travell with me" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/container_seats"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@color/light_red"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/availableDriverProfileReserverdSeats"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Your seats"
+                            android:textColor="@color/design_default_color_primary_dark"
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:background="@android:color/white" />
+
+                        <TextView
+                            android:id="@+id/availableDriverProfileRidePrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="total price"
+                            android:textColor="@color/design_default_color_primary_dark"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="@drawable/custum_border">
+
+
+                        <EditText
+                            android:id="@+id/availableDriverProfileMessageRider"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:background="@android:color/transparent"
+                            android:gravity="top"
+                            android:hint="Your Message Here"
+                            android:inputType="textMultiLine"
+                            android:overScrollMode="always"
+                            android:padding="6dp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/availableDriverProfileSendRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/black"
+                    android:text="Send Request"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+
+
 
 </FrameLayout>
