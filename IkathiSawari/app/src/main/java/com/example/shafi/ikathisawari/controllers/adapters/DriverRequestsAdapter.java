@@ -1,18 +1,22 @@
 package com.example.shafi.ikathisawari.controllers.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.controllers.fragments.driver.RequestRiderProfile;
 import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RideHistory;
 import com.example.shafi.ikathisawari.models.RidersRequestsListInDriver;
@@ -49,10 +53,10 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.driver_pending_request_card, viewGroup, false);
+        View view = inflater.inflate(R.layout.driver_pending_request_card1, viewGroup, false);
 
         LayoutInflater inflater1 = LayoutInflater.from(viewGroup.getContext());
-        View view2 = inflater1.inflate(R.layout.accepted_requests_card, viewGroup, false);
+        View view2 = inflater1.inflate(R.layout.accepted_requests_card1, viewGroup, false);
 
         switch (i) {
             case 0: return new ViewHolder0(view);
@@ -89,22 +93,31 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         switch (viewHolder.getItemViewType()) {
             case 0:
                 ViewHolder0 viewHolder0 = (ViewHolder0) viewHolder;
+                viewHolder0.originName.setText(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getRider_origin_name());
+                viewHolder0.destinationName.setText(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getRider_destination_name());
                 viewHolder0.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
+                viewHolder0.ageGender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getGender());
+                viewHolder0.contactNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
+                viewHolder0.travellDate.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTimeAndDateRider());
+                viewHolder0.offerSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeats());
+                viewHolder0.availableSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getNo_of_available_seats());
+
                 viewHolder0.status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
-                viewHolder0.requestRider_mobileNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
+                viewHolder0.riderSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider());
+                viewHolder0.riderRidePrice.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
                 viewHolder0.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        RequestRiderProfile requestRiderProfile = new RequestRiderProfile();
-//                        Bundle bundle = new Bundle();
-//                        bundle.putParcelableArrayList("ridersRequestsListInDriver",ridersRequestsListInDriver);
-//                        bundle.putInt("position",position);
-//                        requestRiderProfile.setArguments(bundle);
-////                FragmentManager fragmentManager = context.getSupportFragmentManager();
-//                        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-//                        fragmentTransaction.replace(R.id.driver_container, requestRiderProfile);
-//                        fragmentTransaction.addToBackStack(null);
-//                        fragmentTransaction.commit();
+                        RequestRiderProfile requestRiderProfile = new RequestRiderProfile();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelableArrayList("ridersRequestsListInDriver",ridersRequestsListInDriver);
+                        bundle.putInt("position",position);
+                        requestRiderProfile.setArguments(bundle);
+//                FragmentManager fragmentManager = context.getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.driver_container, requestRiderProfile);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
                     }
                 });
                 viewHolder0.accept_cancel_btn.setOnClickListener(new View.OnClickListener() {
@@ -166,22 +179,35 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             case 2:
                 ViewHolder2 viewHolder2 = (ViewHolder2)viewHolder;
+
+                viewHolder2.originName.setText(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getRider_origin_name());
+                viewHolder2.destinationName.setText(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getRider_destination_name());
                 viewHolder2.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
+                viewHolder2.ageGender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getGender());
+                viewHolder2.contactNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
+                viewHolder2.travellDate.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTimeAndDateRider());
+                viewHolder2.offerSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeats());
+                viewHolder2.availableSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getNo_of_available_seats());
+
                 viewHolder2.status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
-                viewHolder2.requestRider_mobileNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
+                viewHolder2.riderSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider());
+                viewHolder2.riderRidePrice.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
+
+
+
                 viewHolder2.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        RequestRiderProfile requestRiderProfile = new RequestRiderProfile();
-//                        Bundle bundle = new Bundle();
-//                        bundle.putParcelableArrayList("ridersRequestsListInDriver",ridersRequestsListInDriver);
-//                        bundle.putInt("position",position);
-//                        requestRiderProfile.setArguments(bundle);
-////                FragmentManager fragmentManager = context.getSupportFragmentManager();
-//                        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-//                        fragmentTransaction.replace(R.id.driver_container, requestRiderProfile);
-//                        fragmentTransaction.addToBackStack(null);
-//                        fragmentTransaction.commit();
+                        RequestRiderProfile requestRiderProfile = new RequestRiderProfile();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelableArrayList("ridersRequestsListInDriver",ridersRequestsListInDriver);
+                        bundle.putInt("position",position);
+                        requestRiderProfile.setArguments(bundle);
+//                FragmentManager fragmentManager = context.getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.driver_container, requestRiderProfile);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
                     }
                 });
 
@@ -248,31 +274,58 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     class ViewHolder0 extends RecyclerView.ViewHolder {
-        TextView name,status, requestRider_mobileNo;
-        TextView accept_cancel_btn, reject_btn;
+        TextView originName, destinationName,name, ageGender,contactNo, status,
+                travellDate,offerSeats,availableSeats, riderSeats, riderRidePrice, riderMessage;
+        Button accept_cancel_btn, reject_btn;
 
         public ViewHolder0(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.requestRider_name);
-            status = itemView.findViewById(R.id.requestRider_status_type);
-            requestRider_mobileNo = itemView.findViewById(R.id.requestRider_mobileNo);
-            accept_cancel_btn = itemView.findViewById(R.id.accept_cancel_btn);
-            reject_btn = itemView.findViewById(R.id.reject_btn);
+
+            originName = itemView.findViewById(R.id.requestedRider1OriginName_p);
+            destinationName = itemView.findViewById(R.id.requestedRider1DestinationName_p);
+            name = itemView.findViewById(R.id.requestedRider1name_p);
+            ageGender = itemView.findViewById(R.id.requestedRider1AgeGender_p);
+            contactNo = itemView.findViewById(R.id.requestedRider1contactNo_p);
+            travellDate = itemView.findViewById(R.id.requestedRider1dateTime_p);
+            offerSeats = itemView.findViewById(R.id.requestedRider1OfferedSeats_p);
+            availableSeats = itemView.findViewById(R.id.requestedRider1AvailableSeats_p);
+
+            status = itemView.findViewById(R.id.requestedDriverStatus_p);
+            riderSeats = itemView.findViewById(R.id.requestedDriverReseerrvedSeats_p);
+            riderRidePrice = itemView.findViewById(R.id.requestedDriverRidePrice_p);
+
+            accept_cancel_btn = itemView.findViewById(R.id.accept_cancel_btn_p);
+            reject_btn = itemView.findViewById(R.id.reject_btn_p);
 
         }
     }
 
     class ViewHolder2 extends RecyclerView.ViewHolder {
-        TextView name, status, requestRider_mobileNo;
-        TextView cancelRequest,reject_btn;
+
+        TextView originName, destinationName,name, ageGender,contactNo, status,
+                travellDate,offerSeats,availableSeats, riderSeats, riderRidePrice, riderMessage;
+        Button cancelRequest, reject_btn;
 
         public ViewHolder2(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.requestRider_name_p);
-            status = itemView.findViewById(R.id.requestRider_status_type_p);
-            requestRider_mobileNo = itemView.findViewById(R.id.requestRider_mobileNo_p);
-            cancelRequest = itemView.findViewById(R.id.cancel_btn_p);
-            reject_btn = itemView.findViewById(R.id.reject_btn_p);
+
+            reject_btn = itemView.findViewById(R.id.reject_btn_ac);
+
+            originName = itemView.findViewById(R.id.requestedRider1OriginName_ac);
+            destinationName = itemView.findViewById(R.id.requestedRider1DestinationName_ac);
+            name = itemView.findViewById(R.id.requestedRider1name_ac);
+            ageGender = itemView.findViewById(R.id.requestedRider1AgeGender_ac);
+            contactNo = itemView.findViewById(R.id.requestedRider1contactNo_ac);
+            travellDate = itemView.findViewById(R.id.requestedRider1dateTime_ac);
+            offerSeats = itemView.findViewById(R.id.requestedRider1OfferedSeats_ac);
+            availableSeats = itemView.findViewById(R.id.requestedRider1AvailableSeats_ac);
+
+            status = itemView.findViewById(R.id.requestedDriverStatus_ac);
+            riderSeats = itemView.findViewById(R.id.requestedDriverReseerrvedSeats_ac);
+            riderRidePrice = itemView.findViewById(R.id.requestedDriverRidePrice_ac);
+
+            cancelRequest = itemView.findViewById(R.id.accept_cancel_btn_ac);
+            reject_btn = itemView.findViewById(R.id.reject_btn_ac);
 
         }
 

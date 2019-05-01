@@ -1,31 +1,557 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".controllers.fragments.driver.RequestRiderProfile">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/requestRiderName"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/acceptRequest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Accept Request" />
-        <Button
-            android:id="@+id/rejectRequest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reject Request" />
-    </LinearLayout>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1">
+
+                            <ImageButton
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                app:srcCompat="@drawable/ic_location_on_green_24dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_gravity="center">
+
+                                <TextView
+                                    android:id="@+id/requestedRiderProfileOriginName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+
+                                    android:layout_weight="1"
+                                    android:text="From: "
+
+                                    android:textColor="@android:color/black"
+                                    android:textSize="12sp" />
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1">
+
+                            <ImageButton
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                app:srcCompat="@drawable/ic_arrow_downward_black_24dp" />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1">
+
+                            <ImageButton
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                app:srcCompat="@drawable/ic_location_on_red_24dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_gravity="center">
+
+                                <TextView
+                                    android:id="@+id/requestedRiderProfileDestinationName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+
+                                    android:layout_weight="1"
+                                    android:text="To: "
+
+                                    android:textColor="@android:color/black"
+                                    android:textSize="12sp" />
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="vertical">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/requestedRiderProfile_image"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+
+                                android:layout_margin="8dp"
+                                android:background="@drawable/ic_account_circle_black_24dp" />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/requestedRiderProfilename"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="5dp"
+
+                                    android:layout_weight="1"
+                                    android:text="Name"
+                                    android:textColor="@android:color/black" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/requestedRiderProfileAgeGender"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+
+                                    android:layout_weight="1"
+                                    android:text="age/gender"
+                                    android:textColor="@android:color/black" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_phone_black_24dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+                                        <TextView
+                                            android:id="@+id/requestedRiderProfilecontactNo"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="contact"
+                                            android:textColor="@android:color/holo_blue_dark"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+                                        android:id="@+id/imageButtonContact"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@drawable/cnic_icon" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+                                        <TextView
+                                            android:id="@+id/requestedRiderProfilecnic"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+
+                                            android:text="cnic"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+                                        android:id="@+id/imageButtondate"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_date_range_black_24dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+
+                                        <TextView
+                                            android:id="@+id/requestedRiderProfiledateTime"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="Date and time"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="1">
+
+                                    <ImageButton
+                                        android:id="@+id/imageButton"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_airline_seat_recline_extra_black_24dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+
+                                        <TextView
+                                            android:id="@+id/requestedRiderProfileOfferedSeats"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="offered seats"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_gravity="center">
+
+
+                                        <TextView
+                                            android:id="@+id/requestedRiderProfileAvailableSeats"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_weight="1"
+                                            android:text="available  seats"
+                                            android:textColor="@color/colorAccent"
+                                            android:textSize="12sp" />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="8dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/requestedRiderProfileMessageRider"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/container_seats"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@color/light_red"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/requestedRiderProfileStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Status"
+                            android:textColor="@android:color/holo_red_light"
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:background="@android:color/white" />
+
+                        <TextView
+                            android:id="@+id/requestedRiderProfileReserverdSeats"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Your seats"
+                            android:textColor="@color/design_default_color_primary_dark"
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:background="@android:color/white" />
+
+                        <TextView
+                            android:id="@+id/requestedRiderProfileRidePrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="total price"
+                            android:textColor="@color/design_default_color_primary_dark"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="8dp">
+
+
+                        <TextView
+                            android:id="@+id/requestedRiderProfileMessageDriver"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:background="@android:color/transparent"
+                            android:gravity="top"
+                            android:inputType="textMultiLine"
+                            android:overScrollMode="always"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@color/light_red"
+                        android:orientation="horizontal">
+
+
+                        <Button
+                            android:id="@+id/requestedRiderProfileAcceptCancelBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/black"
+                            android:text="Cancel"
+                            android:textAllCaps="false"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:background="@android:color/white" />
+
+                        <Button
+                            android:id="@+id/requestedRiderProfileRejectBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/black"
+                            android:text="Reject"
+                            android:textAllCaps="false"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
