@@ -38,8 +38,8 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
 //        getSupportActionBar().hide();
         setContentView(R.layout.rider__screen);
 
-        Intent intent = new Intent(this, RiderNotificationsService.class);
-        startService(intent);
+//        Intent intent = new Intent(this, RiderNotificationsService.class);
+//        startService(intent);
 
         bottomNavigationView = findViewById(R.id.navigationRider);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);

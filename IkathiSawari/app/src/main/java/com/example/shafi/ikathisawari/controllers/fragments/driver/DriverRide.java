@@ -2,6 +2,7 @@ package com.example.shafi.ikathisawari.controllers.fragments.driver;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
@@ -56,6 +58,8 @@ import java.util.ArrayList;
  */
 public class DriverRide extends Fragment implements OnMapReadyCallback {
 
+    static final float COORDINATE_OFFSET = 0.00002f;
+
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
@@ -63,6 +67,8 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
     ArrayList<LatLng> pointsDriverArrayList;
     PolylineOptions lineOptions = null;
     String currentDriver;
+    LatLng latLng1 ;
+    LatLng latLng2 ;
 
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
     private RecyclerView recyclerView;
@@ -77,6 +83,8 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
     private RatingBar ratingBar;
     View view;
+
+    ArrayList<LatLng> latLngArrayList;
 
 
     public DriverRide() {
@@ -93,48 +101,50 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
 
 
-        currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ridersRequestsListInDriver =new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    MakeRequest rider = snapshot.getValue(MakeRequest.class);
-//                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
-                    RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
-                    if((riderRequestInDriver.getMakeRequest().getStatus().equals("accepted"))){
-                        ridersRequestsListInDriver.add(riderRequestInDriver);
-                        Log.d("Time1_Datess",snapshot.getKey()+" "+ rider);
-                    }
-
-                    Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
-                }
-
-                if (getActivity() != null) {
-                    recyclerView = view.findViewById(R.id.driverRide_rider_recyclerView);
-                    layoutManager = new LinearLayoutManager(getActivity());
-                    recyclerView.setLayoutManager(layoutManager);
-//        driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), driverRequestsList);
 
 
-                    driverPaymentAdapter = new DriverPaymentAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
-
-
-                    recyclerView.setAdapter(driverPaymentAdapter);
-
-                    driverPaymentAdapter.notifyDataSetChanged();
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver);
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                ridersRequestsListInDriver =new ArrayList<>();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    MakeRequest rider = snapshot.getValue(MakeRequest.class);
+////                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
+//                    RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
+//                    if((riderRequestInDriver.getMakeRequest().getStatus().equals("accepted"))){
+//                        ridersRequestsListInDriver.add(riderRequestInDriver);
+//                        Log.d("Time1_Datess",snapshot.getKey()+" "+ rider);
+//                    }
+//
+//                    Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
+//                }
+//
+//                if (getActivity() != null) {
+//                    recyclerView = view.findViewById(R.id.driverRide_rider_recyclerView);
+//                    layoutManager = new LinearLayoutManager(getActivity());
+//                    recyclerView.setLayoutManager(layoutManager);
+////        driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), driverRequestsList);
+//
+//
+//                    driverPaymentAdapter = new DriverPaymentAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
+//
+//
+//                    recyclerView.setAdapter(driverPaymentAdapter);
+//
+//                    driverPaymentAdapter.notifyDataSetChanged();
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
 
 
@@ -189,6 +199,156 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        latLngArrayList = new ArrayList<>();
+
+
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
+
+
+        currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver);
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ridersRequestsListInDriver =new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    MakeRequest rider = snapshot.getValue(MakeRequest.class);
+//                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
+                    RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
+                    if((riderRequestInDriver.getMakeRequest().getStatus().equals("accepted"))){
+                        ridersRequestsListInDriver.add(riderRequestInDriver);
+                        Log.d("Time1_Datess",snapshot.getKey()+" "+ rider);
+                    }
+
+                    Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
+                }
+
+                Toast.makeText(getActivity(), "before", Toast.LENGTH_SHORT).show();
+
+//                LatLng latLng1 ;
+//                LatLng latLng2 ;
+
+
+                for (final RidersRequestsListInDriver item:ridersRequestsListInDriver) {
+
+                    latLng1= new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLat(),
+                            item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLng());
+                    latLng2= new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat(),
+                            item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLng());
+
+                    while (markerAlreadyExist(latLngArrayList,latLng1)){
+                        latLng1= new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat()+COORDINATE_OFFSET,
+                                item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLng()+ COORDINATE_OFFSET);
+                    }
+                    while (markerAlreadyExist(latLngArrayList,latLng2)){
+                        latLng2= new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat()+COORDINATE_OFFSET,
+                                item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLng()+ COORDINATE_OFFSET);
+                    }
+
+                    latLngArrayList.add(latLng1);
+
+
+
+                    markerAlreadyExist(latLngArrayList,latLng1);
+
+                    Marker mk = mMap.addMarker(new MarkerOptions()
+                            .position(latLng1).title("origin")
+                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName()+"  "+"price 20")
+
+                    );
+//                    Marker mk = mMap.addMarker(new MarkerOptions().position(it.getLatLng()).title(it.getName()).snippet(it.getAddress()));
+                    mk.setTag(item.getDateAndTime());
+
+                    Marker mk1 = mMap.addMarker(new MarkerOptions()
+                            .position(latLng2)
+                            .title("Destination")
+                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName()+"  "+"price 20")
+
+                    );
+//                    Marker mk = mMap.addMarker(new MarkerOptions().position(it.getLatLng()).title(it.getName()).snippet(it.getAddress()));
+                    mk1.setTag(item.getDateAndTime());
+
+
+
+
+
+                }
+
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+
+
+
+
+
+//                        if(latLng1.equals(latLng2)){
+//                            Toast.makeText(getActivity(), "equallls", Toast.LENGTH_SHORT).show();
+//                        }else {
+//                            Toast.makeText(getActivity(), "NOT equallls", Toast.LENGTH_SHORT).show();
+//                        }
+
+//                        Toast.makeText(getActivity(), item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName(), Toast.LENGTH_SHORT).show();
+                        String id = (String) marker.getTag();
+                        String markerTitle = marker.getTitle();
+
+                        Toast.makeText(getActivity(), getRequestPos(id)+" k " +id, Toast.LENGTH_SHORT).show();
+                        int reqIndex = getRequestPos(id);
+                        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
+                        View mView = getLayoutInflater().inflate(R.layout.driver_ride_dialog,null);
+                        TextView name = mView.findViewById(R.id.dialog_nameRider);
+                        TextView charges = mView.findViewById(R.id.dialogRidePrice);
+                        Button button = mView.findViewById(R.id.dialogBtn);
+                        name.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
+                        charges.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getActivity(), "dialog btn", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        mBuilder.setView(mView);
+                        AlertDialog dialog = mBuilder.create();
+                        dialog.show();
+
+
+                    }
+
+                });
+                Toast.makeText(getActivity(), "after", Toast.LENGTH_SHORT).show();
+
+                if (getActivity() != null) {
+                    recyclerView = view.findViewById(R.id.driverRide_rider_recyclerView);
+                    layoutManager = new LinearLayoutManager(getActivity());
+                    recyclerView.setLayoutManager(layoutManager);
+//        driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), driverRequestsList);
+
+
+                    driverPaymentAdapter = new DriverPaymentAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
+
+
+                    recyclerView.setAdapter(driverPaymentAdapter);
+
+                    driverPaymentAdapter.notifyDataSetChanged();
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             Log.d("rrrrrr","noooooooper");
@@ -214,6 +374,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
 
 
+        /*
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("DriverRidePoints");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -273,7 +434,21 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
             }
         });
+*/
 
+
+
+
+
+
+
+    }
+
+    private boolean markerAlreadyExist(ArrayList<LatLng> latLngArrayList, LatLng latLngg) {
+        if(latLngArrayList.contains(latLngg)){
+            return true;
+        }
+        return false;
     }
 
 
@@ -318,5 +493,15 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
                 return true;
             }
         });
+    }
+
+    private int getRequestPos(String category) {
+        for(int i = 0; i < this.ridersRequestsListInDriver.size(); ++i) {
+            if(this.ridersRequestsListInDriver.get(i).getDateAndTime() == category){
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
