@@ -236,5 +236,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public boolean calculatedistance(){
+        return true;
+    }
+
 
 }
