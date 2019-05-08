@@ -92,7 +92,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         final int position = i;
         switch (viewHolder.getItemViewType()) {
             case 0:
-                ViewHolder0 viewHolder0 = (ViewHolder0) viewHolder;
+                final ViewHolder0 viewHolder0 = (ViewHolder0) viewHolder;
                 viewHolder0.originName.setText(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getRider_origin_name());
                 viewHolder0.destinationName.setText(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getRider_destination_name());
                 viewHolder0.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
@@ -128,10 +128,32 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                        Toast.makeText(context, "hhhhhh", Toast.LENGTH_SHORT).show();
                         String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         final String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
+//                        FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("availableDriverInfo").child("no_of_available_seats").setValue(Integer.valueOf(viewHolder0.availableSeats.toString())-Integer.valueOf(viewHolder0.riderSeats.toString()));
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
-                        String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
-                        String request = ridersRequestsListInDriver.get(position).getDateAndTime();
-                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("accepted");
+                        final String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
+                        final String request = ridersRequestsListInDriver.get(position).getDateAndTime();
+//                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("accepted");
+//                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(requestRider).child(request).child("status").setValue("accepted");
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status");
+                        reference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Toast.makeText(context, ""+dataSnapshot.getValue(), Toast.LENGTH_SHORT).show();
+                                if((dataSnapshot.getValue() == null)){
+                                    Toast.makeText(context, "nullllllll", Toast.LENGTH_SHORT).show();
+                                    FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(requestRider).child(request).child("status").setValue("accepted");
+
+                                }else {
+                                    Toast.makeText(context, "not nullll", Toast.LENGTH_SHORT).show();
+                                    FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("accepted");
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
 
 
 //                        final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -218,9 +240,31 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
 
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("pending");
-                        String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
-                        String request = ridersRequestsListInDriver.get(position).getDateAndTime();
-                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("pending");
+                        final String requestRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
+                        final String request = ridersRequestsListInDriver.get(position).getDateAndTime();
+//                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("pending");
+//                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(requestRider).child(request).child("status").setValue("pending");
+
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status");
+                        reference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Toast.makeText(context, ""+dataSnapshot.getValue(), Toast.LENGTH_SHORT).show();
+                                if((dataSnapshot.getValue() == null)){
+                                    Toast.makeText(context, "nullllllll", Toast.LENGTH_SHORT).show();
+                                    FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(requestRider).child(request).child("status").setValue("pending");
+
+                                }else {
+                                    Toast.makeText(context, "not nullll", Toast.LENGTH_SHORT).show();
+                                    FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("pending");
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 });
                 viewHolder2.reject_btn.setOnClickListener(new View.OnClickListener() {
@@ -372,7 +416,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private void addInHistoryUnseen(String currentDriver1, final String requestRider1, String request1, RideHistory rideHistory1, int position1){
 
-        Toast.makeText(context, "unseen", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "unseen", Toast.LENGTH_SHORT).show();
         final String currentDriver = currentDriver1;
         final String requestRider = requestRider1;
         final String request = request1;
@@ -396,7 +440,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                                 FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        Toast.makeText(context, "Successfully rejected request", Toast.LENGTH_SHORT).show();
+//                                                        Toast.makeText(context, "Successfully rejected request", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
                                             }

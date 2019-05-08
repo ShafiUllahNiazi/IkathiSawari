@@ -226,7 +226,7 @@
                 android:layout_marginEnd="6dp"
                 android:layout_marginRight="6dp"
                 android:layout_marginBottom="6dp"
-                android:background="@android:color/black"
+                android:background="@color/colorPrimary"
                 android:text="Take Ride"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"

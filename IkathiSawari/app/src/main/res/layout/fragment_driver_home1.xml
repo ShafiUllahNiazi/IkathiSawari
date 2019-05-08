@@ -306,7 +306,7 @@
                         android:layout_marginLeft="6dp"
                         android:layout_marginRight="6dp"
                         android:layout_marginBottom="3dp"
-                        android:background="@android:color/black"
+                        android:background="@color/colorPrimary"
                         android:text="Offer Ride"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
@@ -323,7 +323,8 @@
                         android:text="See Route"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:visibility="gone"/>
 
 
                 </LinearLayout>

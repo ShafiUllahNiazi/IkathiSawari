@@ -99,42 +99,42 @@ public class RiderRide extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.exists()){
-
-                    dataSnapshot.toString();
-
-                    GenericTypeIndicator<ArrayList<RiderRidePointsDriver>> t = new GenericTypeIndicator<ArrayList<RiderRidePointsDriver>>() {};
-                    ArrayList<RiderRidePointsDriver> yourStringArray = dataSnapshot.getValue(t);
-//                    Toast.makeText(getContext(),yourStringArray.get(0).toString(),Toast.LENGTH_LONG).show();
-
-                    Log.d("tststs",yourStringArray.toString());
-
-                    for (RiderRidePointsDriver item:yourStringArray) {
-                        LatLng latLng = new LatLng(item.getLat(),item.getLng());
-
-                        pointsDriverArrayList.add(latLng);
-
-
-                        Log.d("tststs","my "+item.toString());
-                    }
-
-                    mMap.clear();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pointsDriverArrayList.get(pointsDriverArrayList.size()-1)));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                    mMap.addMarker(new MarkerOptions().position(pointsDriverArrayList.get(pointsDriverArrayList.size()-1)));
-
-                    lineOptions = new PolylineOptions();
-                    lineOptions.addAll(pointsDriverArrayList);
-                    lineOptions.width(15);
-                    lineOptions.color(Color.BLUE);
-                    if (lineOptions != null) {
-
-
-                        mMap.addPolyline(lineOptions);
-                    }
-
-
-                }
+//                if(dataSnapshot.exists()){
+//
+//                    dataSnapshot.toString();
+//
+//                    GenericTypeIndicator<ArrayList<RiderRidePointsDriver>> t = new GenericTypeIndicator<ArrayList<RiderRidePointsDriver>>() {};
+//                    ArrayList<RiderRidePointsDriver> yourStringArray = dataSnapshot.getValue(t);
+////                    Toast.makeText(getContext(),yourStringArray.get(0).toString(),Toast.LENGTH_LONG).show();
+//
+//                    Log.d("tststs",yourStringArray.toString());
+//
+//                    for (RiderRidePointsDriver item:yourStringArray) {
+//                        LatLng latLng = new LatLng(item.getLat(),item.getLng());
+//
+//                        pointsDriverArrayList.add(latLng);
+//
+//
+//                        Log.d("tststs","my "+item.toString());
+//                    }
+//
+//                    mMap.clear();
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pointsDriverArrayList.get(pointsDriverArrayList.size()-1)));
+//                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+//                    mMap.addMarker(new MarkerOptions().position(pointsDriverArrayList.get(pointsDriverArrayList.size()-1)));
+//
+//                    lineOptions = new PolylineOptions();
+//                    lineOptions.addAll(pointsDriverArrayList);
+//                    lineOptions.width(15);
+//                    lineOptions.color(Color.BLUE);
+//                    if (lineOptions != null) {
+//
+//
+//                        mMap.addPolyline(lineOptions);
+//                    }
+//
+//
+//                }
 
             }
 

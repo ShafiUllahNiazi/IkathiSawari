@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class UpdateDriverLocation extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener{
+public class UpdateDriverLocation extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
@@ -39,7 +39,10 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
 
     private static final String TAG = "UpdateDriverLocation";
 
+    int serviceRunning = 0;
+
     public UpdateDriverLocation() {
+
     }
 
     @Override
@@ -52,11 +55,14 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        serviceRunning = intent.getIntExtra("runService", 0);
+
         driverLiveRide = new ArrayList<>();
+
 
         buildGoogleApiClient();
         Toast.makeText(this, "Service update location started", Toast.LENGTH_SHORT).show();
-        Log.d(TAG,"start");
+        Log.d(TAG, "start");
 //        return super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
@@ -64,12 +70,12 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG,"Destroy");
+        Log.d(TAG, "Destroy");
         Toast.makeText(this, "Service update location stopped", Toast.LENGTH_SHORT).show();
     }
 
     protected synchronized void buildGoogleApiClient() {
-        Log.d(TAG,"buildApiclient");
+        Log.d(TAG, "buildApiclient");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -80,7 +86,7 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG,"connected");
+        Log.d(TAG, "connected");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
@@ -110,25 +116,27 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG,"location change");
-        Toast.makeText(this, "update", Toast.LENGTH_SHORT).show();
 
-        mLastLocation = location;
-//        mMap.clear();
-        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-        RiderRidePointsDriver points = new RiderRidePointsDriver(location.getLatitude(),location.getLongitude());
-        Log.d(TAG,points.toString());
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
-//
-//        mMap.addMarker(new MarkerOptions().position(latLng));
-//        Log.d("Updatee",""+ latLng.latitude +" "+ latLng.longitude);
+        if (serviceRunning == 1) {
 
-        String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        driverLiveRide.add(points);
-//        DriverRideInfo driverRideInfo = new DriverRideInfo(driverLiveRide);
+            Log.d(TAG, "location change");
+            Toast.makeText(this, "update", Toast.LENGTH_SHORT).show();
 
-        FirebaseDatabase.getInstance().getReference().child("DriverRidePoints").setValue(driverLiveRide);
+            mLastLocation = location;
+
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            RiderRidePointsDriver points = new RiderRidePointsDriver(location.getLatitude(), location.getLongitude());
+            Log.d(TAG, points.toString());
+
+
+            String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            driverLiveRide.add(points);
+            FirebaseDatabase.getInstance().getReference().child("DriverRidePoints").child(currentDriver).setValue(driverLiveRide);
+        }
+        else {
+            Toast.makeText(this, "stop update", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -93,7 +93,7 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 viewHolder0.ride_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, "okkk", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "okkk", Toast.LENGTH_SHORT).show();
 //                        final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
 //                        String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
 //                        FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
@@ -102,7 +102,7 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 viewHolder0.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        Toast.makeText(context, "rating", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "rating", Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
@@ -123,7 +123,7 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 viewHolder2.ride_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, "okkk"+viewHolder2.ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "okkk"+viewHolder2.ratingBar.getRating(), Toast.LENGTH_SHORT).show();
                         final String currentRider = ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
                         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Rating");
                         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -140,7 +140,7 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
                                     Log.d("rrrr",ratingg+" "+newRating+"="+latestRating);
-                                    Toast.makeText(context, "ratinggg "+dataSnapshot.child(currentRider).getValue(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, "ratinggg "+dataSnapshot.child(currentRider).getValue(), Toast.LENGTH_SHORT).show();
                                 }else{
                                     databaseReference.child(currentRider).setValue(viewHolder2.ratingBar.getRating());
                                 }
@@ -159,7 +159,7 @@ public class DriverPaymentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 viewHolder2.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        Toast.makeText(context, "rating "+rating, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "rating "+rating, Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;

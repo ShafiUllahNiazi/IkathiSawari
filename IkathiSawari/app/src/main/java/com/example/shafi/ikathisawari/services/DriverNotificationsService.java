@@ -50,7 +50,7 @@ public class DriverNotificationsService extends Service {
         FirebaseApp.initializeApp(getApplicationContext());
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 //            Toast.makeText(this, "notification Driver", Toast.LENGTH_SHORT).show();
-            String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -72,7 +72,7 @@ public class DriverNotificationsService extends Service {
 
 //                    ///////////////////////////////////////////////////////////////////////////
 
-                        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("DriverRidePoints");
+                        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("DriverRidePoints").child(currentDriver);
                         databaseReference1.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

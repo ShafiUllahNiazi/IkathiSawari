@@ -80,11 +80,6 @@ public class DriverRequests extends Fragment {
 
                     Map<String,Object> requestss = (Map<String, Object>) dataSnapshot.getValue();
                     for (String req: requestss.keySet()){
-                        Log.d("tttttttt", "requestss- " + requestss.get(req) );
-//                        Map<String,Object> dd = (Map<String, Object>) myDrivers.get(driver);
-//
-
-
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(req).setValue(requestss.get(req)).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

@@ -42,6 +42,7 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriverFull;
     FragmentManager supportFragmentManager;
     private String currentRider;
+    int position;
 
     public RiderRequestsAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver) {
         this.context=context;
@@ -62,9 +63,9 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
 
-        final int position = i;
+        position = i;
 //        viewHolder.content_rider_request.setText("Driver");
-        Log.d("ssssssssssss",ridersRequestsListInDriver.get(position).toString());
+        Log.d("ssssssssssss",ridersRequestsListInDriver.get(position).getMakeRequest().toString());
         viewHolder.nameDriver.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getName());
         viewHolder.driver_age_gender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getGender());
         viewHolder.driver_vehicle_model.setText("Vehicle Model: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getVehicle_Model1());
