@@ -86,7 +86,7 @@ public class DriverProfile extends Fragment {
                 cnic = driverInfo.getCnic();
                 gender = driverInfo.getGender();
                 dob = driverInfo.getDob();
-                image = driverInfo.getimage();
+                image = driverInfo.getImage();
 
                 if (!image.equals("default")) {
                     Picasso.get().load(image).into(driverProfileImage_profile);
@@ -171,8 +171,8 @@ public class DriverProfile extends Fragment {
                     String cnic =  cnic_Driver.getText().toString();
                     String dob1 = dob_Driver.getText().toString();
                     String gender1 =  gender_Driver.getText().toString();
-                    DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,image);
-                    riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"");
+                    DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,image,2.5f);
+                    riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"",2.5f);
 
                     databaseReference = FirebaseDatabase.getInstance().getReference();
 

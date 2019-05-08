@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class RiderRequestsAdapter extends RecyclerView.Adapter<RiderRequestsAdap
 
         final int position = i;
 //        viewHolder.content_rider_request.setText("Driver");
+        Log.d("ssssssssssss",ridersRequestsListInDriver.get(position).toString());
         viewHolder.nameDriver.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getName());
         viewHolder.driver_age_gender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getGender());
         viewHolder.driver_vehicle_model.setText("Vehicle Model: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getVehicle_Model1());

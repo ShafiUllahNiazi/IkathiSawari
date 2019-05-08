@@ -205,8 +205,8 @@ public class DriverSignUp  extends Fragment {
                             String gender1 =  gender.getText().toString();
 //                            String seats = noOfSeats.getText().toString();
 
-                            DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"");
-                            riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"");
+                            DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"",2.5f);
+                            riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"",2.5f);
 
                             firebaseDatabase = FirebaseDatabase.getInstance();
                             databaseReference=firebaseDatabase.getReference();

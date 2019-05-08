@@ -3,10 +3,12 @@ package com.example.shafi.ikathisawari.models;
 public class RiderInfo {
 
     private String name, email, mobile, cnic,uid,gender, dob,image;
+    private float rating;
+
     public RiderInfo() {
     }
 
-    public RiderInfo(String uid,String name, String email, String mobile, String cnic,String dob, String gender,String profileImg) {
+    public RiderInfo(String uid,String name, String email, String mobile, String cnic,String dob, String gender,String profileImg, float rating) {
         this.image = profileImg;
         this.name = name;
         this.email = email;
@@ -15,83 +17,42 @@ public class RiderInfo {
         this.uid = uid;
         this.dob = dob;
         this.gender = gender;
-    }
-
-    public String getProfileImg() {
-        return image;
-    }
-
-    public void setProfileImg(String profileImg) {
-        this.image = profileImg;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+        this.rating = rating;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
     public String getCnic() {
         return cnic;
     }
 
-    public void setCnic(String cnic) {
-        this.cnic = cnic;
+    public String getUid() {
+        return uid;
     }
 
-    @Override
-    public String
-    toString() {
-        return "RiderInfo{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", cnic='" + cnic + '\'' +
-                ", uid='" + uid + '\'' +
-                ", gender='" + gender + '\'' +
-                ", dob='" + dob + '\'' +
-                '}';
+    public String getGender() {
+        return gender;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public float getRating() {
+        return rating;
     }
 }

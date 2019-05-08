@@ -104,15 +104,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-//        Toast.makeText(this, "abc "+ currentUser, Toast.LENGTH_SHORT).show();
         if(currentUser != null){
-//            Toast.makeText(this, "not nulll ", Toast.LENGTH_SHORT).show();
+
             progressDialog.setMessage("Logging in");
             progressDialog.show();
             goHome();
-//            progressDialog.cancel();
+
         }
 
     }
@@ -125,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                boolean isDriver = dataSnapshot.child("Driver").hasChild(userId);
                 boolean isRider = dataSnapshot.child("Rider").hasChild(userId);
 
 
@@ -137,20 +134,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "No such user exist", Toast.LENGTH_LONG).show();
                 }
 
-//                for (DataSnapshot dt : dataSnapshot.child("Driver").getChildren()) {
-//                    if (dt.getKey().toString().equals(user.getUid().toString())) {
-////                                            logIn_progressBar.setVisibility(View.INVISIBLE);
-//                        Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
-//                        startActivity(new Intent(MainActivity.this, Driver_Screen.class));
-//                    }
-//                }
-//                for (DataSnapshot dt : dataSnapshot.child("Rider").getChildren()) {
-//                    if (dt.getKey().toString().equals(user.getUid().toString())) {
-////                                            logIn_progressBar.setVisibility(View.INVISIBLE);
-//                        Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
-//                        startActivity(new Intent(MainActivity.this, Rider_Screen.class));
-//                    }
-//                }
             }
 
             @Override
@@ -198,36 +181,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             goHome();
 
-//                            final FirebaseUser user = firebaseAuth.getCurrentUser();
-//                            firebaseDatabase = FirebaseDatabase.getInstance();
-//                            firebaseDatabase.getReference().child("users").addValueEventListener(new ValueEventListener() {
-//
-//                                @Override
-//                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                    for (DataSnapshot dt : dataSnapshot.child("Driver").getChildren()) {
-//                                        if (dt.getKey().toString().equals(user.getUid().toString())) {
-////                                            logIn_progressBar.setVisibility(View.INVISIBLE);
-//                                            Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
-//                                            startActivity(new Intent(MainActivity.this, Driver_Home.class));
-//                                        }
-//                                    }
-//                                    for (DataSnapshot dt : dataSnapshot.child("Rider").getChildren()) {
-//                                        if (dt.getKey().toString().equals(user.getUid().toString())) {
-////                                            logIn_progressBar.setVisibility(View.INVISIBLE);
-//                                            Toast.makeText(MainActivity.this, "Authentication is Sucessful.", Toast.LENGTH_LONG).show();
-//                                            startActivity(new Intent(MainActivity.this, Rider_Home.class));
-//                                        }
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                }
-//
-//
-//                            });
-//                            progressDialog.cancel();
+
                         }
                     }
 

@@ -43,6 +43,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -85,6 +87,9 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
     View view;
 
     ArrayList<LatLng> latLngArrayList;
+
+    RatingBar driverRideDialog_rider_ratingBar2;
+    int reqIndex;
 
 
     public DriverRide() {
@@ -294,22 +299,75 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 //                        }
 
 //                        Toast.makeText(getActivity(), item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName(), Toast.LENGTH_SHORT).show();
-                        String id = (String) marker.getTag();
+                        final String id = (String) marker.getTag();
                         String markerTitle = marker.getTitle();
 
                         Toast.makeText(getActivity(), getRequestPos(id)+" k " +id, Toast.LENGTH_SHORT).show();
-                        int reqIndex = getRequestPos(id);
+                        reqIndex = getRequestPos(id);
                         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
                         View mView = getLayoutInflater().inflate(R.layout.driver_ride_dialog,null);
-                        TextView name = mView.findViewById(R.id.dialog_nameRider);
+                        final TextView name = mView.findViewById(R.id.dialog_nameRider);
+
+                        TextView dialog_contactRider = mView.findViewById(R.id.dialog_contactRider);
+                        TextView dialog_ageGenderRider = mView.findViewById(R.id.dialog_ageGenderRider);
                         TextView charges = mView.findViewById(R.id.dialogRidePrice);
+                        TextView dialogRidetravellDistance = mView.findViewById(R.id.dialogRidetravellDistance);
+                        driverRideDialog_rider_ratingBar2 = mView.findViewById(R.id.driverRideDialog_rider_ratingBar2);
                         Button button = mView.findViewById(R.id.dialogBtn);
                         name.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
+                        dialog_contactRider.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile()+"");
+                        dialog_ageGenderRider.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getGender());
                         charges.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
+                        dialogRidetravellDistance.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getTraveledDistanceRider()+"");
+                        driverRideDialog_rider_ratingBar2.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                            @Override
+                            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                                Toast.makeText(getActivity(), "rating rride"+rating, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Toast.makeText(getActivity(), "dialog btn", Toast.LENGTH_SHORT).show();
+                                final String currentRider = ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
+                                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(currentRider);
+                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.exists()){
+                                            float ratingg = Float.valueOf( dataSnapshot.child("rating").getValue().toString());
+                                            float newRating = driverRideDialog_rider_ratingBar2.getRating();
+                                            float latestRating = (ratingg + newRating)/2;
+                                            databaseReference.child("rating").setValue(latestRating);
+                                        }
+
+//                                        if (dataSnapshot.hasChild(currentRider)) {
+//
+//                                            float ratingg = Float.valueOf( dataSnapshot.child(currentRider).getValue().toString());
+//                                            float newRating = driverRideDialog_rider_ratingBar2.getRating();
+//                                            float latestRating = (ratingg + newRating)/2;
+//                                            Toast.makeText(getActivity(), "aaaa "+ ratingg+" "+newRating+"="+latestRating, Toast.LENGTH_SHORT).show();
+//                                            databaseReference.child(currentRider).setValue(latestRating).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Void> task) {
+//                                                    FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(id).child("");
+//                                                }
+//                                            });
+//
+//
+//                                            Log.d("rrrr",ratingg+" "+newRating+"="+latestRating);
+//                                            Toast.makeText(getActivity(), "ratinggg "+dataSnapshot.child(currentRider).getValue(), Toast.LENGTH_SHORT).show();
+//                                        }else{
+//                                            databaseReference.child(currentRider).setValue(driverRideDialog_rider_ratingBar2.getRating());
+//                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         });
 

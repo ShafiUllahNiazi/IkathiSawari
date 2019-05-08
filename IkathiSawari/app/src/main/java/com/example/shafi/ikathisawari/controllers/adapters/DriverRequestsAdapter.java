@@ -98,13 +98,13 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder0.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
                 viewHolder0.ageGender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getGender());
                 viewHolder0.contactNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
-                viewHolder0.travellDate.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTimeAndDateRider());
-                viewHolder0.offerSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeats());
-                viewHolder0.availableSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getNo_of_available_seats());
+                viewHolder0.travellDate.setText("Date: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTimeAndDateRider());
+                viewHolder0.offerSeats.setText("Offered seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeats());
+                viewHolder0.availableSeats.setText("Available seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getNo_of_available_seats());
 
-                viewHolder0.status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
-                viewHolder0.riderSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider());
-                viewHolder0.riderRidePrice.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
+                viewHolder0.status.setText("status: "+ ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
+                viewHolder0.riderSeats.setText("Request seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider());
+                viewHolder0.riderRidePrice.setText("Charges: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
                 viewHolder0.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -125,7 +125,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     public void onClick(View v) {
 //                        Toast.makeText(context, "accepttt", Toast.LENGTH_SHORT).show();
 
-                        Toast.makeText(context, "hhhhhh", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "hhhhhh", Toast.LENGTH_SHORT).show();
                         String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         final String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
@@ -185,13 +185,13 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder2.name.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
                 viewHolder2.ageGender.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getGender());
                 viewHolder2.contactNo.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
-                viewHolder2.travellDate.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTimeAndDateRider());
-                viewHolder2.offerSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeats());
-                viewHolder2.availableSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getNo_of_available_seats());
+                viewHolder2.travellDate.setText("Date: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getTimeAndDateRider());
+                viewHolder2.offerSeats.setText("Offered seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeats());
+                viewHolder2.availableSeats.setText("Available seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getNo_of_available_seats());
 
-                viewHolder2.status.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
-                viewHolder2.riderSeats.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider());
-                viewHolder2.riderRidePrice.setText(ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
+                viewHolder2.status.setText("Status: "+ridersRequestsListInDriver.get(i).getMakeRequest().getStatus());
+                viewHolder2.riderSeats.setText("Request seats: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getSeatsRider());
+                viewHolder2.riderRidePrice.setText("Charges: "+ridersRequestsListInDriver.get(i).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
 
 
 

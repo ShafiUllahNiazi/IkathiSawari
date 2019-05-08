@@ -54,24 +54,13 @@ public class SignUpScreen extends AppCompatActivity {
     String email;
 
 
-
-//    private TabLayout sign_up_tablayout;
-//    public ViewPager sign_up_viewPager;
-//    public Sign_Up_View_Pager_Adapter sign_up_view_pager_adapter;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_screen);
-//        sign_up_tablayout=findViewById(R.id.sign_up_tablayout);
-//        sign_up_viewPager=findViewById(R.id.sign_up_viewPager);
-//        sign_up_view_pager_adapter=new Sign_Up_View_Pager_Adapter(getSupportFragmentManager());
-//
-//        sign_up_view_pager_adapter.addFragment(new DriverSignUp(),"User Sign up");
-//        sign_up_viewPager.setAdapter(sign_up_view_pager_adapter);
-//        sign_up_tablayout.setupWithViewPager(sign_up_viewPager);
+
+//        FirebaseDatabase.getInstance().getReference().removeValue();
+
         name_signup = findViewById(R.id.name_signup);
         email_signup = findViewById(R.id.email_signup);
         password_signup = findViewById(R.id.password_signup);
@@ -157,8 +146,8 @@ public class SignUpScreen extends AppCompatActivity {
                             String gender1 =  gender.getText().toString();
 //                            String seats = noOfSeats.getText().toString();
 
-                            DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"default");
-                            riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"default");
+                            DriverInfo driverInfo = new DriverInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"default",2.5f);
+                            riderInfo = new RiderInfo(currentUserUid,name, email, mobile, cnic,dob1,gender1,"default",2.5f);
 
                             firebaseDatabase = FirebaseDatabase.getInstance();
                             databaseReference=firebaseDatabase.getReference();

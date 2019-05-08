@@ -18,6 +18,7 @@ public class MakeRequest {
 //    int rideCharges;
 
     String status;
+    boolean isChargesReceived;
 
     AvailableDriverInfo availableDriverInfo;
 
@@ -44,9 +45,10 @@ public class MakeRequest {
 //
 //    }
 
-    public MakeRequest(String status, AvailableDriverInfo availableDriverInfo) {
+    public MakeRequest(String status,boolean isChargesReceived, AvailableDriverInfo availableDriverInfo) {
 
         this.status=status;
+        this.isChargesReceived = isChargesReceived;
         this.availableDriverInfo = availableDriverInfo;
     }
 
@@ -54,69 +56,11 @@ public class MakeRequest {
         return status;
     }
 
+    public boolean isChargesReceived() {
+        return isChargesReceived;
+    }
 
     public AvailableDriverInfo getAvailableDriverInfo() {
         return availableDriverInfo;
     }
-
-    //    public String getCurrent_rider() {
-//        return current_rider;
-//    }
-//
-//    public RiderInfo getRiderInfo() {
-//        return riderInfo;
-//    }
-//
-//    public String getStatus() {
-//        return status;
-//    }
-//
-//
-//    public String getDriverId() {
-//        return driverId;
-//    }
-//
-//    public DriverInfo getDriverInfo() {
-//        return driverInfo;
-//    }
-//
-//    public DriverRoutInfo getDriverRoutInfo() {
-//        return driverRoutInfo;
-//    }
-//
-//    public double getRiderLatOriginAtRoad() {
-//        return riderLatOriginAtRoad;
-//    }
-//
-//    public double getRiderLngOriginAtRoad() {
-//        return riderLngOriginAtRoad;
-//    }
-//
-//    public double getRiderLatDestinationAtRoad() {
-//        return riderLatDestinationAtRoad;
-//    }
-//
-//    public double getRiderLngDestinationAtRoad() {
-//        return riderLngDestinationAtRoad;
-//    }
-//
-//    public String getTimeAndDateRider() {
-//        return timeAndDateRider;
-//    }
-//
-//    public String getSeatsRider() {
-//        return seatsRider;
-//    }
-//
-//    public int getTraveledDistanceRider() {
-//        return traveledDistanceRider;
-//    }
-//
-//    public int getTraveledTimeRider() {
-//        return traveledTimeRider;
-//    }
-//
-//    public int getRideCharges() {
-//        return rideCharges;
-//    }
 }

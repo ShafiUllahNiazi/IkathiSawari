@@ -347,7 +347,7 @@
                 android:id="@+id/requestedDriverCancelRequest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/black"
+                android:background="@color/colorPrimary"
                 android:text="Cancel Request"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"

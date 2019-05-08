@@ -100,7 +100,7 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 //                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(availableDriversList.get(position).getDriverKey()).child("request").child(timeSting);
                 final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(driver).child(timeSting);
 
-                final MakeRequest makeRequest1 = new MakeRequest("pending",availableDriversList.get(position));
+                final MakeRequest makeRequest1 = new MakeRequest("pending",false,availableDriversList.get(position));
 
                 databaseReference.setValue(makeRequest1).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

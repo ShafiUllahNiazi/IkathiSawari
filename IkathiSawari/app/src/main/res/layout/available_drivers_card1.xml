@@ -330,7 +330,7 @@
                 android:id="@+id/availableDriver1SendRequest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/black"
+                android:background="?attr/colorPrimary"
                 android:text="Send Request"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
