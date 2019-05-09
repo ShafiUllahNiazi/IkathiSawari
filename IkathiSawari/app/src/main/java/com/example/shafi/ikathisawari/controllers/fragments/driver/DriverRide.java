@@ -44,6 +44,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -218,7 +219,8 @@ public class DriverRide extends Fragment implements OnMapReadyCallback,RoutingLi
 
                     Marker mk = mMap.addMarker(new MarkerOptions()
                             .position(latLng1).title("origin")
-                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + "  " + "price 20")
+                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + "  " +
+                                    item.getMakeRequest().getAvailableDriverInfo().getRideCharges())
 
                     );
 //                    Marker mk = mMap.addMarker(new MarkerOptions().position(it.getLatLng()).title(it.getName()).snippet(it.getAddress()));
@@ -227,11 +229,14 @@ public class DriverRide extends Fragment implements OnMapReadyCallback,RoutingLi
                     Marker mk1 = mMap.addMarker(new MarkerOptions()
                             .position(latLng2)
                             .title("Destination")
-                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + "  " + "price 20")
+                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + "  " +
+                                    item.getMakeRequest().getAvailableDriverInfo().getRideCharges())
 
                     );
 //                    Marker mk = mMap.addMarker(new MarkerOptions().position(it.getLatLng()).title(it.getName()).snippet(it.getAddress()));
                     mk1.setTag(item.getDateAndTime());
+
+
 
 
                 }
@@ -374,10 +379,16 @@ public class DriverRide extends Fragment implements OnMapReadyCallback,RoutingLi
 //                    mMap.clear();
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(pointsDriverArrayList.get(pointsDriverArrayList.size() - 1)));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+                    if(mMarker!=null){
+                        mMarker.remove();
+                    }
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(pointsDriverArrayList.get(pointsDriverArrayList.size() - 1))
                             .title("Driver position")
+
                     );
+
+
 
 
                     lineOptions = new PolylineOptions();

@@ -32,6 +32,7 @@ import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderNotificat
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRequestParent;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRequests;
 import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRide;
+import com.example.shafi.ikathisawari.controllers.fragments.rider.RiderRide2;
 import com.example.shafi.ikathisawari.services.RiderNotificationsService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -89,7 +90,7 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
 
     RiderRequests riderRequests = new RiderRequests();
     RiderNotification riderNotification = new RiderNotification();
-    RiderRide riderRide = new RiderRide();
+    RiderRide2 riderRide = new RiderRide2();
 
     DriverProfile profile = new DriverProfile();
 
