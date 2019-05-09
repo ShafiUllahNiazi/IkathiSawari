@@ -26,6 +26,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.CustomInfoWindowAdapter;
 import com.example.shafi.ikathisawari.controllers.adapters.DriverPaymentAdapter;
@@ -42,6 +47,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -54,11 +60,12 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DriverRide extends Fragment implements OnMapReadyCallback {
+public class DriverRide extends Fragment implements OnMapReadyCallback,RoutingListener {
 
     static final float COORDINATE_OFFSET = 0.00002f;
 
@@ -69,17 +76,17 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
     ArrayList<LatLng> pointsDriverArrayList;
     PolylineOptions lineOptions = null;
     String currentDriver;
-    LatLng latLng1 ;
-    LatLng latLng2 ;
+    LatLng latLng1;
+    LatLng latLng2;
 
     ArrayList<RidersRequestsListInDriver> ridersRequestsListInDriver;
-
 
 
     private GoogleMap mMap;
     private Marker mMarker;
 
     Button stoppService;
+    Button starttService;
 
     private RatingBar ratingBar;
     View view;
@@ -103,10 +110,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         view = inflater.inflate(R.layout.fragment_driver_ride, container, false);
 
 
-
-
-
-        pointsDriverArrayList= new ArrayList<>();
+        pointsDriverArrayList = new ArrayList<>();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapDriverRideFragment);
@@ -121,27 +125,29 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
 
-        stoppService = view.findViewById(R.id.stopservice);
+        starttService = view.findViewById(R.id.startService);
+        stoppService = view.findViewById(R.id.stopService);
+        starttService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(getActivity(), UpdateDriverLocation.class);
+                intent2.putExtra("runService", 1);
+                getActivity().startService(intent2);
+                starttService.setVisibility(View.GONE);
+                stoppService.setVisibility(View.VISIBLE);
+
+            }
+        });
         stoppService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(stoppService.getText().toString().equals("start ride")){
 
-                    Intent intent2 = new Intent(getActivity(), UpdateDriverLocation.class);
-                    intent2.putExtra("runService",1);
-                    getActivity().startService(intent2);
-                    stoppService.setText("stop ride");
 
-                }
-                if(stoppService.getText().toString().equals("stop ride")){
-
-                    Intent intent2 = new Intent(getActivity(), UpdateDriverLocation.class);
-                    intent2.putExtra("runService",0);
-                    getActivity().stopService(intent2);
-                    stoppService.setText("start ride");
-
-                }
-
+                Intent intent2 = new Intent(getActivity(), UpdateDriverLocation.class);
+                intent2.putExtra("runService", 0);
+                getActivity().stopService(intent2);
+                starttService.setVisibility(View.VISIBLE);
+                stoppService.setVisibility(View.GONE);
 
 
             }
@@ -166,54 +172,53 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
 
-
-
         currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver);
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ridersRequestsListInDriver =new ArrayList<>();
+                ridersRequestsListInDriver = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     MakeRequest rider = snapshot.getValue(MakeRequest.class);
 //                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
-                    RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
-                    if((riderRequestInDriver.getMakeRequest().getStatus().equals("accepted"))){
+                    RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(), rider);
+                    if ((riderRequestInDriver.getMakeRequest().getStatus().equals("accepted"))) {
                         ridersRequestsListInDriver.add(riderRequestInDriver);
-                        Log.d("Time1_Datess",snapshot.getKey()+" "+ rider);
+                        Log.d("Time1_Datess", snapshot.getKey() + " " + rider);
                     }
 
-                    Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
+                    Log.d("Time_Datess", snapshot.getKey() + " " + rider);
                 }
 
+//
 
 
-                for (final RidersRequestsListInDriver item:ridersRequestsListInDriver) {
+                for (final RidersRequestsListInDriver item : ridersRequestsListInDriver) {
 
-                    latLng1= new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLat(),
+                    latLng1 = new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLat(),
                             item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLng());
-                    latLng2= new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat(),
+                    latLng2 = new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat(),
                             item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLng());
 
-                    while (markerAlreadyExist(latLngArrayList,latLng1)){
-                        latLng1= new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat()+COORDINATE_OFFSET,
-                                item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLng()+ COORDINATE_OFFSET);
+                    while (markerAlreadyExist(latLngArrayList, latLng1)) {
+                        latLng1 = new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLat() + COORDINATE_OFFSET,
+                                item.getMakeRequest().getAvailableDriverInfo().getRiderOriginAtRoad().getLng() + COORDINATE_OFFSET);
                     }
-                    while (markerAlreadyExist(latLngArrayList,latLng2)){
-                        latLng2= new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat()+COORDINATE_OFFSET,
-                                item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLng()+ COORDINATE_OFFSET);
+                    while (markerAlreadyExist(latLngArrayList, latLng2)) {
+                        latLng2 = new LatLng(item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLat() + COORDINATE_OFFSET,
+                                item.getMakeRequest().getAvailableDriverInfo().getRiderDestinationAtRoad().getLng() + COORDINATE_OFFSET);
                     }
 
                     latLngArrayList.add(latLng1);
+                    latLngArrayList.add(latLng2);
 
 
-
-                    markerAlreadyExist(latLngArrayList,latLng1);
+//                    markerAlreadyExist(latLngArrayList,latLng1);
 
                     Marker mk = mMap.addMarker(new MarkerOptions()
                             .position(latLng1).title("origin")
-                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName()+"  "+"price 20")
+                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + "  " + "price 20")
 
                     );
 //                    Marker mk = mMap.addMarker(new MarkerOptions().position(it.getLatLng()).title(it.getName()).snippet(it.getAddress()));
@@ -222,14 +227,11 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
                     Marker mk1 = mMap.addMarker(new MarkerOptions()
                             .position(latLng2)
                             .title("Destination")
-                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName()+"  "+"price 20")
+                            .snippet(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + "  " + "price 20")
 
                     );
 //                    Marker mk = mMap.addMarker(new MarkerOptions().position(it.getLatLng()).title(it.getName()).snippet(it.getAddress()));
                     mk1.setTag(item.getDateAndTime());
-
-
-
 
 
                 }
@@ -239,76 +241,76 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
                     public void onInfoWindowClick(Marker marker) {
 
 
-
                         final String id = (String) marker.getTag();
                         String markerTitle = marker.getTitle();
+                        if (!(markerTitle.equals("Driver position"))) {
 
-                        Toast.makeText(getActivity(), getRequestPos(id)+" k " +id, Toast.LENGTH_SHORT).show();
-                        reqIndex = getRequestPos(id);
-                        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
-                        View mView = getLayoutInflater().inflate(R.layout.driver_ride_dialog,null);
-                        final TextView name = mView.findViewById(R.id.dialog_nameRider);
+                            Toast.makeText(getActivity(), getRequestPos(id) + " k " + id, Toast.LENGTH_SHORT).show();
+                            reqIndex = getRequestPos(id);
+                            AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
+                            View mView = getLayoutInflater().inflate(R.layout.driver_ride_dialog, null);
+                            final TextView name = mView.findViewById(R.id.dialog_nameRider);
 
-                        TextView dialog_contactRider = mView.findViewById(R.id.dialog_contactRider);
-                        TextView dialog_ageGenderRider = mView.findViewById(R.id.dialog_ageGenderRider);
-                        TextView charges = mView.findViewById(R.id.dialogRidePrice);
-                        TextView dialogRidetravellDistance = mView.findViewById(R.id.dialogRidetravellDistance);
-                        driverRideDialog_rider_ratingBar2 = mView.findViewById(R.id.driverRideDialog_rider_ratingBar2);
-                        Button button = mView.findViewById(R.id.dialogBtn);
-                        name.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
-                        dialog_contactRider.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile()+"");
-                        dialog_ageGenderRider.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getGender());
-                        charges.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRideCharges()+"");
-                        dialogRidetravellDistance.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getTraveledDistanceRider()+"");
-                        if(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().isChargesReceived()){
-                            button.setVisibility(View.GONE);
-                        }
-
-                        driverRideDialog_rider_ratingBar2.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                            @Override
-                            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                                Toast.makeText(getActivity(), "rating rride"+rating, Toast.LENGTH_SHORT).show();
+                            TextView dialog_contactRider = mView.findViewById(R.id.dialog_contactRider);
+                            TextView dialog_ageGenderRider = mView.findViewById(R.id.dialog_ageGenderRider);
+                            TextView charges = mView.findViewById(R.id.dialogRidePrice);
+                            TextView dialogRidetravellDistance = mView.findViewById(R.id.dialogRidetravellDistance);
+                            driverRideDialog_rider_ratingBar2 = mView.findViewById(R.id.driverRideDialog_rider_ratingBar2);
+                            Button button = mView.findViewById(R.id.dialogBtn);
+                            name.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
+                            dialog_contactRider.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile() + "");
+                            dialog_ageGenderRider.setText(ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getGender());
+                            charges.setText("charges: " + ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getRideCharges() + "");
+                            dialogRidetravellDistance.setText("travelled Distance: " + ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getTraveledDistanceRider() + "");
+                            if (ridersRequestsListInDriver.get(reqIndex).getMakeRequest().isChargesReceived()) {
+                                button.setVisibility(View.GONE);
                             }
-                        });
 
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(getActivity(), "dialog btn", Toast.LENGTH_SHORT).show();
-                                final String currentRider = ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
-                                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(currentRider);
-                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if(dataSnapshot.exists()){
-                                            float ratingg = Float.valueOf( dataSnapshot.child("rating").getValue().toString());
-                                            float newRating = driverRideDialog_rider_ratingBar2.getRating();
-                                            float latestRating = (ratingg + newRating)/2;
-                                            databaseReference.child("rating").setValue(latestRating);
-                                            FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(id).child("isChargesReceived").setValue(true);
+                            driverRideDialog_rider_ratingBar2.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                @Override
+                                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                                    Toast.makeText(getActivity(), "rating rride" + rating, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(getActivity(), "dialog btn", Toast.LENGTH_SHORT).show();
+                                    final String currentRider = ridersRequestsListInDriver.get(reqIndex).getMakeRequest().getAvailableDriverInfo().getCurrent_Rider();
+                                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Rider").child(currentRider);
+                                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                float ratingg = Float.valueOf(dataSnapshot.child("rating").getValue().toString());
+                                                float newRating = driverRideDialog_rider_ratingBar2.getRating();
+                                                float latestRating = (ratingg + newRating) / 2;
+                                                databaseReference.child("rating").setValue(latestRating);
+                                                FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(id).child("isChargesReceived").setValue(true);
+
+                                            }
+
 
                                         }
 
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                    }
+                                        }
+                                    });
+                                }
+                            });
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-                        });
-
-                        mBuilder.setView(mView);
-                        AlertDialog dialog = mBuilder.create();
-                        dialog.show();
+                            mBuilder.setView(mView);
+                            AlertDialog dialog = mBuilder.create();
+                            dialog.show();
+                        }
 
 
                     }
 
                 });
-
 
 
             }
@@ -320,10 +322,9 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         });
 
 
-
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            Log.d("rrrrrr","noooooooper");
+            Log.d("rrrrrr", "noooooooper");
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -333,7 +334,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 //            Toast.makeText(getActivity(), "retttt", Toast.LENGTH_SHORT).show();
             return;
         }
-        Log.d("rrrrrr","perrrrrr");
+        Log.d("rrrrrr", "perrrrrr");
 //        Toast.makeText(getActivity(), "nott", Toast.LENGTH_SHORT).show();
 
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
@@ -344,43 +345,39 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
 
-
-
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("DriverRidePoints").child(currentDriver);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
 
                     dataSnapshot.toString();
 
-                    GenericTypeIndicator<ArrayList<RiderRidePointsDriver>> t = new GenericTypeIndicator<ArrayList<RiderRidePointsDriver>>() {};
+                    GenericTypeIndicator<ArrayList<RiderRidePointsDriver>> t = new GenericTypeIndicator<ArrayList<RiderRidePointsDriver>>() {
+                    };
                     ArrayList<RiderRidePointsDriver> yourStringArray = dataSnapshot.getValue(t);
 //                    Toast.makeText(getContext(),yourStringArray.get(0).toString(),Toast.LENGTH_LONG).show();
 
-                    Log.d("tststs",yourStringArray.toString());
+                    Log.d("tststs", yourStringArray.toString());
 
-                    for (RiderRidePointsDriver item:yourStringArray) {
-                        LatLng latLng = new LatLng(item.getLat(),item.getLng());
+                    for (RiderRidePointsDriver item : yourStringArray) {
+                        LatLng latLng = new LatLng(item.getLat(), item.getLng());
 
                         pointsDriverArrayList.add(latLng);
 
 
-                        Log.d("tststs","my "+item.toString());
+                        Log.d("tststs", "my " + item.toString());
                     }
 
 
-
 //                    mMap.clear();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pointsDriverArrayList.get(pointsDriverArrayList.size()-1)));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pointsDriverArrayList.get(pointsDriverArrayList.size() - 1)));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
                     mMarker = mMap.addMarker(new MarkerOptions()
-                            .position(pointsDriverArrayList.get(pointsDriverArrayList.size()-1))
-                    .title("Driver position")
+                            .position(pointsDriverArrayList.get(pointsDriverArrayList.size() - 1))
+                            .title("Driver position")
                     );
-
 
 
                     lineOptions = new PolylineOptions();
@@ -406,16 +403,10 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
         });
 
 
-
-
-
-
-
-
     }
 
     private boolean markerAlreadyExist(ArrayList<LatLng> latLngArrayList, LatLng latLngg) {
-        if(latLngArrayList.contains(latLngg)){
+        if (latLngArrayList.contains(latLngg)) {
             return true;
         }
         return false;
@@ -434,7 +425,7 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
     public void onPrepareOptionsMenu(Menu menu) {
 
         super.onPrepareOptionsMenu(menu);
-        if(menu.findItem(R.id.action_search) !=null ){
+        if (menu.findItem(R.id.action_search) != null) {
             MenuItem searchItem = menu.findItem(R.id.action_search);
             searchItem.setVisible(false);
         }
@@ -444,12 +435,52 @@ public class DriverRide extends Fragment implements OnMapReadyCallback {
 
 
     private int getRequestPos(String category) {
-        for(int i = 0; i < this.ridersRequestsListInDriver.size(); ++i) {
-            if(this.ridersRequestsListInDriver.get(i).getDateAndTime() == category){
+        for (int i = 0; i < this.ridersRequestsListInDriver.size(); ++i) {
+            if (this.ridersRequestsListInDriver.get(i).getDateAndTime() == category) {
                 return i;
             }
         }
 
         return -1;
+    }
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light,R.color.colorPrimary};
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int i) {
+        polylines = new ArrayList<>();
+        PolylineOptions polyOptions = new PolylineOptions();
+        polyOptions.color(getResources().getColor(COLORS[1]));
+        polyOptions.width(10);
+        polyOptions.addAll(route.get(0).getPoints());
+        Polyline polyline = mMap.addPolyline(polyOptions);
+        polylines.add(polyline);
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+
+    private void makeRoute(LatLng start, LatLng end) {
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .key("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
+                .withListener(this)
+                .alternativeRoutes(false )
+                .waypoints(start, end)
+                .build();
+        routing.execute();
     }
 }
