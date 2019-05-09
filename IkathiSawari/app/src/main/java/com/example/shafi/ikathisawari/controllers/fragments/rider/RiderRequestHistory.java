@@ -1,6 +1,7 @@
 package com.example.shafi.ikathisawari.controllers.fragments.rider;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,7 @@ public class RiderRequestHistory extends Fragment {
     private RiderHistoryAdapter riderHistoryAdapter;
     View view;
     TextView emptyView;
+    private ProgressDialog progressDialog;
 
 
 
@@ -57,6 +59,10 @@ public class RiderRequestHistory extends Fragment {
 
 
         currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("loading");
+        progressDialog.show();
         FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("history_rider").child(currentRider).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -78,10 +84,12 @@ public class RiderRequestHistory extends Fragment {
                     recyclerView.setAdapter(riderHistoryAdapter);
 
                     riderHistoryAdapter.notifyDataSetChanged();
+                    progressDialog.cancel();
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
 
                 }else {
+                    progressDialog.cancel();
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
                 }

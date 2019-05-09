@@ -1,6 +1,7 @@
 package com.example.shafi.ikathisawari.controllers.fragments.driver;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,6 +52,7 @@ public class DriverRequests extends Fragment {
 
     View view;
     TextView emptyView;
+    private ProgressDialog progressDialog;
 
 
 
@@ -69,6 +71,10 @@ public class DriverRequests extends Fragment {
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_driver_requests, container, false);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("loading");
+        progressDialog.show();
         emptyView = view.findViewById(R.id.empty_view_driver_request);
         recyclerView = view.findViewById(R.id.recyclerViewRequestDrivers);
 
@@ -182,10 +188,12 @@ public class DriverRequests extends Fragment {
                        recyclerView.setAdapter(driverRequestsAdapter);
 
                        driverRequestsAdapter.notifyDataSetChanged();
+                       progressDialog.cancel();
                        recyclerView.setVisibility(View.VISIBLE);
                        emptyView.setVisibility(View.GONE);
                    }
                }else {
+                   progressDialog.cancel();
                    recyclerView.setVisibility(View.GONE);
                    emptyView.setVisibility(View.VISIBLE);
                }

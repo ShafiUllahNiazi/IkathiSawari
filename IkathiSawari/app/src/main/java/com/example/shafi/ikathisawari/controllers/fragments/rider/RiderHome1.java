@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -94,6 +95,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
     private LatLng latLngCurrent, latLngDestination;
     Double originLat, originLong, destinationLat, destinationLong;
+    private ProgressDialog progressDialog;
 
 
     private float radius = 1000;
@@ -137,6 +139,9 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_rider_home1, container, false);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
 
 
 //        availableDriversList = new ArrayList<>();
@@ -396,6 +401,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         b.putParcelable("from_position", latLngCurrent);
         b.putParcelable("to_position", latLngDestination);
         availableDrivers.setArguments(b);
+        progressDialog.cancel();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.rider_container, availableDrivers);
@@ -653,6 +659,8 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
                 availableDriversList = new ArrayList<>();
                 if (traveledDistanceRider != 0 && traveledTimeRider != 0) {
+                    progressDialog.setMessage("Seaching Drivers");
+                    progressDialog.show();
 
                     getNearByDrivers();
                 }

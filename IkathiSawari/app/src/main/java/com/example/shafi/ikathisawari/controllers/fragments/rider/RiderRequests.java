@@ -1,6 +1,7 @@
 package com.example.shafi.ikathisawari.controllers.fragments.rider;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -43,6 +44,7 @@ public class RiderRequests extends Fragment {
 
     String currentRider;
     TextView emptyView;
+    private ProgressDialog progressDialog;
 
 
     public RiderRequests() {
@@ -60,6 +62,10 @@ public class RiderRequests extends Fragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
         view =  inflater.inflate(R.layout.fragment_rider_requests, container, false);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("loading");
+        progressDialog.show();
         recyclerView = view.findViewById(R.id.recyclerViewRequestRiders);
         emptyView = view.findViewById(R.id.empty_view_rider_request);
         currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -131,10 +137,12 @@ public class RiderRequests extends Fragment {
                         recyclerView.setAdapter(riderRequestsAdapter);
 
                         riderRequestsAdapter.notifyDataSetChanged();
+                        progressDialog.cancel();
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyView.setVisibility(View.GONE);
                     }
                 }else {
+                    progressDialog.cancel();
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
                 }

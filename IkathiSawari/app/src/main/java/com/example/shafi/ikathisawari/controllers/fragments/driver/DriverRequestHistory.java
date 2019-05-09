@@ -1,6 +1,7 @@
 package com.example.shafi.ikathisawari.controllers.fragments.driver;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ public class DriverRequestHistory extends Fragment {
     DriverHistoryAdapter driverHistoryAdapter;
     View view;
     TextView emptyView;
+    private ProgressDialog progressDialog;
 
 
     public DriverRequestHistory() {
@@ -47,6 +49,10 @@ public class DriverRequestHistory extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_driver_request_history, container, false);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("loading");
+        progressDialog.show();
         emptyView = view.findViewById(R.id.empty_view_driver_request_history);
         recyclerView = view.findViewById(R.id.driverRequestHistory);
 
@@ -71,7 +77,7 @@ public class DriverRequestHistory extends Fragment {
 
                     recyclerView.setAdapter(driverHistoryAdapter);
                     driverHistoryAdapter.notifyDataSetChanged();
-
+                    progressDialog.cancel();
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
 
@@ -81,6 +87,7 @@ public class DriverRequestHistory extends Fragment {
 
 
                 }else {
+                    progressDialog.cancel();
 
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
