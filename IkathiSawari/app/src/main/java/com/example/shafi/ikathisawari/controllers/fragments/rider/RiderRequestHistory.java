@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.RiderHistoryAdapter;
@@ -37,6 +38,7 @@ public class RiderRequestHistory extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private RiderHistoryAdapter riderHistoryAdapter;
     View view;
+    TextView emptyView;
 
 
 
@@ -50,6 +52,9 @@ public class RiderRequestHistory extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_rider_request_history, container, false);
+        recyclerView = view.findViewById(R.id.riderRequestHistory);
+        emptyView = view.findViewById(R.id.empty_view_rider_request_history);
+
 
         currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("history_rider").child(currentRider).addValueEventListener(new ValueEventListener() {
@@ -64,7 +69,7 @@ public class RiderRequestHistory extends Fragment {
 
 
                     }
-                    recyclerView = view.findViewById(R.id.riderRequestHistory);
+
                     layoutManager = new LinearLayoutManager(getActivity());
                     recyclerView.setLayoutManager(layoutManager);
                     riderHistoryAdapter = new RiderHistoryAdapter(getActivity(),getActivity().getSupportFragmentManager(), rideHistoryArrayList);
@@ -73,11 +78,12 @@ public class RiderRequestHistory extends Fragment {
                     recyclerView.setAdapter(riderHistoryAdapter);
 
                     riderHistoryAdapter.notifyDataSetChanged();
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
 
-
-
-
-
+                }else {
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
                 }
             }
 

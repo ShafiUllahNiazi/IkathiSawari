@@ -233,5 +233,36 @@ public class AvailableDriverInfo implements Parcelable{
         dest.writeString(no_of_available_seats);
         dest.writeString(current_Rider);
     }
+
+    @Override
+    public String toString() {
+        return "AvailableDriverInfo{" +
+                "driverKey='" + driverKey + '\'' +
+                ", driverInfo=" + driverInfo +
+                ", driverRoutInfo=" + driverRoutInfo +
+                ", time='" + time + '\'' +
+                ", seats='" + seats + '\'' +
+                ", price='" + price + '\'' +
+                ", date='" + date + '\'' +
+                ", riderOriginAtRoad=" + riderOriginAtRoad +
+                ", riderDestinationAtRoad=" + riderDestinationAtRoad +
+                ", timeAndDateRider='" + timeAndDateRider + '\'' +
+                ", seatsRider='" + seatsRider + '\'' +
+                ", priceRider='" + priceRider + '\'' +
+                ", traveledDistanceRider=" + traveledDistanceRider +
+                ", traveledTimeRider=" + traveledTimeRider +
+                ", rideCharges=" + rideCharges +
+                ", vehicle_Model1='" + vehicle_Model1 + '\'' +
+                ", driver_origin_name='" + driver_origin_name + '\'' +
+                ", driver_destination_name='" + driver_destination_name + '\'' +
+                ", messagedriver='" + messagedriver + '\'' +
+                ", messageRider='" + messageRider + '\'' +
+                ", rider_origin_name='" + rider_origin_name + '\'' +
+                ", rider_destination_name='" + rider_destination_name + '\'' +
+                ", no_of_available_seats='" + no_of_available_seats + '\'' +
+                ", current_Rider='" + current_Rider + '\'' +
+                ", riderInfo=" + riderInfo +
+                '}';
+    }
 }
 

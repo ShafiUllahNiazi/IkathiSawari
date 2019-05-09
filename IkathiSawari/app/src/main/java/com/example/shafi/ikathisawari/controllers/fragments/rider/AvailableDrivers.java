@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.AvailableDriversAdapter;
@@ -35,6 +36,7 @@ public class AvailableDrivers extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private AvailableDriversAdapter availableDriversAdapter;
+    TextView emptyView;
 
     ArrayList<AvailableDriverInfo> availableDriversList;
 
@@ -82,6 +84,7 @@ public class AvailableDrivers extends Fragment {
         LatLng toPosition = getArguments().getParcelable("to_position");
 
         recyclerView = view.findViewById(R.id.recyclerViewAvailableDrivers);
+        emptyView = view.findViewById(R.id.empty_view_available_drivers);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         availableDriversAdapter = new AvailableDriversAdapter(getActivity(),getActivity().getSupportFragmentManager(), availableDriversList);
@@ -89,6 +92,14 @@ public class AvailableDrivers extends Fragment {
         recyclerView.setAdapter(availableDriversAdapter);
 
         availableDriversAdapter.notifyDataSetChanged();
+        if(availableDriversList.size()>0){
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+        else {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
 
 
         return view;

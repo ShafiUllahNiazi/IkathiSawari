@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.RiderRequestsAdapter;
@@ -41,6 +42,7 @@ public class RiderRequests extends Fragment {
     View view;
 
     String currentRider;
+    TextView emptyView;
 
 
     public RiderRequests() {
@@ -58,6 +60,8 @@ public class RiderRequests extends Fragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
         view =  inflater.inflate(R.layout.fragment_rider_requests, container, false);
+        recyclerView = view.findViewById(R.id.recyclerViewRequestRiders);
+        emptyView = view.findViewById(R.id.empty_view_rider_request);
         currentRider = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(currentRider).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -118,7 +122,7 @@ public class RiderRequests extends Fragment {
                         Log.d("Time_Datess",snapshot.getKey()+" "+ makeRequest);
                     }
                     if (getActivity() != null) {
-                        recyclerView = view.findViewById(R.id.recyclerViewRequestRiders);
+
                         layoutManager = new LinearLayoutManager(getActivity());
                         recyclerView.setLayoutManager(layoutManager);
                         riderRequestsAdapter = new RiderRequestsAdapter(getActivity(), getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
@@ -127,7 +131,12 @@ public class RiderRequests extends Fragment {
                         recyclerView.setAdapter(riderRequestsAdapter);
 
                         riderRequestsAdapter.notifyDataSetChanged();
+                        recyclerView.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.GONE);
                     }
+                }else {
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -118,43 +118,12 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
     String current_Rider;
     RiderInfo riderInfo;
+    DriverRoutInfo driverRoutInfo;
     ArrayList<AvailableDriverInfo> availableDriversList;
+    String availableDriver;
 
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putDouble("selectOriginRiderlat", latLngCurrent.latitude);
-//        outState.putDouble("selectOriginRiderlng", latLngCurrent.longitude);
-//        outState.putDouble("selectDestinationRiderlat", latLngDestination.latitude);
-//        outState.putDouble("selectDestinationRiderlng", latLngDestination.longitude);
-//
-//        outState.putString("selectOriginRiderText", selectOriginRider.getText().toString());
-//        outState.putString("selectDestinationRiderText", selectDestinationRider.getText().toString());
-//
-//        outState.putString("selectDateRideRider", selectDateRideRider.getText().toString());
-//        outState.putString("riderSeats", riderSeats.getText().toString());
-//
-//        outState.putParcelableArrayList("availableDriversList", availableDriversList);
-//    }
-//
-//    @Override
-//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-//        super.onViewStateRestored(savedInstanceState);
-//        if(savedInstanceState!=null) {
-//            Double latCurrent = savedInstanceState.getDouble("selectOriginRiderlat");
-//            Double lngCurrnet = savedInstanceState.getDouble("selectOriginRiderlng");
-//            latLngCurrent = new LatLng(latCurrent, lngCurrnet);
-//            Double latDestination = savedInstanceState.getDouble("selectDestinationRiderlat");
-//            Double lngDestination = savedInstanceState.getDouble("selectDestinationRiderlng");
-//            latLngDestination = new LatLng(latDestination, lngDestination);
-//            selectOriginRider.setText(savedInstanceState.getString("selectOriginRiderText"));
-//            selectDestinationRider.setText(savedInstanceState.getString("selectDestinationRiderText"));
-//            selectDateRideRider.setText(savedInstanceState.getString("selectDateRideRider"));
-//            riderSeats.setText(savedInstanceState.getString("riderSeats"));
-//
-//            availableDriversList = savedInstanceState.getParcelableArrayList("availableDriversList");
-//        }
-//    }
+
+
 
     public RiderHome1() {
         // Required empty public constructor
@@ -365,7 +334,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
     String messagedriver, driver_origin_name, driver_destination_name, no_of_available_seats, vehicle_Model1;
 
-    private void getNearByDrivers(final int traveledDistanceRider, final int traveledTimeRider, final String seatsRider) {
+    private void getNearByDrivers() {
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Available Routs");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -379,7 +348,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
                     Map<String, Object> dd = (Map<String, Object>) myDrivers.get(driver);
 
-                    final DriverRoutInfo driverRoutInfo = new DriverRoutInfo();
+                    driverRoutInfo = new DriverRoutInfo();
 
                     driverRoutInfo.setRoutes((List<List<HashMap<String, String>>>) dd.get("routes"));
                     driver_origin_name = (String) dd.get("driver_origin_name");
@@ -392,43 +361,22 @@ public class RiderHome1 extends Fragment implements RoutingListener {
                     messagedriver = (String) dd.get("driver_message");
                     no_of_available_seats = (String) dd.get("no_of_available_seats");
                     Log.d(TAG, "onDataChange: " + dd.get("routes").toString());
-                    final String availableDriver = fetchNearbyDriver(driver, driverRoutInfo, dateDriver, no_of_available_seats, priceDriver);
+//                    availableDriver = fetchNearbyDriver(driver, driverRoutInfo, dateDriver, no_of_available_seats, priceDriver);
+                    availableDriver = fetchNearbyDriver(driver, driverRoutInfo, driver_origin_name,
+                            driver_destination_name,vehicle_Model1,
+                            dateDriver,timeDriver,seatsDriver,priceDriver,messagedriver, no_of_available_seats);
+
+
                     Log.d(TAG, "String " + availableDriver);
 
-                    if (availableDriver != null) {
-                        if (riderInfo != null) {
 
-
-                            final int rideCharges = ((Integer.valueOf(priceDriver) * traveledDistanceRider) / 1000) * Integer.valueOf(seatsRider);
-                            mDriverData = FirebaseDatabase.getInstance().getReference("users").child("Driver");
-                            mDriverData.child(availableDriver).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
-
-                                    RiderRidePointsDriver riderOriginAtRoad1 = new RiderRidePointsDriver(riderOriginAtRoad.getLatitude(),riderOriginAtRoad.getLongitude());
-                                    RiderRidePointsDriver riderDestinationAtRoad1 = new RiderRidePointsDriver(riderDestinationAtRoad.getLatitude(),riderDestinationAtRoad.getLongitude());
-
-                                    AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(current_Rider,riderInfo,availableDriver, driverInfo, driverRoutInfo, dateDriver, timeDriver, seatsDriver, priceDriver, riderOriginAtRoad1, riderDestinationAtRoad1, dateRider, RiderHome1.this.seatsRider, traveledDistanceRider, traveledTimeRider, rideCharges, vehicle_Model1, driver_origin_name, driver_destination_name, messagedriver, rider_origin_name, rider_destination_name, no_of_available_seats,"");
-                                    availableDriversList.add(availableDriverInfo);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-                    }
 
 
                 }
 
-
-//                Log.d(TAG,latLngCurrent)
-//                Log.d(TAG, "Driver list size" + availableDriversList.size()+" "+availableDriversList.get(0)+" "+availableDriversList.get(1));
-                Toast.makeText(getActivity(), "Driver list size" + availableDriversList.size(), Toast.LENGTH_SHORT).show();
-                showAvailableDrivers(availableDriversList);
+//                Toast.makeText(getActivity(), "Driver list size" + availableDriversList.size(), Toast.LENGTH_SHORT).show();
+//                showAvailableDrivers(availableDriversList);
+//                Log.d(TAG," kkk"+availableDriversList.toString());
 
             }
 
@@ -455,7 +403,10 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         fragmentTransaction.commit();
     }
 
-    private String fetchNearbyDriver(String driverKey, DriverRoutInfo driverRoutInfo, String date, String seats, String price) {
+    private String fetchNearbyDriver(final String driverKey, final DriverRoutInfo driverRoutInfo, final String driver_origin_name,
+                                     final String driver_destination_name, final String vehicle_Model11, final String dateDriver,
+                                     final String timeDriver, final String seatsDriver, final String priceDriver1, final String messagedriver,
+                                     final String no_of_available_seats) {
 
         Log.d("dddriver", driverKey);
 
@@ -466,7 +417,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         float originFoundPointDistance = radius;
         float destinationFoundPointDistance = radius;
 
-        List<List<HashMap<String, String>>> result = driverRoutInfo.getRoutes();
+        List<List<HashMap<String, String>>> result = this.driverRoutInfo.getRoutes();
         for (int i = 0; i < result.size(); i++) {
 
             Log.d("mydebug", "For 1");
@@ -574,13 +525,43 @@ public class RiderHome1 extends Fragment implements RoutingListener {
                     ///////////////////////////////////////////
 
 
-                    if (date.compareTo(selectDateRideRider.getText().toString()) <= 0) {
-                        if (Integer.parseInt(seats) >= Integer.parseInt(riderSeats.getText().toString())) {
+                    if (dateDriver.toString().equals(selectDateRideRider.getText().toString())) {
+                        if (Integer.parseInt(seatsDriver) >= Integer.parseInt(riderSeats.getText().toString())) {
 
 
                             riderOriginAtRoad = new Location(originFoundLocation);
                             riderDestinationAtRoad = new Location(destinationFoundLocation);
-                            return driverKey;
+//                            return driverKey;
+
+
+                                if (riderInfo != null) {
+
+
+                                    final int rideCharges = ((Integer.valueOf(priceDriver1) * traveledDistanceRider) / 1000) * Integer.valueOf(seatsRider);
+                                    mDriverData = FirebaseDatabase.getInstance().getReference("users").child("Driver");
+
+//                                        mDriverData.child(availableDriver).addValueEventListener(new ValueEventListener() {
+                                        mDriverData.child(driverKey).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                DriverInfo driverInfo = dataSnapshot.getValue(DriverInfo.class);
+
+                                                RiderRidePointsDriver riderOriginAtRoad1 = new RiderRidePointsDriver(riderOriginAtRoad.getLatitude(),riderOriginAtRoad.getLongitude());
+                                                RiderRidePointsDriver riderDestinationAtRoad1 = new RiderRidePointsDriver(riderDestinationAtRoad.getLatitude(),riderDestinationAtRoad.getLongitude());
+
+                                                AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(current_Rider,riderInfo,driverKey, driverInfo, driverRoutInfo, dateDriver,timeDriver, seatsDriver, priceDriver, riderOriginAtRoad1, riderDestinationAtRoad1, dateRider, seatsRider, traveledDistanceRider, traveledTimeRider, rideCharges, vehicle_Model11, driver_origin_name, driver_destination_name,messagedriver, rider_origin_name, rider_destination_name, no_of_available_seats,"");
+                                                availableDriversList.add(availableDriverInfo);
+                                                showAvailableDrivers(availableDriversList);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                }
+
                         }
                     }
 
@@ -673,7 +654,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
                 availableDriversList = new ArrayList<>();
                 if (traveledDistanceRider != 0 && traveledTimeRider != 0) {
 
-                    getNearByDrivers(traveledDistanceRider, traveledTimeRider, seatsRider);
+                    getNearByDrivers();
                 }
 
 

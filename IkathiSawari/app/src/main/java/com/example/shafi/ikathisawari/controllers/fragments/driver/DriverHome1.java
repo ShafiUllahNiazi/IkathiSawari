@@ -253,6 +253,12 @@ public class DriverHome1 extends Fragment  {
                                         progressDialog.show();
                                         new FetchURL(new FetchRouteData(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination,pickUpPlaceName,destinationPlaceName,carModel1,date,time,seats,price,driver_message1,progressDialog)).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
 
+                                        DriverHome1 driverHome1 = new DriverHome1();
+                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        fragmentTransaction.replace(R.id.driver_container, driverHome1);
+//        fragmentTransaction.addToBackStack(null);
+                                        fragmentTransaction.commit();
                                         Log.d("dddddddddddd",seats+" "+price);
 
                                     }else {

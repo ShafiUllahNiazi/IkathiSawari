@@ -1,6 +1,7 @@
 package com.example.shafi.ikathisawari.controllers.fragments.rider;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
+import com.example.shafi.ikathisawari.controllers.activities.Rider_Screen;
 import com.example.shafi.ikathisawari.models.AvailableDriverInfo;
 import com.example.shafi.ikathisawari.models.MakeRequest;
 import com.example.shafi.ikathisawari.models.RiderInfo;
@@ -98,7 +100,7 @@ public class AvailableDriverProfile extends Fragment {
         availableSeats.setText("Available seats: "+ availableDriversList.get(position).getNo_of_available_seats() + "");
         riderSeats.setText("Your seats: "+ availableDriversList.get(position).getSeatsRider() + "");
         riderRidePrice.setText("Charges: "+ availableDriversList.get(position).getRideCharges() + "");
-        driverMessage.setText("Charges: "+ availableDriversList.get(position).getMessagedriver()+"");
+        driverMessage.setText( availableDriversList.get(position).getMessagedriver()+"");
         sendRequest = view.findViewById(R.id.availableDriverProfileSendRequest);
 
 
@@ -129,6 +131,9 @@ public class AvailableDriverProfile extends Fragment {
                         FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(current_Rider).child(timeSting).setValue(makeRequest1);
 
 
+                        Intent intent = new Intent(getActivity(),Rider_Screen.class);
+                        startActivity(intent);
+                        getActivity().finish();
 
 
                         RiderHome1 riderHome1 = new RiderHome1();

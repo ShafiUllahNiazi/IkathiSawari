@@ -98,7 +98,7 @@ public class Rider_Screen extends AppCompatActivity  implements BottomNavigation
         Log.d("asdfg","clicked");
         switch (menuItem.getItemId()){
             case R.id.navigation_home_rider:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderHome1).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderHome1).commit();
 //                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.rider_container,riderHome).addToBackStack(null).commit();
                 return true;
             case R.id.navigation_requests_rider:

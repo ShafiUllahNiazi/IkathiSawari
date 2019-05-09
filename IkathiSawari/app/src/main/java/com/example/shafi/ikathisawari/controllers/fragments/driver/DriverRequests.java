@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
@@ -49,6 +50,7 @@ public class DriverRequests extends Fragment {
     private DriverRequestsAdapter driverRequestsAdapter;
 
     View view;
+    TextView emptyView;
 
 
 
@@ -67,6 +69,8 @@ public class DriverRequests extends Fragment {
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_driver_requests, container, false);
+        emptyView = view.findViewById(R.id.empty_view_driver_request);
+        recyclerView = view.findViewById(R.id.recyclerViewRequestDrivers);
 
 
         final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -152,32 +156,40 @@ public class DriverRequests extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               ridersRequestsListInDriver =new ArrayList<>();
-               for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                   MakeRequest rider = snapshot.getValue(MakeRequest.class);
+               if(dataSnapshot.exists()){
+                   ridersRequestsListInDriver =new ArrayList<>();
+                   for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                       MakeRequest rider = snapshot.getValue(MakeRequest.class);
 //                   RiderInfo rider = snapshot.getValue(RiderInfo.class);
-                   RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
-                   if(!(riderRequestInDriver.getMakeRequest().getStatus().equals("rejected"))){
-                       ridersRequestsListInDriver.add(riderRequestInDriver);
+                       RidersRequestsListInDriver riderRequestInDriver = new RidersRequestsListInDriver(snapshot.getKey(),rider);
+                       if(!(riderRequestInDriver.getMakeRequest().getStatus().equals("rejected"))){
+                           ridersRequestsListInDriver.add(riderRequestInDriver);
+                       }
+
+                       Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
                    }
 
-                   Log.d("Time_Datess",snapshot.getKey()+" "+ rider);
-               }
+                   if (getActivity() != null) {
 
-               if (getActivity() != null) {
-                   recyclerView = view.findViewById(R.id.recyclerViewRequestDrivers);
-                   layoutManager = new LinearLayoutManager(getActivity());
-                   recyclerView.setLayoutManager(layoutManager);
+                       layoutManager = new LinearLayoutManager(getActivity());
+                       recyclerView.setLayoutManager(layoutManager);
 //        driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), driverRequestsList);
 
 
-                   driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
+                       driverRequestsAdapter = new DriverRequestsAdapter(getActivity(),getActivity().getSupportFragmentManager(), ridersRequestsListInDriver);
 
 
-                   recyclerView.setAdapter(driverRequestsAdapter);
+                       recyclerView.setAdapter(driverRequestsAdapter);
 
-                   driverRequestsAdapter.notifyDataSetChanged();
+                       driverRequestsAdapter.notifyDataSetChanged();
+                       recyclerView.setVisibility(View.VISIBLE);
+                       emptyView.setVisibility(View.GONE);
+                   }
+               }else {
+                   recyclerView.setVisibility(View.GONE);
+                   emptyView.setVisibility(View.VISIBLE);
                }
+
 
 
            }

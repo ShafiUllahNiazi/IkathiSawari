@@ -12,4 +12,13 @@
         android:id="@+id/driverRequestHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/empty_view_driver_request_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="no_data_available"
+        android:textSize="24sp"
+        android:visibility="gone" />
 </FrameLayout>

@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shafi.ikathisawari.R;
 import com.example.shafi.ikathisawari.controllers.adapters.DriverHistoryAdapter;
@@ -32,6 +34,7 @@ public class DriverRequestHistory extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     DriverHistoryAdapter driverHistoryAdapter;
     View view;
+    TextView emptyView;
 
 
     public DriverRequestHistory() {
@@ -44,6 +47,8 @@ public class DriverRequestHistory extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_driver_request_history, container, false);
+        emptyView = view.findViewById(R.id.empty_view_driver_request_history);
+        recyclerView = view.findViewById(R.id.driverRequestHistory);
 
         currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference().child("requests").child("history_driver").child(currentDriver).addValueEventListener(new ValueEventListener() {
@@ -58,18 +63,29 @@ public class DriverRequestHistory extends Fragment {
 
 
                     }
-                    recyclerView = view.findViewById(R.id.driverRequestHistory);
+
                     layoutManager = new LinearLayoutManager(getActivity());
                     recyclerView.setLayoutManager(layoutManager);
                     driverHistoryAdapter = new DriverHistoryAdapter(getActivity(),getChildFragmentManager(), rideHistoryArrayList);
 
 
                     recyclerView.setAdapter(driverHistoryAdapter);
-
                     driverHistoryAdapter.notifyDataSetChanged();
 
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
 
 
+
+
+
+
+                }else {
+
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+
+//                    Toast.makeText(getActivity(), "ssss"+rideHistoryArrayList.size(), Toast.LENGTH_SHORT).show();
 
 
                 }

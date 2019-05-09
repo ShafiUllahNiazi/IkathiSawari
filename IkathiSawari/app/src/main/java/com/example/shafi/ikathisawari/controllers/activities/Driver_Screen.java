@@ -76,8 +76,8 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
             return;
         }
 
-        Toast.makeText(this, " permiiiii", Toast.LENGTH_SHORT).show();
-        Log.d(TAG,"perrrr");
+//        Toast.makeText(this, " permiiiii", Toast.LENGTH_SHORT).show();
+//        Log.d(TAG,"perrrr");
 
 
 
@@ -95,11 +95,11 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
 
 
         if(getIntent().getExtras() != null) {
-            Toast.makeText(this, "EXXXXXXtra", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "EXXXXXXtra", Toast.LENGTH_SHORT).show();
             String orderNotification = getIntent().getStringExtra("orderNotification");
 
             if (orderNotification.equals("request")){
-                Toast.makeText(this, "reqqqqqq", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "reqqqqqq", Toast.LENGTH_SHORT).show();
                 bottomNavigationView.setSelectedItemId(R.id.navigation_requests_rider);
             }
 
@@ -141,7 +141,7 @@ public class Driver_Screen extends AppCompatActivity implements BottomNavigation
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.navigation_home_rider:
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverHome1).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverHome1).commit();
                 return true;
             case R.id.navigation_requests_rider:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in,R.anim.fade_out).replace(R.id.driver_container,driverRequests).commit();

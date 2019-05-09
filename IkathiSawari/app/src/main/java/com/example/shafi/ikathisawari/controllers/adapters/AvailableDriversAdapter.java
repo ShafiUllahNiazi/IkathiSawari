@@ -39,11 +39,16 @@ import java.util.Date;
 
 public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDriversAdapter.ViewHolder> {
 
+    MakeRequest makeRequest1;
     Context context;
     FragmentManager supportFragmentManager;
     ArrayList<AvailableDriverInfo> availableDriversList;
     LatLng fromPosition;
     LatLng toPosition;
+    String timeSting;
+    int position;
+    String current_Rider;
+    DatabaseReference databaseReference;
 
     public AvailableDriversAdapter(Context context, FragmentManager supportFragmentManager, ArrayList<AvailableDriverInfo> availableDriversList) {
         this.context = context;
@@ -61,6 +66,8 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
@@ -82,7 +89,7 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
 
 
 
-        final int position = i;
+        position = i;
 
         viewHolder.availableDriverSendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,15 +99,16 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
                 DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
                 dateFormatter.setLenient(false);
                 Date today = new Date();
-                final String timeSting = dateFormatter.format(today);
+                timeSting = dateFormatter.format(today);
 
-                final String current_Rider = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                current_Rider = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                 String driver = availableDriversList.get(position).getDriverKey();
 //                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child("Driver").child(availableDriversList.get(position).getDriverKey()).child("request").child(timeSting);
-                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(driver).child(timeSting);
+                databaseReference = FirebaseDatabase.getInstance().getReference().child("requests").child("unseen").child(driver).child(timeSting);
 
-                final MakeRequest makeRequest1 = new MakeRequest("pending",false,availableDriversList.get(position));
+                makeRequest1 = new MakeRequest("pending",false,availableDriversList.get(position));
 
                 databaseReference.setValue(makeRequest1).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
