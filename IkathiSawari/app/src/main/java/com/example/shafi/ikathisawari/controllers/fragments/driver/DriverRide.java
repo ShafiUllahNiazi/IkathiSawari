@@ -5,7 +5,9 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -382,9 +384,13 @@ public class DriverRide extends Fragment implements OnMapReadyCallback,RoutingLi
                     if(mMarker!=null){
                         mMarker.remove();
                     }
+                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car);
+                    Bitmap b=bitmapdraw.getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, 34, 34, false);
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(pointsDriverArrayList.get(pointsDriverArrayList.size() - 1))
                             .title("Driver position")
+                            .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
 
                     );
 

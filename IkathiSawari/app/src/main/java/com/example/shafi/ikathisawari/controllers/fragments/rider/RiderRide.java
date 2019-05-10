@@ -185,9 +185,9 @@ public class RiderRide extends Fragment implements OnMapReadyCallback {
                     );
                     mMarker2.setTag(ridersRequestsListInDriver.get(position).getDateAndTime());
 
-                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.cnic_icon);
+                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.car);
                     Bitmap b=bitmapdraw.getBitmap();
-                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, 84, 84, false);
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, 34, 34, false);
 
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(pointsDriverArrayList.get(pointsDriverArrayList.size() - 1))

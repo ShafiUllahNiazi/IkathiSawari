@@ -55,13 +55,14 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        serviceRunning = intent.getIntExtra("runService", 0);
+//        serviceRunning = intent.getIntExtra("runService", 0);
 
         driverLiveRide = new ArrayList<>();
 
 
         buildGoogleApiClient();
-        Toast.makeText(this, "Service update location started", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Service update location started "+serviceRunning, Toast.LENGTH_SHORT).show();
+        serviceRunning =1;
         Log.d(TAG, "start");
 //        return super.onStartCommand(intent, flags, startId);
         return START_STICKY;
@@ -70,6 +71,7 @@ public class UpdateDriverLocation extends Service implements GoogleApiClient.Con
     @Override
     public void onDestroy() {
         super.onDestroy();
+        serviceRunning =0;
         Log.d(TAG, "Destroy");
         Toast.makeText(this, "Service update location stopped", Toast.LENGTH_SHORT).show();
     }

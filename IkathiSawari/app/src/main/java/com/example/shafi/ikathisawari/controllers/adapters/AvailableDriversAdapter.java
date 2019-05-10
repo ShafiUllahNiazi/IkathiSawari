@@ -125,24 +125,24 @@ public class AvailableDriversAdapter extends RecyclerView.Adapter<AvailableDrive
                     }
                 });
 //                FirebaseDatabase.getInstance().getReference().child("Available Routs").child(driver).child("no_of_available_seats")
-                FirebaseDatabase.getInstance().getReference().child("Available Routs").child(driver).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            String availSeats = dataSnapshot.child("no_of_available_seats").getValue().toString();
-                            Toast.makeText(context, ""+availSeats, Toast.LENGTH_SHORT).show();
-                            Log.d("klklkl",availSeats.toString());
-                            FirebaseDatabase.getInstance().getReference().child("Available Routs").child(driver).child("no_of_available_seats")
-                                    .setValue(Integer.valueOf(availSeats) - Integer.valueOf(availableDriversList.get(position).getSeatsRider()));
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+//                FirebaseDatabase.getInstance().getReference().child("Available Routs").child(driver).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        if(dataSnapshot.exists()){
+//                            String availSeats = dataSnapshot.child("no_of_available_seats").getValue().toString();
+//                            Toast.makeText(context, ""+availSeats, Toast.LENGTH_SHORT).show();
+//                            Log.d("klklkl",availSeats.toString());
+//                            FirebaseDatabase.getInstance().getReference().child("Available Routs").child(driver).child("no_of_available_seats")
+//                                    .setValue(Integer.valueOf(availSeats) - Integer.valueOf(availableDriversList.get(position).getSeatsRider()));
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
 
 
 

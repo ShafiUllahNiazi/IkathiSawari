@@ -95,7 +95,7 @@
 
             <TextView
                 android:id="@+id/rider_seats_rider_history"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
@@ -112,12 +112,12 @@
 
             <TextView
                 android:id="@+id/rider_charges_rider_history"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="156 / seat"
+                android:text="156"
                 android:textSize="12sp" />
 
         </LinearLayout>

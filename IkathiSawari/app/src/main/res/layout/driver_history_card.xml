@@ -20,7 +20,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="12dp"
-            android:src="@drawable/ic_home_black_24dp"
+            android:src="@drawable/ic_account_circle_black_24dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="VectorDrawableCompat" />

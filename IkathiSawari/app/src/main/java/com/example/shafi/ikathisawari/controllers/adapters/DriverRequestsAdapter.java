@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,7 +127,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                        Toast.makeText(context, "accepttt", Toast.LENGTH_SHORT).show();
 
 //                        Toast.makeText(context, "hhhhhh", Toast.LENGTH_SHORT).show();
-                        String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         final String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
 //                        FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("availableDriverInfo").child("no_of_available_seats").setValue(Integer.valueOf(viewHolder0.availableSeats.toString())-Integer.valueOf(viewHolder0.riderSeats.toString()));
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("accepted");
@@ -135,18 +136,38 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("accepted");
 //                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(requestRider).child(request).child("status").setValue("accepted");
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status");
-                        reference.addValueEventListener(new ValueEventListener() {
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 Toast.makeText(context, ""+dataSnapshot.getValue(), Toast.LENGTH_SHORT).show();
                                 if((dataSnapshot.getValue() == null)){
-                                    Toast.makeText(context, "nullllllll", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, "nullllllll", Toast.LENGTH_SHORT).show();
                                     FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(requestRider).child(request).child("status").setValue("accepted");
 
                                 }else {
-                                    Toast.makeText(context, "not nullll", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, "not nullll", Toast.LENGTH_SHORT).show();
                                     FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("accepted");
                                 }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                        FirebaseDatabase.getInstance().getReference().child("Available Routs").child(currentDriver).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){
+                                    String availSeats = dataSnapshot.child("no_of_available_seats").getValue().toString();
+                                    Toast.makeText(context, ""+availSeats, Toast.LENGTH_SHORT).show();
+                                    Log.d("klklkl",availSeats.toString());
+                                    FirebaseDatabase.getInstance().getReference().child("Available Routs").child(currentDriver).child("no_of_available_seats")
+                                            .setValue(Integer.valueOf(availSeats) - Integer.valueOf(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getSeatsRider()));
+                                }
+
                             }
 
                             @Override
@@ -236,7 +257,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder2.cancelRequest.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        final String currentDriver = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         String currentRequest= ridersRequestsListInDriver.get(position).getDateAndTime();
 
                         FirebaseDatabase.getInstance().getReference().child("requests").child("seen").child(currentDriver).child(currentRequest).child("status").setValue("pending");
@@ -246,18 +267,37 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //                        FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(requestRider).child(request).child("status").setValue("pending");
 
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status");
-                        reference.addValueEventListener(new ValueEventListener() {
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Toast.makeText(context, ""+dataSnapshot.getValue(), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, ""+dataSnapshot.getValue(), Toast.LENGTH_SHORT).show();
                                 if((dataSnapshot.getValue() == null)){
-                                    Toast.makeText(context, "nullllllll", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, "nullllllll", Toast.LENGTH_SHORT).show();
                                     FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("seen").child(requestRider).child(request).child("status").setValue("pending");
 
                                 }else {
-                                    Toast.makeText(context, "not nullll", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, "not nullll", Toast.LENGTH_SHORT).show();
                                     FirebaseDatabase.getInstance().getReference().child("requestsRiders").child("unseen").child(requestRider).child(request).child("status").setValue("pending");
                                 }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        FirebaseDatabase.getInstance().getReference().child("Available Routs").child(currentDriver).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){
+                                    String availSeats = dataSnapshot.child("no_of_available_seats").getValue().toString();
+//                                    Toast.makeText(context, ""+availSeats, Toast.LENGTH_SHORT).show();
+                                    Log.d("klklkl",availSeats.toString());
+                                    FirebaseDatabase.getInstance().getReference().child("Available Routs").child(currentDriver).child("no_of_available_seats")
+                                            .setValue(Integer.valueOf(availSeats) + Integer.valueOf(ridersRequestsListInDriver.get(position).getMakeRequest().getAvailableDriverInfo().getSeatsRider()));
+                                }
+
                             }
 
                             @Override
@@ -461,7 +501,7 @@ public class DriverRequestsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
     private void addInHistorySeen(String currentDriver1, final String requestRider1, String request1, RideHistory rideHistory1, int position1) {
-        Toast.makeText(context, "seen", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "seen", Toast.LENGTH_SHORT).show();
         final String currentDriver = currentDriver1;
         final String requestRider = requestRider1;
         final String request = request1;

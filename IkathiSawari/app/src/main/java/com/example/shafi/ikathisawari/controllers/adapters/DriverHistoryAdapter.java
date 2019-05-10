@@ -36,8 +36,22 @@ public class DriverHistoryAdapter extends RecyclerView.Adapter<DriverHistoryAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.driverName.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getName());
-        viewHolder.driverMobileNo.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getDriverInfo().getMobile());
+        viewHolder.driverName.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName());
+        viewHolder.gender.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getGender());
+        viewHolder.driverMobileNo.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getRiderInfo().getMobile());
+        viewHolder.ride_date.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getDate());
+        viewHolder.vehicle.setText(rideHistoryArrayList.get(i).getMakeRequest().getAvailableDriverInfo().getVehicle_Model1());
+
+        if(rideHistoryArrayList.get(i).getStatus().equals("rejected")){
+            if(rideHistoryArrayList.get(i).getRejected_by().equals("driver")){
+                viewHolder.status.setText("rejected by Driver");
+            }else {
+                viewHolder.status.setText("rejected by rider");
+            }
+
+        }else {
+            viewHolder.status.setText("Completed");
+        }
 
 
     }
@@ -48,14 +62,17 @@ public class DriverHistoryAdapter extends RecyclerView.Adapter<DriverHistoryAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView driverName,driverMobileNo, origin,destination,vehicle ;
+        TextView driverName,gender, driverMobileNo, charges,riderSeats,vehicle,status,ride_date;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             driverName = itemView.findViewById(R.id.driver_name_driver_history);
+            gender = itemView.findViewById(R.id.age_gender_driver_history);
             driverMobileNo = itemView.findViewById(R.id.mobileNo_driver_history);
-            origin = itemView.findViewById(R.id.rider_seats_driver_history);
-            destination = itemView.findViewById(R.id.rider_charges_driver_history);
-            vehicle = itemView.findViewById(R.id.rider_charges_driver_history);
+            ride_date = itemView.findViewById(R.id.ride_date_driver_history);
+            riderSeats = itemView.findViewById(R.id.rider_seats_driver_history);
+            charges = itemView.findViewById(R.id.rider_charges_driver_history);
+            status = itemView.findViewById(R.id.ride_status_driver_history);
+            vehicle = itemView.findViewById(R.id.vehicle_model_driver_history);
 
         }
     }

@@ -123,7 +123,7 @@ public class DriverNotificationsService extends Service {
                                             builder.setSmallIcon(R.mipmap.ic_launcher);
                                             builder.setContentTitle("Notification");
 //                    builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
-                                            builder.setContentText(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + " pick up location is near 2KM");
+                                            builder.setContentText(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + " pick up location is in 2KM");
 
                                             Intent intent = new Intent(DriverNotificationsService.this, Driver_Screen.class);
                                             intent.putExtra("orderNotification", "request");
@@ -155,7 +155,7 @@ public class DriverNotificationsService extends Service {
                                             builder.setSmallIcon(R.mipmap.ic_launcher);
                                             builder.setContentTitle("Notification");
 //                    builder.setContentText("Hello this is a test Firebase notification, a new database child has been added");
-                                            builder.setContentText(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + " destination location is near 2KM");
+                                            builder.setContentText(item.getMakeRequest().getAvailableDriverInfo().getRiderInfo().getName() + " destination location is in 2KM");
 
                                             Intent intent = new Intent(DriverNotificationsService.this, Driver_Screen.class);
                                             intent.putExtra("orderNotification", "request");
