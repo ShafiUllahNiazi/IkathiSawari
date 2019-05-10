@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
@@ -40,6 +41,7 @@ public class ShowRoute extends Fragment implements OnMapReadyCallback,RoutingLis
     private LatLng latLngCurrent, latLngDestination;
 
 
+
     public ShowRoute() {
         // Required empty public constructor
     }
@@ -50,20 +52,21 @@ public class ShowRoute extends Fragment implements OnMapReadyCallback,RoutingLis
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_show_route, container, false);
+
         LatLng fromPosition = getArguments().getParcelable("from_position");
         LatLng toPosition = getArguments().getParcelable("to_position");
         latLngCurrent = fromPosition;
         latLngDestination = toPosition;
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.showRouteFragment);
+                .findFragmentById(R.id.showRouteFragmentD1);
 
 
         if (mapFragment == null) {
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             mapFragment = SupportMapFragment.newInstance();
-            ft.replace(R.id.showRouteFragment, mapFragment).commit();
+            ft.replace(R.id.showRouteFragmentD1, mapFragment).commit();
         }
 
         mapFragment.getMapAsync(this);

@@ -11,8 +11,9 @@
 
     <ScrollView
 
-        android:layout_width="match_parent"
+        android:id="@+id/driverSCV"
 
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
@@ -319,12 +320,11 @@
                         android:layout_marginLeft="6dp"
                         android:layout_marginRight="6dp"
                         android:layout_marginBottom="3dp"
-                        android:background="@android:color/black"
+                        android:background="@color/colorPrimaryDark"
                         android:text="See Route"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
-                        android:textSize="12sp"
-                        android:visibility="gone"/>
+                        android:textSize="12sp" />
 
 
                 </LinearLayout>
@@ -336,8 +336,35 @@
         </RelativeLayout>
 
 
-
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/showDMap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/showRouteFragmentD1"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/back_driver_home1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:text="Go Back Home"
+                android:textColor="@android:color/white" />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
 
 
 

@@ -2,6 +2,7 @@ package com.example.shafi.ikathisawari.controllers.fragments.rider;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -32,6 +33,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -62,6 +65,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -85,7 +90,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RiderHome1 extends Fragment implements RoutingListener {
+public class RiderHome1 extends Fragment implements OnMapReadyCallback, RoutingListener {
 
     private static final String TAG = "RiderHome1";
 
@@ -98,6 +103,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
     private ProgressDialog progressDialog;
 
 
+    private GoogleMap mMap;
     private float radius = 1000;
     private DatabaseReference mDriverData;
 
@@ -112,7 +118,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
     Location riderDestinationAtRoad;
 
 
-    Button saveRouteRider;
+    Button saveRouteRider,showRouteR1;
 
     EditText selectOriginRider, selectDestinationRider, selectDateRideRider, riderSeats;
 
@@ -123,6 +129,13 @@ public class RiderHome1 extends Fragment implements RoutingListener {
     DriverRoutInfo driverRoutInfo;
     ArrayList<AvailableDriverInfo> availableDriversList;
     String availableDriver;
+
+    ScrollView riderSCV;
+    LinearLayout showRMap;
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light,R.color.colorPrimary};
+    SupportMapFragment mapFragment;
+    Button back_rider_home11;
 
 
 
@@ -139,6 +152,22 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_rider_home1, container, false);
+        showRouteR1 = view.findViewById(R.id.showRouteR11);
+        riderSCV = view.findViewById(R.id.riderSCV);
+        showRMap = view.findViewById(R.id.showRMap);
+        back_rider_home11 = view.findViewById(R.id.back_rider_home11);
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.showRouteFragmentR1);
+
+
+        if (mapFragment == null) {
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            mapFragment = SupportMapFragment.newInstance();
+            ft.replace(R.id.showRouteFragmentR1, mapFragment).commit();
+        }
+
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCanceledOnTouchOutside(false);
@@ -183,6 +212,32 @@ public class RiderHome1 extends Fragment implements RoutingListener {
             }
         });
 
+        back_rider_home11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                riderSCV.setVisibility(View.VISIBLE);
+                showRMap.setVisibility(View.GONE);
+            }
+        });
+
+
+        showRouteR1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (latLngCurrent != null) {
+                    if (latLngDestination != null) {
+                        riderSCV.setVisibility(View.GONE);
+                        showRMap.setVisibility(View.VISIBLE);
+
+                        seeRoute();
+                    } else {
+                        Toast.makeText(getActivity(), "Select Destination", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Select Origin", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         selectOriginRider.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,6 +290,10 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
 
         return view;
+    }
+
+    private void seeRoute() {
+        mapFragment.getMapAsync(this);
     }
 
 
@@ -696,6 +755,79 @@ public class RiderHome1 extends Fragment implements RoutingListener {
             }
         } else {
             Toast.makeText(getActivity(), "Select Date ", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        mMap = googleMap;
+
+        MyClass myClass = new MyClass(mMap,polylines);
+        myClass.makeRoute(latLngCurrent,latLngDestination);
+
+
+
+
+    }
+
+    private class MyClass implements RoutingListener{
+
+        GoogleMap mMap;
+        List<Polyline> polylines;
+
+
+        public MyClass(GoogleMap mMap, List<Polyline> polylines) {
+            this.mMap = mMap;
+            this.polylines = polylines;
+        }
+
+        @Override
+        public void onRoutingFailure(RouteException e) {
+
+        }
+
+        @Override
+        public void onRoutingStart() {
+
+        }
+
+        @Override
+        public void onRoutingSuccess(ArrayList<Route> route, int i) {
+
+            polylines = new ArrayList<>();
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(COLORS[1]));
+            polyOptions.width(10);
+            polyOptions.addAll(route.get(0).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+        }
+
+        @Override
+        public void onRoutingCancelled() {
+
+        }
+        @SuppressLint("MissingPermission")
+        private void makeRoute(LatLng start, LatLng end) {
+            mMap.clear();
+            mMap.setMyLocationEnabled(true);
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.getUiSettings().setCompassEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngCurrent, 12f));
+            mMap.addMarker(new MarkerOptions().position(latLngCurrent).title("Origin"));
+            mMap.addMarker(new MarkerOptions().position(latLngDestination).title("Destination"));
+            Routing routing = new Routing.Builder()
+                    .travelMode(AbstractRouting.TravelMode.DRIVING)
+                    .key("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
+                    .withListener(this)
+                    .alternativeRoutes(false )
+                    .waypoints(start, end)
+                    .build();
+            routing.execute();
         }
     }
 

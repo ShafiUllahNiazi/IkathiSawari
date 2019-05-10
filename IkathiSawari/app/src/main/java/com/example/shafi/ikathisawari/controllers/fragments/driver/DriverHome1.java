@@ -2,6 +2,7 @@ package com.example.shafi.ikathisawari.controllers.fragments.driver;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -35,6 +36,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -88,7 +91,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DriverHome1 extends Fragment  {
+public class DriverHome1 extends Fragment implements OnMapReadyCallback, RoutingListener {
 
     private static final String TAG = "DriverHome1";
 
@@ -102,11 +105,11 @@ public class DriverHome1 extends Fragment  {
     private boolean mLocationPermissionGranted;
 
 
-    Button saveRoute,showRouteD1;
+    Button saveRoute, showRouteD1,back_driver_home1;
 
     String pickUpPlaceName, destinationPlaceName;
 
-    EditText selectOriginDriver, selectDestinationDriver,carModel,selectDateRideDriver, selectTimeRideDriver,driverSeats, driverPricePerKM,driver_message;
+    EditText selectOriginDriver, selectDestinationDriver, carModel, selectDateRideDriver, selectTimeRideDriver, driverSeats, driverPricePerKM, driver_message;
 
     private GoogleMap mMap;
     private LatLng latLngCurrent, latLngDestination;
@@ -116,15 +119,18 @@ public class DriverHome1 extends Fragment  {
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     int myHour, myMinute, myYear, myMonth, myDay;
-    boolean isDate,isTime;
+    boolean isDate, isTime;
     private ProgressDialog progressDialog;
+    ScrollView driverSCV;
+    LinearLayout showDMap;
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light,R.color.colorPrimary};
+    SupportMapFragment mapFragment;
 
 
     public DriverHome1() {
         // Required empty public constructor
     }
-
-
 
 
     @Override
@@ -134,17 +140,33 @@ public class DriverHome1 extends Fragment  {
 
         Toast.makeText(getActivity(), "oncreatee", Toast.LENGTH_SHORT).show();
         View view = inflater.inflate(R.layout.fragment_driver_home1, container, false);
+
+
+        driverSCV = view.findViewById(R.id.driverSCV);
+        showDMap = view.findViewById(R.id.showDMap);
+        back_driver_home1 = view.findViewById(R.id.back_driver_home1);
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.showRouteFragmentD1);
+
+
+        if (mapFragment == null) {
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            mapFragment = SupportMapFragment.newInstance();
+            ft.replace(R.id.showRouteFragmentD1, mapFragment).commit();
+        }
+//        mapFragment.getMapAsync(this);
+
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCanceledOnTouchOutside(false);
-
-
 
 
         mLocationPermissionGranted = false;
         latLngCurrent = null;
         latLngDestination = null;
 
-        isDate =false;
+        isDate = false;
         isTime = false;
 
 
@@ -169,21 +191,31 @@ public class DriverHome1 extends Fragment  {
         selectTimeRideDriver.setFocusable(false);
         selectTimeRideDriver.setClickable(true);
 
+        back_driver_home1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                driverSCV.setVisibility(View.VISIBLE);
+                showDMap.setVisibility(View.GONE);
+            }
+        });
+
 
         showRouteD1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (latLngCurrent != null) {
                     if (latLngDestination != null) {
+                        driverSCV.setVisibility(View.GONE);
+                        showDMap.setVisibility(View.VISIBLE);
+
                         seeRoute();
-                    }else {
+                    } else {
                         Toast.makeText(getActivity(), "Select Destination", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(getActivity(), "Select Origin", Toast.LENGTH_SHORT).show();
                 }
-                
+
             }
         });
         selectOriginDriver.setOnClickListener(new View.OnClickListener() {
@@ -233,60 +265,60 @@ public class DriverHome1 extends Fragment  {
                 if (latLngCurrent != null) {
 
 
-                if (latLngDestination != null) {
+                    if (latLngDestination != null) {
 
-                    String carModel1 = carModel.getText().toString();
-                    if(!(carModel1.equals(""))){
-                        if(isDate){
-                            String date = selectDateRideDriver.getText().toString();
+                        String carModel1 = carModel.getText().toString();
+                        if (!(carModel1.equals(""))) {
+                            if (isDate) {
+                                String date = selectDateRideDriver.getText().toString();
 
-                            if(isTime){
-                                String time =selectTimeRideDriver.getText().toString();
-                                String seats = driverSeats.getText().toString();
-                                String price = driverPricePerKM.getText().toString();
+                                if (isTime) {
+                                    String time = selectTimeRideDriver.getText().toString();
+                                    String seats = driverSeats.getText().toString();
+                                    String price = driverPricePerKM.getText().toString();
 //                        Toast.makeText(getActivity(), seats +" "+ price, Toast.LENGTH_SHORT).show();
-                                if(!(seats.equals(""))){
-                                    if(!(price.equals(""))){
-                                        String driver_message1 = driver_message.getText().toString();
+                                    if (!(seats.equals(""))) {
+                                        if (!(price.equals(""))) {
+                                            String driver_message1 = driver_message.getText().toString();
 //                                        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
-                                        progressDialog.setMessage("Offering Ride");
-                                        progressDialog.show();
-                                        new FetchURL(new FetchRouteData(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination,pickUpPlaceName,destinationPlaceName,carModel1,date,time,seats,price,driver_message1,progressDialog)).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
+                                            progressDialog.setMessage("Offering Ride");
+                                            progressDialog.show();
+                                            new FetchURL(new FetchRouteData(mMap, "saveRoute", getActivity(), latLngCurrent, latLngDestination, pickUpPlaceName, destinationPlaceName, carModel1, date, time, seats, price, driver_message1, progressDialog)).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
 
-                                        DriverHome1 driverHome1 = new DriverHome1();
-                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                        fragmentTransaction.replace(R.id.driver_container, driverHome1);
+                                            DriverHome1 driverHome1 = new DriverHome1();
+                                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                            fragmentTransaction.replace(R.id.driver_container, driverHome1);
 //        fragmentTransaction.addToBackStack(null);
-                                        fragmentTransaction.commit();
-                                        Log.d("dddddddddddd",seats+" "+price);
+                                            fragmentTransaction.commit();
+                                            Log.d("dddddddddddd", seats + " " + price);
 
-                                    }else {
-                                        Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getActivity(), "Provide the price for one Km", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } else {
+                                        Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
                                     }
 
-                                }else {
-                                    Toast.makeText(getActivity(), "Provide available seats", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "Select  Time", Toast.LENGTH_SHORT).show();
                                 }
-
-                            }else{
-                                Toast.makeText(getActivity(), "Select  Time", Toast.LENGTH_SHORT).show();
-                            }}else {
-                            Toast.makeText(getActivity(), "Select  Date", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), "Select  Date", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "Kindly provide the vehicle model", Toast.LENGTH_SHORT).show();
                         }
-                    }else {
-                        Toast.makeText(getActivity(), "Kindly provide the vehicle model", Toast.LENGTH_SHORT).show();
-                    }
-
 
 
 //                    new FetchURL(mMap,"saveRoute",getActivity(),latLngCurrent, latLngDestination).execute(getUrl(latLngCurrent, latLngDestination, "driving"), "driving");
 //                    Toast.makeText(getActivity(), latLngCurrent.latitude + " " + latLngCurrent.longitude + " Locations ..." + latLngDestination.latitude + " " + latLngDestination.longitude, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Destination  empty...", Toast.LENGTH_SHORT).show();
-                }
+                    } else {
+                        Toast.makeText(getActivity(), "Destination  empty...", Toast.LENGTH_SHORT).show();
+                    }
 
-            }else {
+                } else {
                     Toast.makeText(getActivity(), "Origin empty...", Toast.LENGTH_SHORT).show();
                 }
 
@@ -298,61 +330,58 @@ public class DriverHome1 extends Fragment  {
     }
 
 
-
-
-
-
     private void setSchedule() {
         Calendar calendar = Calendar.getInstance();
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 //                Toast.makeText(getContext(), hourOfDay+""+minute, Toast.LENGTH_SHORT).show();
-                String h,min;
+                String h, min;
                 myHour = hourOfDay;
                 myMinute = minute;
                 isTime = true;
-                if(myHour<10)
-                    h = "0"+myHour;
+                if (myHour < 10)
+                    h = "0" + myHour;
                 else
-                    h = ""+myHour;
-                if(myMinute<10)
-                    min = "0"+myMinute;
+                    h = "" + myHour;
+                if (myMinute < 10)
+                    min = "0" + myMinute;
                 else
-                    min = ""+myMinute;
-                selectTimeRideDriver.setText(h+":"+min);
+                    min = "" + myMinute;
+                selectTimeRideDriver.setText(h + ":" + min);
             }
-        },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true);
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
         timePickerDialog.show();
     }
+
     private void setDTW() {
         Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog= new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 //                Toast.makeText(getContext(), dayOfMonth+"", Toast.LENGTH_SHORT).show();
-                String y,mon,d;
+                String y, mon, d;
                 myYear = year;
-                myMonth = month+1;
+                myMonth = month + 1;
                 myDay = dayOfMonth;
-                y = myYear+"";
-                if(myMonth<10)
-                    mon = "0"+myMonth;
+                y = myYear + "";
+                if (myMonth < 10)
+                    mon = "0" + myMonth;
                 else
-                    mon = ""+myMonth;
-                if(myDay<10)
-                    d = "0"+myDay;
+                    mon = "" + myMonth;
+                if (myDay < 10)
+                    d = "0" + myDay;
                 else
-                    d = ""+myDay;
+                    d = "" + myDay;
 
 //                dateTimeText.setText(myHour+":"+myMinute+" on "+myDay+" "+myMonth+":"+myYear);
 
-                selectDateRideDriver.setText(y+"-"+mon+"-"+d);
+                selectDateRideDriver.setText(y + "-" + mon + "-" + d);
 
                 isDate = true;
 
             }
-        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
 
     }
@@ -373,8 +402,6 @@ public class DriverHome1 extends Fragment  {
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
         return url;
     }
-
-
 
 
     @Override
@@ -404,14 +431,14 @@ public class DriverHome1 extends Fragment  {
 
     }
 
-    private  String getRegionName(double lati, double longi) {
+    private String getRegionName(double lati, double longi) {
         String regioName = "";
         Geocoder gcd = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
         try {
             List<Address> addresses = gcd.getFromLocation(lati, longi, 1);
             if (addresses.size() > 0) {
 //                regioName = addresses.get(0).getLocality();
-                regioName = addresses.get(0)+" kk";
+                regioName = addresses.get(0) + " kk";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -424,7 +451,7 @@ public class DriverHome1 extends Fragment  {
     public void onPrepareOptionsMenu(Menu menu) {
 
         super.onPrepareOptionsMenu(menu);
-        if(menu.findItem(R.id.action_search) !=null ){
+        if (menu.findItem(R.id.action_search) != null) {
             MenuItem searchItem = menu.findItem(R.id.action_search);
             searchItem.setVisible(false);
         }
@@ -432,19 +459,76 @@ public class DriverHome1 extends Fragment  {
 
     }
 
-    private void seeRoute(){
-        ShowRoute showRoute = new ShowRoute();
-        Bundle b = new Bundle();
+    private void seeRoute() {
+//        ShowRoute showRoute = new ShowRoute();
+//        Bundle b = new Bundle();
+//
+//        b.putParcelable("from_position", latLngCurrent);
+//        b.putParcelable("to_position", latLngDestination);
+//        showRoute.setArguments(b);
+//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.driver_container, showRoute);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+        mapFragment.getMapAsync(this);
+    }
 
-        b.putParcelable("from_position", latLngCurrent);
-        b.putParcelable("to_position", latLngDestination);
-        showRoute.setArguments(b);
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.driver_container, showRoute);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    private void makeRoute(LatLng start, LatLng end) {
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .key("AIzaSyBvR07aFM-1ddGVgt392lRnUge3weT6nUY")
+                .withListener(this)
+                .alternativeRoutes(false )
+                .waypoints(start, end)
+                .build();
+        routing.execute();
     }
 
 
+    @Override
+    public void onRoutingFailure(RouteException e) {
+
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int i) {
+        polylines = new ArrayList<>();
+        PolylineOptions polyOptions = new PolylineOptions();
+        polyOptions.color(getResources().getColor(COLORS[1]));
+        polyOptions.width(10);
+        polyOptions.addAll(route.get(0).getPoints());
+        Polyline polyline = mMap.addPolyline(polyOptions);
+        polylines.add(polyline);
+
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+
+        mMap = googleMap;
+        mMap.clear();
+        mMap.setMyLocationEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        makeRoute(latLngCurrent,latLngDestination);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngCurrent, 12f));
+        mMap.addMarker(new MarkerOptions().position(latLngCurrent).title("Origin"));
+        mMap.addMarker(new MarkerOptions().position(latLngDestination).title("Destination"));
+
+    }
 }
