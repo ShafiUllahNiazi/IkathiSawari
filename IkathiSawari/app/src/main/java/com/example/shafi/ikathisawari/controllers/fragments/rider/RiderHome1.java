@@ -347,9 +347,11 @@ public class RiderHome1 extends Fragment implements RoutingListener {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 Map<String, Object> myDrivers = (Map<String, Object>) dataSnapshot.getValue();
+                int count =0;
 
                 for (String driver : myDrivers.keySet()) {
                     Log.d(TAG, "driver- " + myDrivers.get(driver));
+                    count = count+1;
 
                     Map<String, Object> dd = (Map<String, Object>) myDrivers.get(driver);
 
@@ -364,10 +366,10 @@ public class RiderHome1 extends Fragment implements RoutingListener {
                     seatsDriver = (String) dd.get("no_of_seats");
                     priceDriver = (String) dd.get("price_per_km");
                     messagedriver = (String) dd.get("driver_message");
-                    no_of_available_seats = (String) dd.get("no_of_available_seats");
+                    no_of_available_seats = (String) dd.get("no_of_available_seats").toString();
                     Log.d(TAG, "onDataChange: " + dd.get("routes").toString());
 //                    availableDriver = fetchNearbyDriver(driver, driverRoutInfo, dateDriver, no_of_available_seats, priceDriver);
-                    availableDriver = fetchNearbyDriver(driver, driverRoutInfo, driver_origin_name,
+                    availableDriver = fetchNearbyDriver(count,myDrivers.keySet().size(),driver, driverRoutInfo, driver_origin_name,
                             driver_destination_name,vehicle_Model1,
                             dateDriver,timeDriver,seatsDriver,priceDriver,messagedriver, no_of_available_seats);
 
@@ -379,7 +381,9 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
                 }
 
-//                Toast.makeText(getActivity(), "Driver list size" + availableDriversList.size(), Toast.LENGTH_SHORT).show();
+
+
+                Toast.makeText(getActivity(), "Driver list size" + availableDriversList.size(), Toast.LENGTH_SHORT).show();
 //                showAvailableDrivers(availableDriversList);
 //                Log.d(TAG," kkk"+availableDriversList.toString());
 
@@ -409,7 +413,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         fragmentTransaction.commit();
     }
 
-    private String fetchNearbyDriver(final String driverKey, final DriverRoutInfo driverRoutInfo, final String driver_origin_name,
+    private String fetchNearbyDriver(int count, int size, final String driverKey, final DriverRoutInfo driverRoutInfo, final String driver_origin_name,
                                      final String driver_destination_name, final String vehicle_Model11, final String dateDriver,
                                      final String timeDriver, final String seatsDriver, final String priceDriver1, final String messagedriver,
                                      final String no_of_available_seats) {
@@ -423,7 +427,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
         float originFoundPointDistance = radius;
         float destinationFoundPointDistance = radius;
 
-        List<List<HashMap<String, String>>> result = this.driverRoutInfo.getRoutes();
+        final List<List<HashMap<String, String>>> result = this.driverRoutInfo.getRoutes();
         for (int i = 0; i < result.size(); i++) {
 
             Log.d("mydebug", "For 1");
@@ -532,7 +536,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
 
                     if (dateDriver.toString().equals(selectDateRideRider.getText().toString())) {
-                        if (Integer.parseInt(seatsDriver) >= Integer.parseInt(riderSeats.getText().toString())) {
+                        if (Integer.parseInt(no_of_available_seats) >= Integer.parseInt(riderSeats.getText().toString())) {
 
 
                             riderOriginAtRoad = new Location(originFoundLocation);
@@ -558,6 +562,7 @@ public class RiderHome1 extends Fragment implements RoutingListener {
                                                 AvailableDriverInfo availableDriverInfo = new AvailableDriverInfo(current_Rider,riderInfo,driverKey, driverInfo, driverRoutInfo, dateDriver,timeDriver, seatsDriver, priceDriver, riderOriginAtRoad1, riderDestinationAtRoad1, dateRider, seatsRider, traveledDistanceRider, traveledTimeRider, rideCharges, vehicle_Model11, driver_origin_name, driver_destination_name,messagedriver, rider_origin_name, rider_destination_name, no_of_available_seats,"");
                                                 availableDriversList.add(availableDriverInfo);
                                                 showAvailableDrivers(availableDriversList);
+
                                             }
 
                                             @Override
@@ -567,12 +572,14 @@ public class RiderHome1 extends Fragment implements RoutingListener {
                                         });
 
                                 }
+                            return driverKey;
 
                         }
+
                     }
 
 
-//                    return driverKey;
+
 //                    Log.d("availableDriver", "Driver list added item " + availableDrivers.size());
 
                 }
@@ -580,6 +587,21 @@ public class RiderHome1 extends Fragment implements RoutingListener {
 
             }
 
+        }
+        Toast.makeText(getActivity(), count+" "+size, Toast.LENGTH_SHORT).show();
+
+        if(count==size){
+            progressDialog.cancel();
+            AvailableDrivers availableDrivers = new AvailableDrivers();
+            Bundle b = new Bundle();
+            b.putParcelableArrayList("availableDriversList", availableDriversList);
+
+            availableDrivers.setArguments(b);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.rider_container, availableDrivers);
+//        fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
 
 
